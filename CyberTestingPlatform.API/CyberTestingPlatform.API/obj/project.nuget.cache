@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "0lfJz2mtkqm1GXnqTgwe4G7TBPyA+b+SOe+MCxsofSdEerxhy+t5GXL8MNrphY6sVqMB2TQZcXKgwreFsPx0Jw==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Александр\\source\\repos\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.API\\CyberTestingPlatform.API.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Александр\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
+    "C:\\Users\\Александр\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
+    "C:\\Users\\Александр\\.nuget\\packages\\swashbuckle.aspnetcore\\6.5.0\\swashbuckle.aspnetcore.6.5.0.nupkg.sha512",
+    "C:\\Users\\Александр\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.5.0\\swashbuckle.aspnetcore.swagger.6.5.0.nupkg.sha512",
+    "C:\\Users\\Александр\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.5.0\\swashbuckle.aspnetcore.swaggergen.6.5.0.nupkg.sha512",
+    "C:\\Users\\Александр\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.5.0\\swashbuckle.aspnetcore.swaggerui.6.5.0.nupkg.sha512"
+  ],
+  "logs": []
+}
