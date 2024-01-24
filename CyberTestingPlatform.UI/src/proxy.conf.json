@@ -1,0 +1,16 @@
+{
+  "/authApi": {
+    "target": "https://localhost:7212",
+    "secure": false,
+    "pathRewrite": {
+      "^/authApi": ""
+    }
+  },
+  "/storeApi": {
+    "target": "https://localhost:7201",
+    "secure": false,
+    "pathRewrite": {
+      "^/storeApi": ""
+    }
+  }
+}

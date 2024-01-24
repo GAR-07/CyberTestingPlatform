@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "KvlIJSmG+tc9AczM0d1L3bEgcleHu3CQ+hVNRiahL1o=",
+  "Source": "CyberTestingPlatform.Auth.API",
+  "BasePath": "_content/CyberTestingPlatform.Auth.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

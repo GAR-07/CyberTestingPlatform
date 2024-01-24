@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34024.191
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CyberTestingPlatform.API", "CyberTestingPlatform.API\CyberTestingPlatform.API.csproj", "{FC0CA8FD-D922-4881-B5A7-6E885A052504}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CyberTestingPlatform.Auth.API", "CyberTestingPlatform.Auth.API\CyberTestingPlatform.Auth.API.csproj", "{A4C9427F-401B-463B-A808-90AEDCB7BDD7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CyberTestingPlatform.Resourse.API", "CyberTestingPlatform.Resourse.API\CyberTestingPlatform.Resourse.API.csproj", "{75DE6238-A06F-4068-9FFD-3BBAEA1091C8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{FC0CA8FD-D922-4881-B5A7-6E885A052504}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FC0CA8FD-D922-4881-B5A7-6E885A052504}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FC0CA8FD-D922-4881-B5A7-6E885A052504}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FC0CA8FD-D922-4881-B5A7-6E885A052504}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4C9427F-401B-463B-A808-90AEDCB7BDD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4C9427F-401B-463B-A808-90AEDCB7BDD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4C9427F-401B-463B-A808-90AEDCB7BDD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4C9427F-401B-463B-A808-90AEDCB7BDD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75DE6238-A06F-4068-9FFD-3BBAEA1091C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75DE6238-A06F-4068-9FFD-3BBAEA1091C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75DE6238-A06F-4068-9FFD-3BBAEA1091C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75DE6238-A06F-4068-9FFD-3BBAEA1091C8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

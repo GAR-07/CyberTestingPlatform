@@ -1,0 +1,55 @@
+<app-navbar></app-navbar>
+<div class="container">
+  <h1>Регистрация</h1>
+  <form [formGroup]="regForm" (ngSubmit)="onSubmit()">
+
+    <div class="form-group">
+      <label for="birthday">Дата рождения</label>
+      <input type="date" class="form-control" formControlName="birthday">
+      <app-validator-message [field]="regForm.get('birthday')"></app-validator-message>
+    </div>
+
+    <div class="form-group">
+      <label for="userName">Имя</label>
+      <input type="text" class="form-control" formControlName="userName">
+      <app-validator-message [field]="regForm.get('userName')"></app-validator-message>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Электронная почта</label>
+      <input type="text" class="form-control" formControlName="email">
+      <app-validator-message [field]="regForm.get('email')"></app-validator-message>
+    </div>
+
+    <div class="form-group">
+      <label for="role">Выберите роль:</label><br/>
+      <input class="mb-3" type="radio" value="User"
+      name ="role" formControlName="role">
+      <span> Пользователь</span><br/>
+      <input class="mb-3" type="radio" value="Teacher"
+      name ="role" formControlName="role">
+      <span> Учитель</span><br/>
+    </div>
+
+    <div formGroupName="passwords">
+
+      <div class="form-group">
+        <label for="password">Пароль</label>
+        <input type="password" class="form-control" formControlName="password">
+        <app-validator-message [field]="regForm.get('passwords.password')"></app-validator-message>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Повторите пароль</label>
+        <input type="password" class="form-control" formControlName="confirmPassword">
+        <app-validator-message [field]="regForm.get('passwords')"></app-validator-message>
+      </div>
+      
+    </div>
+
+    <button type="submit" class="btn btn-success" [disabled]="!regForm.valid">Зарегистрироваться</button>
+    <div>
+      <a routerLink="/login">Уже есть аккаунт?</a>
+    </div>
+  </form>
+</div>
