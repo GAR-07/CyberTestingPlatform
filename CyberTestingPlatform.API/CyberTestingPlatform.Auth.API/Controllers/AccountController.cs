@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
@@ -37,6 +38,11 @@ namespace CyberTestingPlatform.Auth.API.Controllers
                     {
                         return Unauthorized("Password is not valid");
                     }
+                    foreach (var role in account.Roles.Split(','))
+                        if (role == "Banned")
+                        {
+                            return Unauthorized("Your account has been blocked");
+                        }
                     var response = new
                     {
                         accessToken = GenerateJwt(account),
@@ -54,6 +60,10 @@ namespace CyberTestingPlatform.Auth.API.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (model.Role == "Admin" || model.Role == "Moder")
+                {
+                    return Unauthorized("Incorrect roles");
+                }
                 var passwordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(model.Password, HashType.SHA512);
                 Account? account = await _dbContext.Accounts.FirstOrDefaultAsync(p => p.Email == model.Email);
                 if (account == null)
@@ -102,6 +112,33 @@ namespace CyberTestingPlatform.Auth.API.Controllers
         //    return Unauthorized("The account does not exist");
         //}
 
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        [Route("GetAllAccounts")]
+        public IActionResult GetAllAccounts([FromQuery] ItemsRequestModel model)
+        {
+
+            if (int.TryParse(model.SampleSize, out int sampleSize) && int.TryParse(model.Page, out int page))
+            {
+                try
+                {
+                    var startItem = _dbContext.Accounts.Select(p => p.UserId).ToList().Count - sampleSize * page;
+                    var accountsList = _dbContext.Accounts.Skip(startItem < 0 ? 0 : startItem)
+                        .Take(startItem < 0 ? sampleSize + startItem : sampleSize);
+                    foreach (var account in accountsList)
+                    {
+                        account.PasswordHash = "";
+                    }
+                    return Ok(accountsList);
+                }
+                catch
+                {
+                    return BadRequest("Error getting items from the database");
+                }
+            }
+            return BadRequest("Invalid model object");
+        }
+
         private string GenerateJwt(Account account)
         {
             var claims = new List<Claim>()
@@ -120,7 +157,7 @@ namespace CyberTestingPlatform.Auth.API.Controllers
                 audience: _authOptions.Audience,
                 claims: claims,
                 notBefore: DateTime.Now,
-                expires: DateTime.Now.AddMinutes(_authOptions.TokenLifeTime),
+                expires: DateTime.Now.AddSeconds(_authOptions.TokenLifeTime),
                 signingCredentials: new SigningCredentials(_authOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
             return new JwtSecurityTokenHandler().WriteToken(jwtToken);
         }

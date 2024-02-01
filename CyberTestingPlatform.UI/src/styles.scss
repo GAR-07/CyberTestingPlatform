@@ -1,1 +1,86 @@
-/* You can add global styles to this file, and also import other style files */
+@import "./assets/styles/normalize.scss";
+@import "./assets/styles/reset.scss";
+@import "./assets/styles/colors.scss";
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@300;400;500;600&family=Roboto:ital,wght@0,100;1,100&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+* {
+  font-family: 'Montserrat', sans-serif;
+}
+
+body {
+  color: var(--grey13);
+  background: var(--grey90);
+}
+
+.btn {
+  display: block;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  padding: 4px 15px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  color: var(--primary-color);
+  background: var(--font-color-white);
+  box-shadow: 0 1px 0 var(--primary-transparent);
+  transition: 0.4s ease;
+  cursor: pointer;
+
+  &:not(:disabled):focus-visible {
+    outline: 4px solid var(--ligth-blue);
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 10px var(--primary-transparent) !important;
+  }
+}
+
+.btn.primary {
+  color: var(--font-color-white);
+  background: var(--primary-color);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.col-4 {
+  flex-direction: column;
+  flex: 0 0 33.33334%;
+  max-width: 33.33334%;
+  width: 100%;
+  min-height: 1px;
+}
+
+.col-6 {
+  flex-direction: column;
+  flex: 0 0 50%;
+  max-width: 50%;
+  width: 100%;
+  min-height: 1px;
+}
+
+.col-12 {
+  flex-direction: column;
+  flex: 0 0 100%;
+  max-width: 100%;
+  width: 100%;
+  min-height: 1px;
+}
+
+@media (max-width: 599.98px) {
+  html {
+    font-size: 12px;
+  }
+}
+
+@media (min-width: 600px) {
+  html {
+    font-size: 16px;
+  }
+}

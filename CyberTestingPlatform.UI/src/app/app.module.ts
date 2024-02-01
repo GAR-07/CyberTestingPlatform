@@ -17,6 +17,8 @@ import { JwtModule } from '@auth0/angular-jwt';
 import { ACCESS_TOKEN_KEY } from './services/auth.service';
 import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
 import { StartPageComponent } from './components/start-page/start-page.component';
+import { SidebarComponent } from './components/UI/sidebar/sidebar.component';
+import { FooterComponent } from './components/UI/footer/footer.component';
 
 export function tokenGetter() {
   return localStorage.getItem(ACCESS_TOKEN_KEY);
@@ -32,7 +34,9 @@ export function tokenGetter() {
     NavbarComponent,
     ValidatorMessageComponent,
     AdminPanelComponent,
-    StartPageComponent
+    StartPageComponent,
+    SidebarComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,

@@ -1,6 +1,239 @@
-a {
-  cursor: pointer;
+// Используются 2 режима отображения до 900px и после
+
+.navbar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  min-height: 48px;
+  padding: 0 16px;
+  background: var(--primary-color);
+  box-shadow: var(--shadow-color);
+  position: sticky;
+  z-index: 2;
+  top: 0;
+  left: 0;
+
+  .container {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1920px;
+    width: 100%;
+    height: inherit;
+
+    a {
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .logo {
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+      height: 80%;
+  
+      img {
+        width: 2.5rem;
+        height: 2.5rem;
+      }
+  
+      p {
+        color: var(--font-color-white);
+        font-family: "Press Start 2P", sans-serif !important;
+        font-size: 1.25rem;
+        font-style: normal;
+        font-weight: 400;
+        text-transform: uppercase;
+        padding-left: 1rem;
+      }
+    }
+
+    .mobile-menu {
+
+      .navbar-menu {
+        position: relative;
+        float: right;
+  
+        .navbar-button {
+          width: 0.1px;
+          height: 0.1px;
+          opacity: 0;
+          position: absolute;
+          z-index: -10;
+  
+          &:not(:disabled):focus-visible + a {
+            outline: 4px solid var(--ligth-blue);
+            outline-offset: 1px;
+            transition: outline-offset 0s, outline 0s;
+          }
+        }
+      }
+
+      .dropdown-wrapper {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100vh;
+        width: 100%;
+        background-color: var(--shadow-color);
+        visibility: hidden;
+        z-index: 3;
+  
+        .dropdown-content {
+          position: relative;
+          min-height: 100%;
+          width: 100%;
+          float: right;
+          padding: 10px 16px;
+          background: var(--primary-gradient);
+          transform: translate(100vw);
+          transform-origin: top right;
+          transition: all .2s ease-in-out;
+
+          &.active {
+            transform: translate(0);
+          }
+        }
+
+        &.active {
+          visibility: visible;
+        }
+      }
+
+      .navbar-wrapper {
+        width: 100%;
+        height: 100%;
+        margin: 10px 0;
+        border: 1px solid var(--font-color-white);
+        border-radius: 5px;
+        background: var(--primary-transparent);
+  
+        .navbar-nav {
+          display: flex;
+          justify-content: space-around;
+          flex-flow: row wrap;
+          width: 100%;
+
+          .nav-item {
+      
+            &::after {
+              bottom: -1px;
+            }
+
+            &:hover::after{
+              visibility: visible;
+              bottom: 4px;
+            }
+
+            &.active::after {
+              bottom: 4px;
+            }
+          }
+        }
+      }
+    }
+
+    .desktop-menu {
+
+      .navbar-wrapper {
+        width: 100%;
+        height: 100%;
+  
+        .navbar-nav {
+          display: flex;
+          flex-flow: row nowrap;
+        }
+      }
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      position: relative;
+
+      .nav-link {
+        color: var(--font-color-white);
+        font-weight: 700;
+        padding: 0.5rem;
+      }
+
+      &::after {
+        content: "";
+        position: absolute;
+        background-color: var(--font-color-white);
+        left: 0;
+        bottom: -10px;
+        width: 100%;
+        height: 2px;
+        visibility: hidden;
+        transition: 0.4s ease;
+      }
+
+      &:hover::after{
+        visibility: visible;
+        bottom: 4px;
+      }
+
+      &.active::after {
+        position: absolute;
+        background-color: var(--font-color-white);
+        left: 0;
+        bottom: 4px;
+        width: 100%;
+        height: 2px;
+        visibility: visible;
+      }
+    }
+  }
 }
+
+// Стили для настройки компановки элементов выпадающего списка
+
+@media (max-width: 399.98px) {
+  .dropdown-content {
+
+    .navbar-wrapper {
+      justify-content: center;
+    }
+  }
+}
+
+@media (min-width: 400px) {
+  .dropdown-content {
+    max-width: 330px;
+
+    .navbar-wrapper {
+      justify-content: flex-start;
+    }
+  }
+}
+
+// Стили для выбора вида отображаемых навигационных элементов
+
+@media (max-width: 899.98px) {
+  .mobile-menu {
+    display: block;
+  }
+
+  .desktop-menu {
+    display: none;
+  }
+}
+
+@media (min-width: 900px) {
+  .mobile-menu {
+    display: none;
+  }
+
+  .desktop-menu {
+    display: block;
+  }
+}
+
+// Стили для корректного отображения работы скрытых кнопок
 
 #nav-logout button {
   width: 0.1px;
@@ -8,9 +241,9 @@ a {
   opacity: 0;
   position: absolute;
   z-index: -10;
+}
 
-  &:focus + a {	
-    outline: 1px solid #0078d7;
-    outline: -webkit-focus-ring-color auto 5px;
-  }
+#nav-logout button:focus + a {	
+  outline: 1px solid #0078d7;
+  outline: -webkit-focus-ring-color auto 5px;
 }

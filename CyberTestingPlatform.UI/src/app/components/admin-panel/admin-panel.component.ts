@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component} from '@angular/core';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-admin-panel',
@@ -7,4 +8,18 @@ import { Component } from '@angular/core';
 })
 export class AdminPanelComponent {
 
+  constructor(
+    private authService: AuthService,
+  ) {}
+
+  ngOnInit(): void {
+    this.authService.getAllAccounts(3, 2).subscribe({
+      next: (response: any) => {
+        console.log(response);
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    });
+  }
 }

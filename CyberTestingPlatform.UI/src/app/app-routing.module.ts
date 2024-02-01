@@ -15,7 +15,8 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'cabinet', component: CabinetComponent, canActivate: [AuthGuard] }, 
-  { path: 'adminPanel', component: AdminPanelComponent, canActivate: [AdminGuard]}
+  { path: 'adminPanel', component: AdminPanelComponent, canActivate: [AdminGuard]},
+  { path: '**', component: HomeComponent, canActivate: [AuthGuard]}
 ];
 
 @NgModule({

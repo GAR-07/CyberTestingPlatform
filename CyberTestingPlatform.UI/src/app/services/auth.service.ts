@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
@@ -55,5 +55,13 @@ export class AuthService {
   isAccountConfirm() {
     var token = localStorage.getItem(ACCESS_TOKEN_KEY);
     return token && !this.jwtHelper.isTokenExpired(token);
+  }
+
+  getAllAccounts(sampleSize: number, page: number) {
+    const params = new HttpParams()
+      .set('Content-Type', 'application/json')
+      .set('sampleSize', sampleSize.toString())
+      .set('page', page.toString());
+    return this.http.get<any>(this.authApiUrl + '/Account/GetAllAccounts', { params });
   }
 }
