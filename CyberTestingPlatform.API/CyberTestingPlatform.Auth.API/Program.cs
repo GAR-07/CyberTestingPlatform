@@ -1,8 +1,11 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Http.Features;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using CyberTestingPlatform.Auth.API.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using CyberTestingPlatform.DataAccess;
+using CyberTestingPlatform.Core.Abstractions;
+using CyberTestingPlatform.Application.Services;
+using CyberTestingPlatform.DataAccess.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,12 +16,8 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
-builder.Services.Configure<FormOptions>(options =>
-{
-    options.ValueLengthLimit = 250000000;
-    options.MultipartBodyLengthLimit = 250000000;
-    options.MemoryBufferThreshold = int.MaxValue;
-});
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IAccountsRepository, AccountsRepository>();
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

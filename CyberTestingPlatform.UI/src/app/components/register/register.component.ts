@@ -59,8 +59,7 @@ export class RegisterComponent {
       role: this.regForm.value.role,
       password: this.regForm.value.passwords.password,
     };
-    this.authService.register(this.modelData)
-    .subscribe({
+    this.authService.register(this.modelData).subscribe({
       next: (response: any) => {
         console.log(response);
       },
@@ -78,7 +77,8 @@ export class RegisterComponent {
       }
       var inputDate = control.value.split('-');
       var birthday = new Date(inputDate[0], inputDate[1], inputDate[2]);
-      return birthday.getFullYear() < 1900 || birthday > currentDate ? { custom: 'Значение даты не соответствует разрешённым.' } : null;
+      
+      return inputDate[0] < 1900 || birthday > currentDate ? { custom: 'Значение даты не соответствует разрешённым.' } : null;
     };
   }
 

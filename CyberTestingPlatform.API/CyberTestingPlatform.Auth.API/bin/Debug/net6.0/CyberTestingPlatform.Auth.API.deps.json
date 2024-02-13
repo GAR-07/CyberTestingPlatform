@@ -9,9 +9,12 @@
       "CyberTestingPlatform.Auth.API/1.0.0": {
         "dependencies": {
           "BCrypt.Net-Next": "4.0.3",
+          "CyberTestingPlatform.Application": "1.0.0",
+          "CyberTestingPlatform.DataAccess": "1.0.0",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "6.0.26",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "6.0.26",
           "Microsoft.EntityFrameworkCore": "6.0.26",
+          "Microsoft.EntityFrameworkCore.Design": "6.0.26",
           "Microsoft.EntityFrameworkCore.SqlServer": "6.0.26",
           "Microsoft.EntityFrameworkCore.Tools": "6.0.26",
           "Swashbuckle.AspNetCore": "6.5.0"
@@ -601,6 +604,46 @@
             "fileVersion": "4.700.19.56404"
           }
         }
+      },
+      "CyberTestingPlatform.Application/1.0.0": {
+        "dependencies": {
+          "BCrypt.Net-Next": "4.0.3",
+          "CyberTestingPlatform.Core": "1.0.0",
+          "CyberTestingPlatform.Resourse.API": "1.0.0",
+          "Microsoft.AspNetCore.Authentication.JwtBearer": "6.0.26"
+        },
+        "runtime": {
+          "CyberTestingPlatform.Application.dll": {}
+        }
+      },
+      "CyberTestingPlatform.Core/1.0.0": {
+        "runtime": {
+          "CyberTestingPlatform.Core.dll": {}
+        }
+      },
+      "CyberTestingPlatform.DataAccess/1.0.0": {
+        "dependencies": {
+          "CyberTestingPlatform.Core": "1.0.0",
+          "Microsoft.EntityFrameworkCore": "6.0.26",
+          "Microsoft.EntityFrameworkCore.SqlServer": "6.0.26"
+        },
+        "runtime": {
+          "CyberTestingPlatform.DataAccess.dll": {}
+        }
+      },
+      "CyberTestingPlatform.Resourse.API/1.0.0": {
+        "dependencies": {
+          "BCrypt.Net-Next": "4.0.3",
+          "CyberTestingPlatform.DataAccess": "1.0.0",
+          "Microsoft.AspNetCore.Authentication.JwtBearer": "6.0.26",
+          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "6.0.26",
+          "Microsoft.EntityFrameworkCore": "6.0.26",
+          "Microsoft.EntityFrameworkCore.SqlServer": "6.0.26",
+          "Swashbuckle.AspNetCore": "6.5.0"
+        },
+        "runtime": {
+          "CyberTestingPlatform.Resourse.API.dll": {}
+        }
       }
     }
   },
@@ -1043,6 +1086,26 @@
       "sha512": "sha512-CeWTdRNfRaSh0pm2gDTJFwVaXfTq6Xwv/sA887iwPTneW7oMtMlpvDIO+U60+3GWTB7Aom6oQwv5VZVUhQRdPQ==",
       "path": "system.windows.extensions/4.7.0",
       "hashPath": "system.windows.extensions.4.7.0.nupkg.sha512"
+    },
+    "CyberTestingPlatform.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "CyberTestingPlatform.Core/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "CyberTestingPlatform.DataAccess/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "CyberTestingPlatform.Resourse.API/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
     }
   }
 }

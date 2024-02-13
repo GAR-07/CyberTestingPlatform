@@ -1,0 +1,11 @@
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Core\bin\Debug\net6.0\CyberTestingPlatform.Core.deps.json
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Core\bin\Debug\net6.0\CyberTestingPlatform.Core.dll
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Core\bin\Debug\net6.0\CyberTestingPlatform.Core.pdb
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Core\obj\Debug\net6.0\CyberTestingPlatform.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Core\obj\Debug\net6.0\CyberTestingPlatform.Core.AssemblyInfoInputs.cache
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Core\obj\Debug\net6.0\CyberTestingPlatform.Core.AssemblyInfo.cs
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Core\obj\Debug\net6.0\CyberTestingPlatform.Core.csproj.CoreCompileInputs.cache
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Core\obj\Debug\net6.0\CyberTestingPlatform.Core.dll
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Core\obj\Debug\net6.0\refint\CyberTestingPlatform.Core.dll
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Core\obj\Debug\net6.0\CyberTestingPlatform.Core.pdb
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Core\obj\Debug\net6.0\ref\CyberTestingPlatform.Core.dll

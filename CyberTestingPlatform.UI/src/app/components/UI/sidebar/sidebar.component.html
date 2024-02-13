@@ -1,17 +1,7 @@
 <header class="sidebar">
   <div class="container">
     <div class="menu-content">
-      <a class="logo" routerLink="">
-        <!-- favicon.ico -->
-        <img src="https://i.ibb.co/XzHDSTS/image.png" alt="logo">
-        <p>КиберТест</p>
-      </a>
       <div class="navbar-wrapper">
-        <ul class="navbar-nav" *ngIf="roles.length === 0">
-          <li class="nav-item">
-            <a class="nav-link" routerLink="/login">Вход</a>
-          </li>
-        </ul>
         <ul class="navbar-nav" *ngIf="roles.length != 0">
           <li class="nav-item" *ngIf="roles.includes('Admin')">
             <a class="nav-link" routerLink="/adminPanel">AdminPanel</a>
@@ -20,8 +10,10 @@
             <a class="nav-link" routerLink="/cabinet" >Кабинет</a>
           </li>
           <li class="nav-item">
-            <button (click)="logout()" class="invisible"></button>
-            <a class="nav-link" (click)="logout()">Выход</a>
+            <a class="nav-link" routerLink="/cabinet" >Кабинет</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/cabinet" >Кабинет</a>
           </li>
         </ul>
       </div>

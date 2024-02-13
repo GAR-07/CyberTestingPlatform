@@ -57,11 +57,11 @@ export class AuthService {
     return token && !this.jwtHelper.isTokenExpired(token);
   }
 
-  getAllAccounts(sampleSize: number, page: number) {
+  getAccounts(sampleSize: number, page: number) {
     const params = new HttpParams()
       .set('Content-Type', 'application/json')
       .set('sampleSize', sampleSize.toString())
       .set('page', page.toString());
-    return this.http.get<any>(this.authApiUrl + '/Account/GetAllAccounts', { params });
+    return this.http.get<any>(this.authApiUrl + '/Account/GetAccounts', { params });
   }
 }

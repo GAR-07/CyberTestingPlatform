@@ -1,0 +1,17 @@
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.DataAccess\obj\Debug\net6.0\CyberTestingPlatform.DataAccess.csproj.AssemblyReference.cache
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.DataAccess\obj\Debug\net6.0\CyberTestingPlatform.DataAccess.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.DataAccess\obj\Debug\net6.0\CyberTestingPlatform.DataAccess.AssemblyInfoInputs.cache
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.DataAccess\obj\Debug\net6.0\CyberTestingPlatform.DataAccess.AssemblyInfo.cs
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.DataAccess\obj\Debug\net6.0\CyberTestingPlatform.DataAccess.csproj.CoreCompileInputs.cache
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.DataAccess\bin\Debug\net6.0\CyberTestingPlatform.DataAccess.deps.json
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.DataAccess\bin\Debug\net6.0\CyberTestingPlatform.DataAccess.runtimeconfig.json
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.DataAccess\bin\Debug\net6.0\CyberTestingPlatform.DataAccess.dll
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.DataAccess\bin\Debug\net6.0\CyberTestingPlatform.DataAccess.pdb
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.DataAccess\bin\Debug\net6.0\CyberTestingPlatform.Core.dll
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.DataAccess\bin\Debug\net6.0\CyberTestingPlatform.Core.pdb
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.DataAccess\obj\Debug\net6.0\CyberTestingPlatform.DataAccess.csproj.CopyComplete
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.DataAccess\obj\Debug\net6.0\CyberTestingPlatform.DataAccess.dll
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.DataAccess\obj\Debug\net6.0\refint\CyberTestingPlatform.DataAccess.dll
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.DataAccess\obj\Debug\net6.0\CyberTestingPlatform.DataAccess.pdb
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.DataAccess\obj\Debug\net6.0\CyberTestingPlatform.DataAccess.genruntimeconfig.cache
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.DataAccess\obj\Debug\net6.0\ref\CyberTestingPlatform.DataAccess.dll

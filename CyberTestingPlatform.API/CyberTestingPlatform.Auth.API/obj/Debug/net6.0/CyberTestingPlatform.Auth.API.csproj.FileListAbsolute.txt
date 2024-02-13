@@ -58,7 +58,6 @@ C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatfo
 C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Auth.API\obj\Debug\net6.0\CyberTestingPlatform.Auth.API.AssemblyInfoInputs.cache
 C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Auth.API\obj\Debug\net6.0\CyberTestingPlatform.Auth.API.AssemblyInfo.cs
 C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Auth.API\obj\Debug\net6.0\CyberTestingPlatform.Auth.API.csproj.CoreCompileInputs.cache
-C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Auth.API\obj\Debug\net6.0\CyberTestingPlatform.Auth.API.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Auth.API\obj\Debug\net6.0\CyberTestingPlatform.Auth.API.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Auth.API\obj\Debug\net6.0\staticwebassets\msbuild.CyberTestingPlatform.Auth.API.Microsoft.AspNetCore.StaticWebAssets.props
 C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Auth.API\obj\Debug\net6.0\staticwebassets\msbuild.build.CyberTestingPlatform.Auth.API.props
@@ -74,3 +73,15 @@ C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatfo
 C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Auth.API\obj\Debug\net6.0\CyberTestingPlatform.Auth.API.pdb
 C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Auth.API\obj\Debug\net6.0\CyberTestingPlatform.Auth.API.genruntimeconfig.cache
 C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Auth.API\obj\Debug\net6.0\ref\CyberTestingPlatform.Auth.API.dll
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Auth.API\bin\Debug\net6.0\CyberTestingPlatform.Core.dll
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Auth.API\bin\Debug\net6.0\CyberTestingPlatform.DataAccess.dll
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Auth.API\bin\Debug\net6.0\CyberTestingPlatform.DataAccess.pdb
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Auth.API\bin\Debug\net6.0\CyberTestingPlatform.Core.pdb
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Auth.API\bin\Debug\net6.0\CyberTestingPlatform.Application.dll
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Auth.API\bin\Debug\net6.0\CyberTestingPlatform.Application.pdb
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Auth.API\obj\Debug\net6.0\CyberTestingPlatform.Auth.API.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Auth.API\bin\Debug\net6.0\CyberTestingPlatform.Resourse.API.deps.json
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Auth.API\bin\Debug\net6.0\CyberTestingPlatform.Resourse.API.runtimeconfig.json
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Auth.API\bin\Debug\net6.0\CyberTestingPlatform.Resourse.API.exe
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Auth.API\bin\Debug\net6.0\CyberTestingPlatform.Resourse.API.dll
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Auth.API\bin\Debug\net6.0\CyberTestingPlatform.Resourse.API.pdb

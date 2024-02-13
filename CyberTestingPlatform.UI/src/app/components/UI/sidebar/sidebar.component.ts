@@ -16,7 +16,6 @@ export class SidebarComponent {
   
   ngOnInit(): void {
     var response = this.authService.accountData();
-    console.log(response);
     if (response) {
       this.roles = response.role;
     } else {

@@ -1062,6 +1062,69 @@
             "rid": "win"
           }
         }
+      },
+      "CyberTestingPlatform.Application/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "BCrypt.Net-Next": "4.0.3",
+          "CyberTestingPlatform.Core": "1.0.0",
+          "CyberTestingPlatform.Resourse.API": "1.0.0",
+          "Microsoft.AspNetCore.Authentication.JwtBearer": "6.0.26"
+        },
+        "compile": {
+          "bin/placeholder/CyberTestingPlatform.Application.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/CyberTestingPlatform.Application.dll": {}
+        }
+      },
+      "CyberTestingPlatform.Core/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "compile": {
+          "bin/placeholder/CyberTestingPlatform.Core.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/CyberTestingPlatform.Core.dll": {}
+        }
+      },
+      "CyberTestingPlatform.DataAccess/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "CyberTestingPlatform.Core": "1.0.0",
+          "Microsoft.EntityFrameworkCore": "6.0.26",
+          "Microsoft.EntityFrameworkCore.SqlServer": "6.0.26"
+        },
+        "compile": {
+          "bin/placeholder/CyberTestingPlatform.DataAccess.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/CyberTestingPlatform.DataAccess.dll": {}
+        }
+      },
+      "CyberTestingPlatform.Resourse.API/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "BCrypt.Net-Next": "4.0.3",
+          "CyberTestingPlatform.DataAccess": "1.0.0",
+          "Microsoft.AspNetCore.Authentication.JwtBearer": "6.0.26",
+          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "6.0.26",
+          "Microsoft.EntityFrameworkCore": "6.0.26",
+          "Microsoft.EntityFrameworkCore.SqlServer": "6.0.26",
+          "Swashbuckle.AspNetCore": "6.5.0"
+        },
+        "compile": {
+          "bin/placeholder/CyberTestingPlatform.Resourse.API.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/CyberTestingPlatform.Resourse.API.dll": {}
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
       }
     }
   },
@@ -3038,14 +3101,37 @@
         "useSharedDesignerContext.txt",
         "version.txt"
       ]
+    },
+    "CyberTestingPlatform.Application/1.0.0": {
+      "type": "project",
+      "path": "../CyberTestingPlatform.Application/CyberTestingPlatform.Application.csproj",
+      "msbuildProject": "../CyberTestingPlatform.Application/CyberTestingPlatform.Application.csproj"
+    },
+    "CyberTestingPlatform.Core/1.0.0": {
+      "type": "project",
+      "path": "../CyberTestingPlatform.Core/CyberTestingPlatform.Core.csproj",
+      "msbuildProject": "../CyberTestingPlatform.Core/CyberTestingPlatform.Core.csproj"
+    },
+    "CyberTestingPlatform.DataAccess/1.0.0": {
+      "type": "project",
+      "path": "../CyberTestingPlatform.DataAccess/CyberTestingPlatform.DataAccess.csproj",
+      "msbuildProject": "../CyberTestingPlatform.DataAccess/CyberTestingPlatform.DataAccess.csproj"
+    },
+    "CyberTestingPlatform.Resourse.API/1.0.0": {
+      "type": "project",
+      "path": "../CyberTestingPlatform.Resourse.API/CyberTestingPlatform.Resourse.API.csproj",
+      "msbuildProject": "../CyberTestingPlatform.Resourse.API/CyberTestingPlatform.Resourse.API.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net6.0": [
       "BCrypt.Net-Next >= 4.0.3",
+      "CyberTestingPlatform.Application >= 1.0.0",
+      "CyberTestingPlatform.DataAccess >= 1.0.0",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 6.0.26",
       "Microsoft.AspNetCore.Identity.EntityFrameworkCore >= 6.0.26",
       "Microsoft.EntityFrameworkCore >= 6.0.26",
+      "Microsoft.EntityFrameworkCore.Design >= 6.0.26",
       "Microsoft.EntityFrameworkCore.SqlServer >= 6.0.26",
       "Microsoft.EntityFrameworkCore.Tools >= 6.0.26",
       "Swashbuckle.AspNetCore >= 6.5.0"
@@ -3082,7 +3168,14 @@
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\Александр\\source\\repos\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Application\\CyberTestingPlatform.Application.csproj": {
+              "projectPath": "C:\\Users\\Александр\\source\\repos\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Application\\CyberTestingPlatform.Application.csproj"
+            },
+            "C:\\Users\\Александр\\source\\repos\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.DataAccess\\CyberTestingPlatform.DataAccess.csproj": {
+              "projectPath": "C:\\Users\\Александр\\source\\repos\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.DataAccess\\CyberTestingPlatform.DataAccess.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
@@ -3108,6 +3201,12 @@
             "version": "[6.0.26, )"
           },
           "Microsoft.EntityFrameworkCore": {
+            "target": "Package",
+            "version": "[6.0.26, )"
+          },
+          "Microsoft.EntityFrameworkCore.Design": {
+            "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+            "suppressParent": "All",
             "target": "Package",
             "version": "[6.0.26, )"
           },

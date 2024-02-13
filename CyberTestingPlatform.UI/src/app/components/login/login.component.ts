@@ -33,8 +33,7 @@ export class LoginComponent {
 
   onSubmit() {
     this.modelData = this.loginForm.value;
-    this.authService.login(this.modelData)
-    .subscribe({
+    this.authService.login(this.modelData).subscribe({
       next: (response: any) => {
         console.log(response);
       },

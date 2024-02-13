@@ -13,7 +13,7 @@ export class AdminPanelComponent {
   ) {}
 
   ngOnInit(): void {
-    this.authService.getAllAccounts(3, 2).subscribe({
+    this.authService.getAccounts(10, 1).subscribe({
       next: (response: any) => {
         console.log(response);
       },

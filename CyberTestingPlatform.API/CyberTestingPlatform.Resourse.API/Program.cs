@@ -1,9 +1,55 @@
+using CyberTestingPlatform.Resourse.API.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using CyberTestingPlatform.DataAccess;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+var authOptions = builder.Configuration.GetSection("AuthOptions").Get<AuthOptions>();
 
+// Add services to the container.
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+);
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.ValueLengthLimit = 250000000;
+    options.MultipartBodyLengthLimit = 250000000;
+    options.MemoryBufferThreshold = int.MaxValue;
+});
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true, // указывает, будет ли валидироваться издатель при валидации токена
+        ValidIssuer = authOptions.Issuer, // строка, представляющая издателя
+        ValidateAudience = true, // будет ли валидироваться потребитель токена
+        ValidAudience = authOptions.Audience, // установка потребителя токена
+        ValidateIssuerSigningKey = true, // валидация ключа безопасности
+        IssuerSigningKey = authOptions.GetSymmetricSecurityKey(), // установка ключа безопасности
+        ValidateLifetime = true, // будет ли валидироваться время существования
+    };
+});
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddAuthorization();
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        builder => builder
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .WithOrigins("http://localhost:4200")
+            .AllowCredentials()
+    );
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -16,10 +62,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseRouting();
+app.UseCors();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
 
 app.Run();

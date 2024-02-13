@@ -9,12 +9,12 @@
     align-items: center;
     width: 100%;
     max-width: 1920px;
-    margin-top: 40px;
+    margin: 20px 0;
   
     .content-block {
       display: flex;
       flex-direction: column;
-      margin: 20px 0 30px 0;
+      margin: 20px 10px;
       max-width: 700px;
   
       .slogan {
@@ -67,6 +67,7 @@
         min-width: 150px;
         max-width: 150px;
         height: 150px;
+        margin: 0 10px;
 
         img {
           width: 100%;
@@ -84,6 +85,7 @@
         min-width: 300px;
         max-width: 300px;
         height: 300px;
+        margin: 0 10px;
 
         img {
           width: 100%;

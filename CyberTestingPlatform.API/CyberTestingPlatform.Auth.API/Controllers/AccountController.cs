@@ -1,11 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
 using CyberTestingPlatform.Auth.API.Models;
-using System.Security.Claims;
 using BCrypt.Net;
+using CyberTestingPlatform.Core.Abstractions;
+using CyberTestingPlatform.Core.Models;
 
 namespace CyberTestingPlatform.Auth.API.Controllers
 {
@@ -13,15 +11,11 @@ namespace CyberTestingPlatform.Auth.API.Controllers
     [Route("[controller]")]
     public class AccountController : Controller
     {
-        private readonly ApplicationDbContext _dbContext;
-        private readonly AuthOptions _authOptions;
+        private readonly IAccountService _accountService;
 
-        public AccountController(
-            IConfiguration configuration,
-            ApplicationDbContext dbContext)
+        public AccountController(IAccountService accountService)
         {
-            _authOptions = configuration.GetSection("AuthOptions").Get<AuthOptions>();
-            _dbContext = dbContext;
+            _accountService = accountService;
         }
 
         [Route("Login")]
@@ -30,26 +24,19 @@ namespace CyberTestingPlatform.Auth.API.Controllers
         {
             if (ModelState.IsValid)
             {
-                var passwordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(model.Password, HashType.SHA512);
-                Account? account = await _dbContext.Accounts.FirstOrDefaultAsync(p => p.Email == model.Email);
-                if (account != null)
+                var account = await _accountService.GetAccountByEmail(model.Email);
+
+                var validateError = _accountService.ValidateAccount(account, model.Password);
+                if (!string.IsNullOrEmpty(validateError))
                 {
-                    if (!BCrypt.Net.BCrypt.EnhancedVerify(model.Password, account.PasswordHash, HashType.SHA512))
-                    {
-                        return Unauthorized("Password is not valid");
-                    }
-                    foreach (var role in account.Roles.Split(','))
-                        if (role == "Banned")
-                        {
-                            return Unauthorized("Your account has been blocked");
-                        }
-                    var response = new
-                    {
-                        accessToken = GenerateJwt(account),
-                    };
-                    return Ok(response);
+                    return BadRequest(validateError);
                 }
-                return Unauthorized("The account does not exist");
+
+                var response = new
+                {
+                    accessToken = _accountService.GenerateJwt(account),
+                };
+                return Ok(response);
             }
             return BadRequest("Invalid model object");
         }
@@ -60,36 +47,59 @@ namespace CyberTestingPlatform.Auth.API.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (model.Role == "Admin" || model.Role == "Moder")
+                var validateError = await _accountService.ValidateRegistration(model.Email, model.Role);
+                if (!string.IsNullOrEmpty(validateError))
                 {
-                    return Unauthorized("Incorrect roles");
+                    return BadRequest(validateError);
                 }
+
                 var passwordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(model.Password, HashType.SHA512);
-                Account? account = await _dbContext.Accounts.FirstOrDefaultAsync(p => p.Email == model.Email);
-                if (account == null)
+                var inputDate = model.Birthday.Split('-').Select(Int32.Parse).ToArray();
+                var birthday = new DateTime(inputDate[0], inputDate[1], inputDate[2]);
+
+                var (account, accountError) = Account.Create(
+                    Guid.NewGuid(),
+                    birthday,
+                    model.Email,
+                    model.UserName,
+                    passwordHash,
+                    model.Role);
+
+                if (!string.IsNullOrEmpty(accountError))
                 {
-                    var inputDate = model.Birthday.Split('-').Select(Int32.Parse).ToArray();
-                    var birthday = new DateTime(inputDate[0], inputDate[1], inputDate[2]);
-                    account = new()
-                    {
-                        Birthday = birthday,
-                        Email = model.Email,
-                        UserName = model.UserName,
-                        Roles = model.Role,
-                        PasswordHash = passwordHash,
-                    };
-                    _dbContext.Accounts.Add(account);
-                    await _dbContext.SaveChangesAsync();
-                    var response = new
-                    {
-                        accessToken = GenerateJwt(account),
-                    };
-                    return Ok(response);
+                    return BadRequest(accountError);
                 }
-                return Unauthorized("Email already exists");
+
+                await _accountService.CreateAccount(account);
+
+                var response = new
+                {
+                    accessToken = _accountService.GenerateJwt(account),
+                };
+                return Ok(response);
+
             }
             return BadRequest("Invalid model object");
         }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        [Route("GetAccounts")]
+        public async Task<IActionResult> GetAccounts([FromQuery] ItemsViewModel model)
+        {
+            var accounts = await _accountService.GetSelectAccounts(model.SampleSize, model.Page);
+
+            return Ok(accounts);
+        }
+
+        //[HttpGet]
+        //[Route("GetAllAccounts")]
+        //public async Task<IActionResult> GetAllAccounts()
+        //{
+        //    var accounts = await _accountService.GetAllAccounts();
+        //    var response = accounts.Select(x => new AccountResponse(x.UserId, x.Birthday, x.Email, x.UserName, x.Roles));
+        //    return Ok(response);
+        //}
 
         //[HttpGet]
         //[Authorize]
@@ -111,55 +121,5 @@ namespace CyberTestingPlatform.Auth.API.Controllers
         //    }
         //    return Unauthorized("The account does not exist");
         //}
-
-        [HttpGet]
-        [Authorize(Roles = "Admin")]
-        [Route("GetAllAccounts")]
-        public IActionResult GetAllAccounts([FromQuery] ItemsRequestModel model)
-        {
-
-            if (int.TryParse(model.SampleSize, out int sampleSize) && int.TryParse(model.Page, out int page))
-            {
-                try
-                {
-                    var startItem = _dbContext.Accounts.Select(p => p.UserId).ToList().Count - sampleSize * page;
-                    var accountsList = _dbContext.Accounts.Skip(startItem < 0 ? 0 : startItem)
-                        .Take(startItem < 0 ? sampleSize + startItem : sampleSize);
-                    foreach (var account in accountsList)
-                    {
-                        account.PasswordHash = "";
-                    }
-                    return Ok(accountsList);
-                }
-                catch
-                {
-                    return BadRequest("Error getting items from the database");
-                }
-            }
-            return BadRequest("Invalid model object");
-        }
-
-        private string GenerateJwt(Account account)
-        {
-            var claims = new List<Claim>()
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, account.UserId.ToString()),
-                new Claim(JwtRegisteredClaimNames.Name, account.UserName),
-                new Claim(JwtRegisteredClaimNames.Email, account.Email),
-                new Claim(JwtRegisteredClaimNames.Birthdate, account.Birthday.ToString())
-            };
-            foreach (var role in account.Roles.Split(','))
-            {
-                claims.Add(new Claim("role", role.ToString()));
-            }
-            var jwtToken = new JwtSecurityToken(
-                issuer: _authOptions.Issuer,    
-                audience: _authOptions.Audience,
-                claims: claims,
-                notBefore: DateTime.Now,
-                expires: DateTime.Now.AddSeconds(_authOptions.TokenLifeTime),
-                signingCredentials: new SigningCredentials(_authOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
-            return new JwtSecurityTokenHandler().WriteToken(jwtToken);
-        }
     }
 }
