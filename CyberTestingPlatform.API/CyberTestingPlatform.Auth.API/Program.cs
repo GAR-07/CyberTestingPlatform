@@ -3,8 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using CyberTestingPlatform.DataAccess;
-using CyberTestingPlatform.Core.Abstractions;
 using CyberTestingPlatform.Application.Services;
+using CyberTestingPlatform.Application.Models;
 using CyberTestingPlatform.DataAccess.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);

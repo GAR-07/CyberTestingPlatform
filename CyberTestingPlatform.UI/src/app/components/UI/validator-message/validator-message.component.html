@@ -1,5 +1,5 @@
 <div *ngIf="field">
-  <div class="alert alert-danger" *ngIf="field.invalid && field.touched && validatorMessages?.length">
+  <div class="alert" *ngIf="field.invalid && field.touched && validatorMessages?.length">
     <div *ngFor="let message of validatorMessages">{{ message }}</div>
   </div>
 </div>

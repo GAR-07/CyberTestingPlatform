@@ -1,6 +1,6 @@
 ﻿using CyberTestingPlatform.Core.Models;
 
-namespace CyberTestingPlatform.Core.Abstractions
+namespace CyberTestingPlatform.Application.Services
 {
     public interface IAccountService
     {

@@ -1,23 +1,11 @@
 {
   "Version": 1,
-  "Hash": "NqEL8Lbpt2kdh5ULPHFrLS0vL4xhEOOA7n7SKNJJH4M=",
+  "Hash": "KvlIJSmG+tc9AczM0d1L3bEgcleHu3CQ+hVNRiahL1o=",
   "Source": "CyberTestingPlatform.Auth.API",
   "BasePath": "_content/CyberTestingPlatform.Auth.API",
   "Mode": "Default",
   "ManifestType": "Build",
-  "ReferencedProjectsConfiguration": [
-    {
-      "Identity": "C:\\Users\\Александр\\source\\repos\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Resourse.API\\CyberTestingPlatform.Resourse.API.csproj",
-      "Version": 2,
-      "Source": "CyberTestingPlatform.Resourse.API",
-      "GetPublishAssetsTargets": "ComputeReferencedStaticWebAssetsPublishManifest;GetCurrentProjectPublishStaticWebAssetItems",
-      "AdditionalPublishProperties": "Configuration=Debug;Platform=AnyCPU",
-      "AdditionalPublishPropertiesToRemove": "WebPublishProfileFile;TargetFramework",
-      "GetBuildAssetsTargets": "GetCurrentProjectBuildStaticWebAssetItems",
-      "AdditionalBuildProperties": "Configuration=Debug;Platform=AnyCPU",
-      "AdditionalBuildPropertiesToRemove": "WebPublishProfileFile;TargetFramework"
-    }
-  ],
+  "ReferencedProjectsConfiguration": [],
   "DiscoveryPatterns": [],
   "Assets": []
 }

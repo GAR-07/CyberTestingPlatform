@@ -9,6 +9,7 @@ namespace CyberTestingPlatform.DataAccess.Entites
         public Guid Id { get; set; }
         
         [Required]
+        [MaxLength(Lecture.MAX_THEME_LENGTH)]
         public string Theme { get; set; }
 
         [Required]
@@ -22,5 +23,7 @@ namespace CyberTestingPlatform.DataAccess.Entites
         public DateTime CreationDate { get; set; }
 
         public DateTime LastUpdationDate { get; set; }
+
+        public Guid CourseId { get; set; }
     }
 }

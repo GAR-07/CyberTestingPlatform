@@ -1,5 +1,4 @@
-﻿using CyberTestingPlatform.Core.Abstractions;
-using CyberTestingPlatform.Core.Models;
+﻿using CyberTestingPlatform.Core.Models;
 using CyberTestingPlatform.DataAccess.Entites;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
@@ -33,7 +32,7 @@ namespace CyberTestingPlatform.DataAccess.Repositories
             var totalCount = await _dbContext.Accounts.CountAsync();
             var startIndex = Math.Max(0, totalCount - sampleSize * page);
             var countToTake = Math.Min(sampleSize, totalCount - startIndex);
-            
+
             var accountEntities = await _dbContext.Accounts
                 .Skip(startIndex)
                 .Take(countToTake)
@@ -50,6 +49,19 @@ namespace CyberTestingPlatform.DataAccess.Repositories
         public async Task<Account?> GetByEmail(string email)
         {
             var accountEntity = await _dbContext.Accounts.FirstOrDefaultAsync(p => p.Email == email);
+            return accountEntity != null ? Account.Create(
+                accountEntity.UserId,
+                accountEntity.Birthday,
+                accountEntity.Email,
+                accountEntity.UserName,
+                accountEntity.PasswordHash,
+                accountEntity.Roles).account
+                : null;
+        }
+
+        public async Task<Account?> Get(Guid userId)
+        {
+            var accountEntity = await _dbContext.Accounts.FirstOrDefaultAsync(p => p.UserId == userId);
             return accountEntity != null ? Account.Create(
                 accountEntity.UserId,
                 accountEntity.Birthday,

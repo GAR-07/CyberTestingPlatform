@@ -11,13 +11,5 @@ namespace CyberTestingPlatform.DataAccess
         public DbSet<AccountEntity> Accounts { get; set; }
         public DbSet<CourseEntity> Courses { get; set; }
         public DbSet<LectureEntity> Lectures { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<CourseEntity>()
-                .HasMany(c => c.Lectures)
-                .WithOne()
-                .HasForeignKey("CourseId");
-        }
     }
 }

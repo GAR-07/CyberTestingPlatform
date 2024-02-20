@@ -14,7 +14,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CyberTestingPlatform.Core\CyberTestingPlatform.Core.csproj" />
-    <ProjectReference Include="..\CyberTestingPlatform.Resourse.API\CyberTestingPlatform.Resourse.API.csproj" />
   </ItemGroup>
 
 </Project>

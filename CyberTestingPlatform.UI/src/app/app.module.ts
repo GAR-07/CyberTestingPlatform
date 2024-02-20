@@ -11,14 +11,14 @@ import { RegisterComponent } from './components/register/register.component';
 import { CabinetComponent } from './components/cabinet/cabinet.component';
 import { NavbarComponent } from './components/UI/navbar/navbar.component';
 import { ValidatorMessageComponent } from './components/UI/validator-message/validator-message.component';
-import { AUTH_API_URL, STORE_API_URL } from './app-injection-tokens';
+import { AUTH_API_URL, RESOURSE_API_URL } from './app-injection-tokens';
 import { environment } from 'src/environments/environment';
 import { JwtModule } from '@auth0/angular-jwt';
 import { ACCESS_TOKEN_KEY } from './services/auth.service';
 import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
 import { StartPageComponent } from './components/start-page/start-page.component';
-import { SidebarComponent } from './components/UI/sidebar/sidebar.component';
 import { FooterComponent } from './components/UI/footer/footer.component';
+import { LectureBlockComponent} from './components/UI/lecture-block/lecture-block.component';
 
 export function tokenGetter() {
   return localStorage.getItem(ACCESS_TOKEN_KEY);
@@ -35,8 +35,8 @@ export function tokenGetter() {
     ValidatorMessageComponent,
     AdminPanelComponent,
     StartPageComponent,
-    SidebarComponent,
-    FooterComponent
+    FooterComponent,
+    LectureBlockComponent
   ],
   imports: [
     BrowserModule,
@@ -56,8 +56,8 @@ export function tokenGetter() {
     useValue: environment.authApiUrl
   },
   {
-    provide: STORE_API_URL,
-    useValue: environment.storeApiUrl
+    provide: RESOURSE_API_URL,
+    useValue: environment.resourseApiUrl
   }],
   bootstrap: [AppComponent]
 })

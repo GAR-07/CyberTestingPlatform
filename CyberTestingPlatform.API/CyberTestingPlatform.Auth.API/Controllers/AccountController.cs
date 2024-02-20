@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using CyberTestingPlatform.Application.Services;
 using CyberTestingPlatform.Auth.API.Models;
-using BCrypt.Net;
-using CyberTestingPlatform.Core.Abstractions;
 using CyberTestingPlatform.Core.Models;
+using BCrypt.Net;
 
 namespace CyberTestingPlatform.Auth.API.Controllers
 {
@@ -87,9 +87,13 @@ namespace CyberTestingPlatform.Auth.API.Controllers
         [Route("GetAccounts")]
         public async Task<IActionResult> GetAccounts([FromQuery] ItemsViewModel model)
         {
-            var accounts = await _accountService.GetSelectAccounts(model.SampleSize, model.Page);
+            if (ModelState.IsValid)
+            {
+                var accounts = await _accountService.GetSelectAccounts(model.SampleSize, model.Page);
 
-            return Ok(accounts);
+                return Ok(accounts);
+            }
+            return BadRequest("Invalid model object");
         }
 
         //[HttpGet]

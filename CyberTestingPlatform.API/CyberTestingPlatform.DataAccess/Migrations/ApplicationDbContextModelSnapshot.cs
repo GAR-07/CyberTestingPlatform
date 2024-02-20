@@ -58,6 +58,10 @@ namespace CyberTestingPlatform.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
 
@@ -68,12 +72,20 @@ namespace CyberTestingPlatform.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ImagePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("LastUpdationDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
+
                     b.Property<string>("Theme")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -95,7 +107,10 @@ namespace CyberTestingPlatform.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("CourseId")
+                    b.Property<Guid?>("CourseEntityId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CourseId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreationDate")
@@ -109,7 +124,8 @@ namespace CyberTestingPlatform.DataAccess.Migrations
 
                     b.Property<string>("Theme")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -118,7 +134,7 @@ namespace CyberTestingPlatform.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CourseId");
+                    b.HasIndex("CourseEntityId");
 
                     b.ToTable("Lectures");
                 });
@@ -127,7 +143,7 @@ namespace CyberTestingPlatform.DataAccess.Migrations
                 {
                     b.HasOne("CyberTestingPlatform.DataAccess.Entites.CourseEntity", null)
                         .WithMany("Lectures")
-                        .HasForeignKey("CourseId");
+                        .HasForeignKey("CourseEntityId");
                 });
 
             modelBuilder.Entity("CyberTestingPlatform.DataAccess.Entites.CourseEntity", b =>

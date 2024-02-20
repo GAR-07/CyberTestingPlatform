@@ -1,9 +1,11 @@
-using CyberTestingPlatform.Resourse.API.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using CyberTestingPlatform.DataAccess;
+using CyberTestingPlatform.Application.Services;
+using CyberTestingPlatform.Application.Models;
+using CyberTestingPlatform.DataAccess.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +16,9 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
+builder.Services.AddScoped<IStorageService, StorageService>();
+builder.Services.AddScoped<ICoursesRepository, CoursesRepository>();
+builder.Services.AddScoped<ILecturesRepository, LecturesRepository>();
 builder.Services.Configure<FormOptions>(options =>
 {
     options.ValueLengthLimit = 250000000;

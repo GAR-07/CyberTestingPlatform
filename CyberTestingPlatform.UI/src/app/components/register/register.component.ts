@@ -78,7 +78,7 @@ export class RegisterComponent {
       var inputDate = control.value.split('-');
       var birthday = new Date(inputDate[0], inputDate[1], inputDate[2]);
       
-      return inputDate[0] < 1900 || birthday > currentDate ? { custom: 'Значение даты не соответствует разрешённым.' } : null;
+      return inputDate[0] < 1900 || birthday > currentDate ? { custom: 'Значение даты не соответствует разрешённым' } : null;
     };
   }
 
@@ -88,7 +88,7 @@ export class RegisterComponent {
       if (!(control.dirty || control.touched)) {
         return null;
       }
-      return pattern.test(control.value) ? { custom: 'Поле может содержать только буквы и нижнее подчёркивание.' } : null;
+      return pattern.test(control.value) ? { custom: 'Поле может содержать только буквы и нижнее подчёркивание' } : null;
     };
   }
 
@@ -101,7 +101,7 @@ export class RegisterComponent {
       if (!(group.dirty || group.touched) || password === confirmPassword) {
         return null;
       }
-      return { custom: 'Пароли должны совпадать.' };
+      return { custom: 'Пароли должны совпадать' };
     };
   }
 }

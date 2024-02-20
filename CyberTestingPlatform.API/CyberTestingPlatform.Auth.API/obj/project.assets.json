@@ -1069,7 +1069,6 @@
         "dependencies": {
           "BCrypt.Net-Next": "4.0.3",
           "CyberTestingPlatform.Core": "1.0.0",
-          "CyberTestingPlatform.Resourse.API": "1.0.0",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "6.0.26"
         },
         "compile": {
@@ -1103,28 +1102,6 @@
         "runtime": {
           "bin/placeholder/CyberTestingPlatform.DataAccess.dll": {}
         }
-      },
-      "CyberTestingPlatform.Resourse.API/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v6.0",
-        "dependencies": {
-          "BCrypt.Net-Next": "4.0.3",
-          "CyberTestingPlatform.DataAccess": "1.0.0",
-          "Microsoft.AspNetCore.Authentication.JwtBearer": "6.0.26",
-          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "6.0.26",
-          "Microsoft.EntityFrameworkCore": "6.0.26",
-          "Microsoft.EntityFrameworkCore.SqlServer": "6.0.26",
-          "Swashbuckle.AspNetCore": "6.5.0"
-        },
-        "compile": {
-          "bin/placeholder/CyberTestingPlatform.Resourse.API.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/CyberTestingPlatform.Resourse.API.dll": {}
-        },
-        "frameworkReferences": [
-          "Microsoft.AspNetCore.App"
-        ]
       }
     }
   },
@@ -3116,11 +3093,6 @@
       "type": "project",
       "path": "../CyberTestingPlatform.DataAccess/CyberTestingPlatform.DataAccess.csproj",
       "msbuildProject": "../CyberTestingPlatform.DataAccess/CyberTestingPlatform.DataAccess.csproj"
-    },
-    "CyberTestingPlatform.Resourse.API/1.0.0": {
-      "type": "project",
-      "path": "../CyberTestingPlatform.Resourse.API/CyberTestingPlatform.Resourse.API.csproj",
-      "msbuildProject": "../CyberTestingPlatform.Resourse.API/CyberTestingPlatform.Resourse.API.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -3138,24 +3110,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Александр\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\G25\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Александр\\source\\repos\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Auth.API\\CyberTestingPlatform.Auth.API.csproj",
+      "projectUniqueName": "C:\\Users\\G25\\Documents\\GitHub\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Auth.API\\CyberTestingPlatform.Auth.API.csproj",
       "projectName": "CyberTestingPlatform.Auth.API",
-      "projectPath": "C:\\Users\\Александр\\source\\repos\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Auth.API\\CyberTestingPlatform.Auth.API.csproj",
-      "packagesPath": "C:\\Users\\Александр\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Александр\\source\\repos\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Auth.API\\obj\\",
+      "projectPath": "C:\\Users\\G25\\Documents\\GitHub\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Auth.API\\CyberTestingPlatform.Auth.API.csproj",
+      "packagesPath": "C:\\Users\\G25\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\G25\\Documents\\GitHub\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Auth.API\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\Александр\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\G25\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -3169,11 +3136,11 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "C:\\Users\\Александр\\source\\repos\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Application\\CyberTestingPlatform.Application.csproj": {
-              "projectPath": "C:\\Users\\Александр\\source\\repos\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Application\\CyberTestingPlatform.Application.csproj"
+            "C:\\Users\\G25\\Documents\\GitHub\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Application\\CyberTestingPlatform.Application.csproj": {
+              "projectPath": "C:\\Users\\G25\\Documents\\GitHub\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Application\\CyberTestingPlatform.Application.csproj"
             },
-            "C:\\Users\\Александр\\source\\repos\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.DataAccess\\CyberTestingPlatform.DataAccess.csproj": {
-              "projectPath": "C:\\Users\\Александр\\source\\repos\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.DataAccess\\CyberTestingPlatform.DataAccess.csproj"
+            "C:\\Users\\G25\\Documents\\GitHub\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.DataAccess\\CyberTestingPlatform.DataAccess.csproj": {
+              "projectPath": "C:\\Users\\G25\\Documents\\GitHub\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.DataAccess\\CyberTestingPlatform.DataAccess.csproj"
             }
           }
         }
@@ -3244,7 +3211,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.402\\RuntimeIdentifierGraph.json"
       }
     }
   }

@@ -1,103 +1,112 @@
-﻿using CyberTestingPlatform.Resourse.API.Models;
-using CyberTestingPlatform.Core.Abstractions;
+﻿using CyberTestingPlatform.DataAccess.Repositories;
 using CyberTestingPlatform.Core.Models;
-using Microsoft.Extensions.Configuration;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
-using BCrypt.Net;
-
-// Сервисы соединяют базу данных с контроллерами API
-// Контроллер будет вызывать эти сервисы
-// Использование репозиториев, с их помощью осущ. валидация, кэширование, обращение к другим базам данных - всё это здесь
-// Сейчас методы простые, но логику в контроллерах хранить не хорошо, поэтому эта логика будет тут
 
 namespace CyberTestingPlatform.Application.Services
 {
-    public class StorageService
+    public class StorageService : IStorageService
     {
-        private readonly IAccountsRepository _accountsRepository;
+        private readonly ICoursesRepository _coursesRepository;
+        private readonly ILecturesRepository _lecturesRepository;
 
         public StorageService(
-            IAccountsRepository accountsRepository)
+            ICoursesRepository coursesRepository,
+            ILecturesRepository lecturesRepository)
         {
-            _accountsRepository = accountsRepository;
+            _coursesRepository = coursesRepository;
+            _lecturesRepository = lecturesRepository;
         }
 
-        public async Task<List<Account>> GetAllAccounts()
+        // Далее идут методы для курсов
+
+        public async Task<List<Course>> GetAllCourses()
         {
-            return await _accountsRepository.GetAll();
+            return await _coursesRepository.GetAll();
         }
 
-        public async Task<List<Account>?> GetSelectAccounts(int sampleSize, int page)
+        public async Task<List<Course>?> GetSelectCourses(int sampleSize, int page)
         {
             if (sampleSize > 0 && page > 0)
             {
-                return await _accountsRepository.GetSelection(sampleSize, page);
+                return await _coursesRepository.GetSelection(sampleSize, page);
             }
 
             return null;
         }
 
-        public async Task<Account?> GetAccountByEmail(string email)
+        public async Task<Course?> GetCourse(Guid id)
         {
-            return await _accountsRepository.GetByEmail(email);
+            return await _coursesRepository.Get(id);
         }
 
-        public async Task<Guid> CreateAccount(Account account)
+        public async Task<Guid> CreateCourse(Course course)
         {
-            return await _accountsRepository.Create(account);
+            return await _coursesRepository.Create(course);
         }
 
-        public async Task<Guid> UpdateAccount(Guid userId, DateTime birthday, string email, string userName, string passwordHash, string roles)
+        public async Task<Guid> UpdateCourse(Guid id, string theme, string title, string description, string content, int price, string imagePath, DateTime lastUpdationDate)
         {
-            return await _accountsRepository.Update(userId, birthday, email, userName, passwordHash, roles);
+            return await _coursesRepository.Update(id, theme, title, description, content, price, imagePath, lastUpdationDate);
         }
 
-        public async Task<Guid> DeleteAccount(Guid userId)
+        public async Task<Guid> DeleteCourse(Guid userId)
         {
-            return await _accountsRepository.Delete(userId);
+            return await _coursesRepository.Delete(userId);
         }
 
-        public string? ValidateAccount(Account? account, string password)
+        // Далее идут методы для лекций
+
+        public async Task<List<Lecture>> GetAllLectures()
         {
-            if (account == null)
-                return "The account does not exist";
+            return await _lecturesRepository.GetAll();
+        }
 
-            if (!IsPasswordValid(password, account.PasswordHash))
-                return "Password is not valid";
-
-            if (IsAccountBanned(account.Roles))
-                return "Your account has been blocked";
+        public async Task<List<Lecture>?> GetSelectLectures(int sampleSize, int page)
+        {
+            if (sampleSize > 0 && page > 0)
+            {
+                return await _lecturesRepository.GetSelection(sampleSize, page);
+            }
 
             return null;
         }
 
-        public async Task<string?> ValidateRegistration(string email, string role)
+        public async Task<Lecture?> GetLecture(Guid id)
         {
-            if (role == "Admin" || role == "Moder")
-                return "Incorrect roles";
-
-            if (await IsEmailAlreadyExists(email))
-                return "Email already exists";
-
-            return null;
+            return await _lecturesRepository.Get(id);
         }
 
-        public bool IsPasswordValid(string password, string passwordHash)
+        public async Task<Guid> CreateLecture(Lecture lecture)
         {
-            return BCrypt.Net.BCrypt.EnhancedVerify(password, passwordHash, HashType.SHA512);
+            return await _lecturesRepository.Create(lecture);
         }
 
-        public bool IsAccountBanned(string roles)
+        public async Task<Guid> UpdateLecture(Guid id, string theme, string title, string content, DateTime lastUpdationDate, Guid courseId)
         {
-            return roles.Split(',').Contains("Banned");
+            return await _lecturesRepository.Update(id, theme, title, content, lastUpdationDate, courseId);
         }
 
-        public async Task<bool> IsEmailAlreadyExists(string email)
+        public async Task<Guid> DeleteLecture(Guid userId)
         {
-            var existingAccount = await _accountsRepository.GetByEmail(email);
-            return existingAccount != null;
+            return await _lecturesRepository.Delete(userId);
         }
+
+        public DateTime ConvertToDateTime(string inputDate)
+        {
+            var dateSplit = inputDate.Split('-').Select(Int32.Parse).ToArray();
+            return new DateTime(dateSplit[0], dateSplit[1], dateSplit[2]);
+        }
+
+        /// Далее идут неиспользующиеся методы
+
+        //public async Task<string?> ValidateRegistration(string email, string role)
+        //{
+        //    if (role == "Admin" || role == "Moder")
+        //        return "Incorrect roles";
+
+        //    if (await IsEmailAlreadyExists(email))
+        //        return "Email already exists";
+
+        //    return null;
+        //}
     }
 }

@@ -9,6 +9,7 @@
       "CyberTestingPlatform.Resourse.API/1.0.0": {
         "dependencies": {
           "BCrypt.Net-Next": "4.0.3",
+          "CyberTestingPlatform.Application": "1.0.0",
           "CyberTestingPlatform.DataAccess": "1.0.0",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "6.0.26",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "6.0.26",
@@ -603,6 +604,16 @@
           }
         }
       },
+      "CyberTestingPlatform.Application/1.0.0": {
+        "dependencies": {
+          "BCrypt.Net-Next": "4.0.3",
+          "CyberTestingPlatform.Core": "1.0.0",
+          "Microsoft.AspNetCore.Authentication.JwtBearer": "6.0.26"
+        },
+        "runtime": {
+          "CyberTestingPlatform.Application.dll": {}
+        }
+      },
       "CyberTestingPlatform.Core/1.0.0": {
         "runtime": {
           "CyberTestingPlatform.Core.dll": {}
@@ -1059,6 +1070,11 @@
       "sha512": "sha512-CeWTdRNfRaSh0pm2gDTJFwVaXfTq6Xwv/sA887iwPTneW7oMtMlpvDIO+U60+3GWTB7Aom6oQwv5VZVUhQRdPQ==",
       "path": "system.windows.extensions/4.7.0",
       "hashPath": "system.windows.extensions.4.7.0.nupkg.sha512"
+    },
+    "CyberTestingPlatform.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
     },
     "CyberTestingPlatform.Core/1.0.0": {
       "type": "project",

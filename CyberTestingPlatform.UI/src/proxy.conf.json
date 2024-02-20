@@ -1,16 +1,16 @@
 {
   "/authApi": {
-    "target": "https://localhost:7212",
+    "target": "https://localhost:7200",
     "secure": false,
     "pathRewrite": {
       "^/authApi": ""
     }
   },
-  "/storeApi": {
+  "/resourseApi": {
     "target": "https://localhost:7201",
     "secure": false,
     "pathRewrite": {
-      "^/storeApi": ""
+      "^/resourseApi": ""
     }
   }
 }

@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CyberTestingPlatform.Application\CyberTestingPlatform.Application.csproj" />
     <ProjectReference Include="..\CyberTestingPlatform.DataAccess\CyberTestingPlatform.DataAccess.csproj" />
   </ItemGroup>
 

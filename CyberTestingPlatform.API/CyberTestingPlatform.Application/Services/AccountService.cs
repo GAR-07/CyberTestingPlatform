@@ -1,5 +1,5 @@
-﻿using CyberTestingPlatform.Resourse.API.Models;
-using CyberTestingPlatform.Core.Abstractions;
+﻿using CyberTestingPlatform.DataAccess.Repositories;
+using CyberTestingPlatform.Application.Models;
 using CyberTestingPlatform.Core.Models;
 using Microsoft.Extensions.Configuration;
 using System.IdentityModel.Tokens.Jwt;
@@ -36,10 +36,12 @@ namespace CyberTestingPlatform.Application.Services
                 new Claim(JwtRegisteredClaimNames.Email, account.Email),
                 new Claim(JwtRegisteredClaimNames.Birthdate, account.Birthday.ToString())
             };
+
             foreach (var role in account.Roles.Split(','))
             {
                 claims.Add(new Claim("role", role.ToString()));
             }
+
             var jwtToken = new JwtSecurityToken(
                 issuer: _authOptions.Issuer,
                 audience: _authOptions.Audience,
@@ -47,6 +49,7 @@ namespace CyberTestingPlatform.Application.Services
                 notBefore: DateTime.Now,
                 expires: DateTime.Now.AddSeconds(_authOptions.TokenLifeTime),
                 signingCredentials: new SigningCredentials(_authOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+
             return new JwtSecurityTokenHandler().WriteToken(jwtToken);
         }
 
