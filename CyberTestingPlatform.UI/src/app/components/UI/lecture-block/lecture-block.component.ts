@@ -1,4 +1,4 @@
-import { Component, Input, SimpleChanges} from '@angular/core';
+import { Component, Input} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CourseData } from 'src/app/interfaces/courseData.model';
 import { LectureData } from 'src/app/interfaces/lectureData.model';
@@ -16,11 +16,12 @@ export class LectureBlockComponent {
   @Input() courses: CourseData[] = [];
   @Input() lecture!: LectureData;
 
-
   mode: string = '';
   course!: CourseData;
+  isModalDialogVisible: boolean = false;
+  guidEmpty: string = '00000000-0000-0000-0000-000000000000';
   lectureForm: FormGroup = this.formBuilder.group({
-    courseTheme: [null, [
+    courseId: [null, [
       Validators.maxLength(255), 
     ]],
     theme: [null, [
@@ -33,7 +34,6 @@ export class LectureBlockComponent {
     ]],
     content: [null, [
       Validators.required,
-      Validators.minLength(1),
     ]]
   }) 
 
@@ -45,6 +45,10 @@ export class LectureBlockComponent {
 
   ngOnInit(): void {
     this.changeMode(this.mode);
+    if(this.mode !== 'create') {
+      this.getCourseById(this.lecture.courseId)
+      console.log(this.courses);
+    }
   }
 
   changeMode(mode: string) {
@@ -53,7 +57,7 @@ export class LectureBlockComponent {
     if(this.mode === 'edit') {
       if(this.course) {
         this.lectureForm.patchValue({
-          courseTheme: this.course.theme,
+          courseId: this.course.id,
         });
       }
       this.lectureForm.patchValue({
@@ -62,25 +66,20 @@ export class LectureBlockComponent {
         content: this.lecture.content,
         courseId: this.lecture.courseId
       });
+
     } else {
       this.lectureForm.patchValue({
-        courseTheme: null,
         theme: null,
         title: null,
         content: null,
         courseId: null
       });
     }
-
-    if (this.mode != 'create') {
-      this.getCourseById(this.lecture.courseId)
-    }
   }
 
   createLecture() {
     const date = new Date();
-    const creationDate = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
-    this.getCourseByTheme(this.lectureForm.value.courseTheme)
+    const convertedDate = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
 
     this.lecture = {
       id: '',
@@ -88,9 +87,9 @@ export class LectureBlockComponent {
       title: this.lectureForm.value.title,
       content: this.lectureForm.value.content,
       creatorId: this.authService.accountData().sub,
-      creationDate: creationDate,
-      lastUpdationDate: creationDate,
-      courseId: this.course.id,
+      creationDate: convertedDate,
+      lastUpdationDate: '',
+      courseId: this.lectureForm.value.courseId,
     };
     
     this.storageService.createLecture(this.lecture).subscribe({
@@ -105,21 +104,20 @@ export class LectureBlockComponent {
 
   editLecture() {
     const date = new Date();
-    const updationDate = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
-    this.getCourseByTheme(this.lectureForm.value.courseTheme)
+    const convertedDate = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
 
     this.lecture = {
       id: this.lecture.id,
       theme: this.lectureForm.value.theme,
       title: this.lectureForm.value.title,
       content: this.lectureForm.value.content,
-      creatorId: '',
-      creationDate: '',
-      lastUpdationDate: updationDate,
-      courseId: this.course.id,
+      creatorId: this.lecture.creatorId,
+      creationDate: this.lecture.creationDate,
+      lastUpdationDate: convertedDate,
+      courseId: this.lectureForm.value.courseId,
     };
     
-    this.storageService.createLecture(this.lecture).subscribe({
+    this.storageService.updateLecture(this.lecture.id, this.lecture).subscribe({
       next: (response: any) => {
         console.log(response);
       },
@@ -129,17 +127,31 @@ export class LectureBlockComponent {
     });
   }
 
-  getCourseById(id: string) {
-    this.courses.forEach(course => {
-      if (course.id === id) {
-        this.course = course;
+  deleteLecture(id: string) {
+    this.storageService.deleteLecture(id).subscribe({
+      next: (response: any) => {
+        console.log(response);
+      },
+      error: (response) => {
+        console.log(response);
       }
     });
   }
 
-  getCourseByTheme(theme: string) {
+  showModal() {
+		this.isModalDialogVisible = true;
+	}
+
+  closeModal(isConfirmed: boolean) {
+		this.isModalDialogVisible = false;
+    if (isConfirmed === true) {
+      this.deleteLecture(this.course.id);
+    }
+	}
+
+  getCourseById(id: string) {
     this.courses.forEach(course => {
-      if (course.theme === theme) {
+      if (course.id === id) {
         this.course = course;
       }
     });

@@ -21,7 +21,7 @@ namespace CyberTestingPlatform.DataAccess.Repositories
                 .ToListAsync();
 
             var courses = courseEntities
-                .Select(x => Course.Create(x.Id, x.Theme, x.Title, x.Description, x.Content, x.Price, x.ImagePath, x.CreatorID, x.CreationDate, x.LastUpdationDate).course)
+                .Select(x => Course.Create(x.Id, x.Name, x.Description, x.Price, x.ImagePath, x.CreatorID, x.CreationDate, x.LastUpdationDate).course)
                 .ToList();
 
             return courses;
@@ -40,7 +40,7 @@ namespace CyberTestingPlatform.DataAccess.Repositories
                 .ToListAsync();
 
             var courses = courseEntities
-               .Select(x => Course.Create(x.Id, x.Theme, x.Title, x.Description, x.Content, x.Price, x.ImagePath, x.CreatorID, x.CreationDate, x.LastUpdationDate).course)
+               .Select(x => Course.Create(x.Id, x.Name, x.Description, x.Price, x.ImagePath, x.CreatorID, x.CreationDate, x.LastUpdationDate).course)
                .ToList();
 
             return courses;
@@ -51,10 +51,8 @@ namespace CyberTestingPlatform.DataAccess.Repositories
             var courseEntity = await _dbContext.Courses.FirstOrDefaultAsync(p => p.Id == id);
             return courseEntity != null ? Course.Create(
                 courseEntity.Id,
-                courseEntity.Theme,
-                courseEntity.Title,
+                courseEntity.Name,
                 courseEntity.Description,
-                courseEntity.Content,
                 courseEntity.Price,
                 courseEntity.ImagePath,
                 courseEntity.CreatorID,
@@ -68,10 +66,8 @@ namespace CyberTestingPlatform.DataAccess.Repositories
             var courseEntity = new CourseEntity
             {
                 Id = lecture.Id,
-                Theme = lecture.Theme,
-                Title = lecture.Title,
+                Name = lecture.Name,
                 Description = lecture.Description,
-                Content = lecture.Content,
                 Price = lecture.Price,
                 ImagePath = lecture.ImagePath,
                 CreatorID = lecture.CreatorID,
@@ -85,7 +81,7 @@ namespace CyberTestingPlatform.DataAccess.Repositories
             return courseEntity.Id;
         }
 
-        public async Task<Guid> Update(Guid id, string theme, string title, string description, string content, int price, string imagePath, DateTime lastUpdationDate)
+        public async Task<Guid> Update(Guid id, string name, string description, int price, string imagePath, DateTime lastUpdationDate)
         {
             var courseEntity = await _dbContext.Courses
                 .Where(p => p.Id == id)
@@ -93,10 +89,8 @@ namespace CyberTestingPlatform.DataAccess.Repositories
 
             if (courseEntity != null)
             {
-                courseEntity.Theme = theme;
-                courseEntity.Title = title;
+                courseEntity.Name = name;
                 courseEntity.Description = description;
-                courseEntity.Content = content;
                 courseEntity.Price = price;
                 courseEntity.ImagePath = imagePath;
                 courseEntity.LastUpdationDate = lastUpdationDate;

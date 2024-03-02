@@ -17,6 +17,21 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
             _storageService = storageService;
         }
 
+        [HttpPost, DisableRequestSizeLimit]
+        [Authorize(Roles = "Admin,Creator")]
+        [Route("UploadFiles")]
+        public async Task<IActionResult> UploadFiles()
+        {
+            var formCollection = await Request.ReadFormAsync();
+            var (filePath, error) = await _storageService.SaveFiles(formCollection.Files);
+            
+            return Ok(new
+            {
+                filePath,
+                error
+            });
+        }
+
         // Далее идут методы для курсов
 
         [HttpGet("GetCourse/{id}")]
@@ -31,10 +46,8 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
                 {
                     var response = new CoursesResponse(
                         course.Id,
-                        course.Theme,
-                        course.Title,
+                        course.Name,
                         course.Description,
-                        course.Content,
                         course.Price,
                         course.ImagePath,
                         course.CreatorID,
@@ -61,10 +74,8 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
                 {
                     var response = courses.Select(x => new CoursesResponse(
                         x.Id,
-                        x.Theme,
-                        x.Title,
+                        x.Name,
                         x.Description,
-                        x.Content,
                         x.Price,
                         x.ImagePath,
                         x.CreatorID,
@@ -89,10 +100,8 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
 
                 var (course, error) = Course.Create(
                     Guid.NewGuid(),
-                    request.Theme,
-                    request.Title,
+                    request.Name,
                     request.Description,
-                    request.Content,
                     request.Price,
                     request.ImagePath,
                     request.CreatorId,
@@ -121,15 +130,30 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
 
                 var response = await _storageService.UpdateCourse(
                     id, 
-                    request.Theme, 
-                    request.Title, 
+                    request.Name, 
                     request.Description, 
-                    request.Content, 
                     request.Price, 
                     request.ImagePath, 
                     updationDate);
 
                 return Ok(response);
+            }
+            return BadRequest("Invalid model object");
+        }
+
+        [HttpDelete("DeleteCourse/{id}")]
+        [Authorize]
+        public async Task<IActionResult> DeleteCourse(Guid id)
+        {
+            if (ModelState.IsValid)
+            {
+                var response = await _storageService.DeleteCourse(id);
+
+                if (response != Guid.Empty)
+                {
+                    return Ok(response);
+                }
+                return BadRequest("No objects found");
             }
             return BadRequest("Invalid model object");
         }
@@ -191,9 +215,9 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
             return BadRequest("Invalid model object");
         }
 
-        [Route("CreateLecture")]
-        [Authorize(Roles = "Admin,Creator")]
         [HttpPost]
+        [Authorize(Roles = "Admin,Creator")]
+        [Route("CreateLecture")]
         public async Task<IActionResult> CreateLecture([FromBody] LecturesRequest request)
         {
             if (ModelState.IsValid)
@@ -239,6 +263,23 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
                     request.CourseId);
 
                 return Ok(response);
+            }
+            return BadRequest("Invalid model object");
+        }
+
+        [HttpDelete("DeleteLecture/{id}")]
+        [Authorize]
+        public async Task<IActionResult> DeleteLecture(Guid id)
+        {
+            if (ModelState.IsValid)
+            {
+                var response = await _storageService.DeleteLecture(id);
+
+                if (response != Guid.Empty)
+                {
+                    return Ok(response);
+                }
+                return BadRequest("No objects found");
             }
             return BadRequest("Invalid model object");
         }

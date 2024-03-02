@@ -34,6 +34,23 @@
           "Microsoft.AspNetCore.App"
         ]
       },
+      "Microsoft.AspNetCore.Http.Features/3.1.32": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.Primitives": "3.1.32",
+          "System.IO.Pipelines": "4.7.5"
+        },
+        "compile": {
+          "lib/netcoreapp3.1/Microsoft.AspNetCore.Http.Features.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/Microsoft.AspNetCore.Http.Features.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Microsoft.CSharp/4.5.0": {
         "type": "package",
         "compile": {
@@ -41,6 +58,19 @@
         },
         "runtime": {
           "lib/netcoreapp2.0/_._": {}
+        }
+      },
+      "Microsoft.Extensions.Primitives/3.1.32": {
+        "type": "package",
+        "compile": {
+          "lib/netcoreapp3.1/Microsoft.Extensions.Primitives.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/Microsoft.Extensions.Primitives.dll": {
+            "related": ".xml"
+          }
         }
       },
       "Microsoft.IdentityModel.Abstractions/6.35.0": {
@@ -178,6 +208,19 @@
           }
         }
       },
+      "System.IO.Pipelines/4.7.5": {
+        "type": "package",
+        "compile": {
+          "ref/netcoreapp2.0/System.IO.Pipelines.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netcoreapp3.0/System.IO.Pipelines.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "System.Runtime/4.3.0": {
         "type": "package",
         "dependencies": {
@@ -249,6 +292,9 @@
       "CyberTestingPlatform.Core/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "Microsoft.AspNetCore.Http.Features": "3.1.32"
+        },
         "compile": {
           "bin/placeholder/CyberTestingPlatform.Core.dll": {}
         },
@@ -303,6 +349,23 @@
         "lib/net6.0/Microsoft.AspNetCore.Authentication.JwtBearer.xml",
         "microsoft.aspnetcore.authentication.jwtbearer.6.0.26.nupkg.sha512",
         "microsoft.aspnetcore.authentication.jwtbearer.nuspec"
+      ]
+    },
+    "Microsoft.AspNetCore.Http.Features/3.1.32": {
+      "sha512": "uf8Cae8ThkSWPqzRD1HyBzGjd3HbJzw4HDPtMRv2sMmJCDBkGxMIc3gGFP09VLPzt5bHRv82TNPfOYFsMRhr8Q==",
+      "type": "package",
+      "path": "microsoft.aspnetcore.http.features/3.1.32",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/netcoreapp3.1/Microsoft.AspNetCore.Http.Features.dll",
+        "lib/netcoreapp3.1/Microsoft.AspNetCore.Http.Features.xml",
+        "lib/netstandard2.0/Microsoft.AspNetCore.Http.Features.dll",
+        "lib/netstandard2.0/Microsoft.AspNetCore.Http.Features.xml",
+        "microsoft.aspnetcore.http.features.3.1.32.nupkg.sha512",
+        "microsoft.aspnetcore.http.features.nuspec"
       ]
     },
     "Microsoft.CSharp/4.5.0": {
@@ -371,6 +434,22 @@
         "ref/xamarinwatchos10/_._",
         "useSharedDesignerContext.txt",
         "version.txt"
+      ]
+    },
+    "Microsoft.Extensions.Primitives/3.1.32": {
+      "sha512": "N8lTVwdjR+df9Sx3VdHfrecV6zl8KQoAx7kQXJ3rYwQBEw2vuZM0LKVAqjnaA/TBC8ZKnt99ptwH5iaEOxBuYQ==",
+      "type": "package",
+      "path": "microsoft.extensions.primitives/3.1.32",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "lib/netcoreapp3.1/Microsoft.Extensions.Primitives.dll",
+        "lib/netcoreapp3.1/Microsoft.Extensions.Primitives.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.Primitives.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.Primitives.xml",
+        "microsoft.extensions.primitives.3.1.32.nupkg.sha512",
+        "microsoft.extensions.primitives.nuspec"
       ]
     },
     "Microsoft.IdentityModel.Abstractions/6.35.0": {
@@ -562,6 +641,34 @@
         "lib/netstandard2.0/System.IdentityModel.Tokens.Jwt.xml",
         "system.identitymodel.tokens.jwt.6.35.0.nupkg.sha512",
         "system.identitymodel.tokens.jwt.nuspec"
+      ]
+    },
+    "System.IO.Pipelines/4.7.5": {
+      "sha512": "iqGBxw9zqxHK4bzwiYMYGYnaKK1OBQkLGwqqN/+kkj1lQVo+jEaEntOCL4XztOHjpp+ANYQ4UPKNUeeQmFK3mQ==",
+      "type": "package",
+      "path": "system.io.pipelines/4.7.5",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net461/System.IO.Pipelines.dll",
+        "lib/net461/System.IO.Pipelines.xml",
+        "lib/netcoreapp3.0/System.IO.Pipelines.dll",
+        "lib/netcoreapp3.0/System.IO.Pipelines.xml",
+        "lib/netstandard1.3/System.IO.Pipelines.dll",
+        "lib/netstandard1.3/System.IO.Pipelines.xml",
+        "lib/netstandard2.0/System.IO.Pipelines.dll",
+        "lib/netstandard2.0/System.IO.Pipelines.xml",
+        "ref/net461/System.IO.Pipelines.dll",
+        "ref/net461/System.IO.Pipelines.xml",
+        "ref/netcoreapp2.0/System.IO.Pipelines.dll",
+        "ref/netcoreapp2.0/System.IO.Pipelines.xml",
+        "system.io.pipelines.4.7.5.nupkg.sha512",
+        "system.io.pipelines.nuspec",
+        "useSharedDesignerContext.txt",
+        "version.txt"
       ]
     },
     "System.Runtime/4.3.0": {
@@ -847,19 +954,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\G25\\.nuget\\packages\\": {}
+    "C:\\Users\\Александр\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\G25\\Documents\\GitHub\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Application\\CyberTestingPlatform.Application.csproj",
+      "projectUniqueName": "C:\\Users\\Александр\\source\\repos\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Application\\CyberTestingPlatform.Application.csproj",
       "projectName": "CyberTestingPlatform.Application",
-      "projectPath": "C:\\Users\\G25\\Documents\\GitHub\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Application\\CyberTestingPlatform.Application.csproj",
-      "packagesPath": "C:\\Users\\G25\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\G25\\Documents\\GitHub\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Application\\obj\\",
+      "projectPath": "C:\\Users\\Александр\\source\\repos\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Application\\CyberTestingPlatform.Application.csproj",
+      "packagesPath": "C:\\Users\\Александр\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Александр\\source\\repos\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Application\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\G25\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Александр\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -873,8 +985,8 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "C:\\Users\\G25\\Documents\\GitHub\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Core\\CyberTestingPlatform.Core.csproj": {
-              "projectPath": "C:\\Users\\G25\\Documents\\GitHub\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Core\\CyberTestingPlatform.Core.csproj"
+            "C:\\Users\\Александр\\source\\repos\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Core\\CyberTestingPlatform.Core.csproj": {
+              "projectPath": "C:\\Users\\Александр\\source\\repos\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Core\\CyberTestingPlatform.Core.csproj"
             }
           }
         }
@@ -914,7 +1026,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.402\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
       }
     }
   }

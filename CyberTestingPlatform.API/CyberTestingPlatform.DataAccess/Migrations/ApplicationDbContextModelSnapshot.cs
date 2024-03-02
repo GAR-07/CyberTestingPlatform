@@ -58,10 +58,6 @@ namespace CyberTestingPlatform.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
 
@@ -79,18 +75,13 @@ namespace CyberTestingPlatform.DataAccess.Migrations
                     b.Property<DateTime>("LastUpdationDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
                     b.Property<int>("Price")
                         .HasColumnType("int");
-
-                    b.Property<string>("Theme")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
 
                     b.HasKey("Id");
 
@@ -107,9 +98,6 @@ namespace CyberTestingPlatform.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("CourseEntityId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("CourseId")
                         .HasColumnType("uniqueidentifier");
 
@@ -121,6 +109,9 @@ namespace CyberTestingPlatform.DataAccess.Migrations
 
                     b.Property<DateTime>("LastUpdationDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("Position")
+                        .HasColumnType("int");
 
                     b.Property<string>("Theme")
                         .IsRequired()
@@ -134,21 +125,7 @@ namespace CyberTestingPlatform.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CourseEntityId");
-
                     b.ToTable("Lectures");
-                });
-
-            modelBuilder.Entity("CyberTestingPlatform.DataAccess.Entites.LectureEntity", b =>
-                {
-                    b.HasOne("CyberTestingPlatform.DataAccess.Entites.CourseEntity", null)
-                        .WithMany("Lectures")
-                        .HasForeignKey("CourseEntityId");
-                });
-
-            modelBuilder.Entity("CyberTestingPlatform.DataAccess.Entites.CourseEntity", b =>
-                {
-                    b.Navigation("Lectures");
                 });
 #pragma warning restore 612, 618
         }

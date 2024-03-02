@@ -35,7 +35,14 @@
           }
         }
       },
+      "Microsoft.AspNetCore.Http.Features/3.1.32": {
+        "dependencies": {
+          "Microsoft.Extensions.Primitives": "3.1.32",
+          "System.IO.Pipelines": "4.7.5"
+        }
+      },
       "Microsoft.CSharp/4.5.0": {},
+      "Microsoft.Extensions.Primitives/3.1.32": {},
       "Microsoft.IdentityModel.Abstractions/6.35.0": {
         "runtime": {
           "lib/net6.0/Microsoft.IdentityModel.Abstractions.dll": {
@@ -120,6 +127,7 @@
           }
         }
       },
+      "System.IO.Pipelines/4.7.5": {},
       "System.Runtime/4.3.0": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "1.1.0",
@@ -137,6 +145,9 @@
       "System.Text.Encodings.Web/4.7.2": {},
       "System.Text.Json/4.7.2": {},
       "CyberTestingPlatform.Core/1.0.0": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Http.Features": "3.1.32"
+        },
         "runtime": {
           "CyberTestingPlatform.Core.dll": {}
         }
@@ -163,12 +174,26 @@
       "path": "microsoft.aspnetcore.authentication.jwtbearer/6.0.26",
       "hashPath": "microsoft.aspnetcore.authentication.jwtbearer.6.0.26.nupkg.sha512"
     },
+    "Microsoft.AspNetCore.Http.Features/3.1.32": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-uf8Cae8ThkSWPqzRD1HyBzGjd3HbJzw4HDPtMRv2sMmJCDBkGxMIc3gGFP09VLPzt5bHRv82TNPfOYFsMRhr8Q==",
+      "path": "microsoft.aspnetcore.http.features/3.1.32",
+      "hashPath": "microsoft.aspnetcore.http.features.3.1.32.nupkg.sha512"
+    },
     "Microsoft.CSharp/4.5.0": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-kaj6Wb4qoMuH3HySFJhxwQfe8R/sJsNJnANrvv8WdFPMoNbKY5htfNscv+LHCu5ipz+49m2e+WQXpLXr9XYemQ==",
       "path": "microsoft.csharp/4.5.0",
       "hashPath": "microsoft.csharp.4.5.0.nupkg.sha512"
+    },
+    "Microsoft.Extensions.Primitives/3.1.32": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-N8lTVwdjR+df9Sx3VdHfrecV6zl8KQoAx7kQXJ3rYwQBEw2vuZM0LKVAqjnaA/TBC8ZKnt99ptwH5iaEOxBuYQ==",
+      "path": "microsoft.extensions.primitives/3.1.32",
+      "hashPath": "microsoft.extensions.primitives.3.1.32.nupkg.sha512"
     },
     "Microsoft.IdentityModel.Abstractions/6.35.0": {
       "type": "package",
@@ -232,6 +257,13 @@
       "sha512": "sha512-yxGIQd3BFK7F6S62/7RdZk3C/mfwyVxvh6ngd1VYMBmbJ1YZZA9+Ku6suylVtso0FjI0wbElpJ0d27CdsyLpBQ==",
       "path": "system.identitymodel.tokens.jwt/6.35.0",
       "hashPath": "system.identitymodel.tokens.jwt.6.35.0.nupkg.sha512"
+    },
+    "System.IO.Pipelines/4.7.5": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-iqGBxw9zqxHK4bzwiYMYGYnaKK1OBQkLGwqqN/+kkj1lQVo+jEaEntOCL4XztOHjpp+ANYQ4UPKNUeeQmFK3mQ==",
+      "path": "system.io.pipelines/4.7.5",
+      "hashPath": "system.io.pipelines.4.7.5.nupkg.sha512"
     },
     "System.Runtime/4.3.0": {
       "type": "package",

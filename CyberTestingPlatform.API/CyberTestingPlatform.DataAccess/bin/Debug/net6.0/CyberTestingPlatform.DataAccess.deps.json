@@ -25,6 +25,18 @@
           }
         }
       },
+      "Microsoft.AspNetCore.Http.Features/3.1.32": {
+        "dependencies": {
+          "Microsoft.Extensions.Primitives": "6.0.0",
+          "System.IO.Pipelines": "4.7.5"
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/Microsoft.AspNetCore.Http.Features.dll": {
+            "assemblyVersion": "3.1.32.0",
+            "fileVersion": "3.100.3222.56610"
+          }
+        }
+      },
       "Microsoft.CSharp/4.5.0": {},
       "Microsoft.Data.SqlClient/2.1.4": {
         "dependencies": {
@@ -410,6 +422,14 @@
           }
         }
       },
+      "System.IO.Pipelines/4.7.5": {
+        "runtime": {
+          "lib/netcoreapp3.0/System.IO.Pipelines.dll": {
+            "assemblyVersion": "4.0.2.4",
+            "fileVersion": "4.700.22.12208"
+          }
+        }
+      },
       "System.Runtime.Caching/4.7.0": {
         "dependencies": {
           "System.Configuration.ConfigurationManager": "4.7.0"
@@ -491,6 +511,9 @@
         }
       },
       "CyberTestingPlatform.Core/1.0.0": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Http.Features": "3.1.32"
+        },
         "runtime": {
           "CyberTestingPlatform.Core.dll": {}
         }
@@ -509,6 +532,13 @@
       "sha512": "sha512-OiKusGL20vby4uDEswj2IgkdchC1yQ6rwbIkZDVBPIR6al2b7n3pC91elBul9q33KaBgRKhbZH3+2Ur4fnWx2A==",
       "path": "humanizer.core/2.8.26",
       "hashPath": "humanizer.core.2.8.26.nupkg.sha512"
+    },
+    "Microsoft.AspNetCore.Http.Features/3.1.32": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-uf8Cae8ThkSWPqzRD1HyBzGjd3HbJzw4HDPtMRv2sMmJCDBkGxMIc3gGFP09VLPzt5bHRv82TNPfOYFsMRhr8Q==",
+      "path": "microsoft.aspnetcore.http.features/3.1.32",
+      "hashPath": "microsoft.aspnetcore.http.features.3.1.32.nupkg.sha512"
     },
     "Microsoft.CSharp/4.5.0": {
       "type": "package",
@@ -740,6 +770,13 @@
       "sha512": "sha512-5tBCjAub2Bhd5qmcd0WhR5s354e4oLYa//kOWrkX+6/7ZbDDJjMTfwLSOiZ/MMpWdE4DWPLOfTLOq/juj9CKzA==",
       "path": "system.identitymodel.tokens.jwt/6.8.0",
       "hashPath": "system.identitymodel.tokens.jwt.6.8.0.nupkg.sha512"
+    },
+    "System.IO.Pipelines/4.7.5": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-iqGBxw9zqxHK4bzwiYMYGYnaKK1OBQkLGwqqN/+kkj1lQVo+jEaEntOCL4XztOHjpp+ANYQ4UPKNUeeQmFK3mQ==",
+      "path": "system.io.pipelines/4.7.5",
+      "hashPath": "system.io.pipelines.4.7.5.nupkg.sha512"
     },
     "System.Runtime.Caching/4.7.0": {
       "type": "package",

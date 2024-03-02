@@ -20,3 +20,4 @@ C:\Users\G25\Documents\GitHub\CyberTestingPlatform\CyberTestingPlatform.API\Cybe
 C:\Users\G25\Documents\GitHub\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Core\obj\Debug\net6.0\refint\CyberTestingPlatform.Core.dll
 C:\Users\G25\Documents\GitHub\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Core\obj\Debug\net6.0\CyberTestingPlatform.Core.pdb
 C:\Users\G25\Documents\GitHub\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Core\obj\Debug\net6.0\ref\CyberTestingPlatform.Core.dll
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Core\obj\Debug\net6.0\CyberTestingPlatform.Core.csproj.AssemblyReference.cache

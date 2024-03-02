@@ -6,6 +6,7 @@ using CyberTestingPlatform.DataAccess;
 using CyberTestingPlatform.Application.Services;
 using CyberTestingPlatform.Application.Models;
 using CyberTestingPlatform.DataAccess.Repositories;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -72,6 +73,12 @@ app.UseCors();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseStaticFiles(new StaticFileOptions()
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Resources")),
+    RequestPath = new PathString("/Resources")
+});
 
 app.UseEndpoints(endpoints =>
 {

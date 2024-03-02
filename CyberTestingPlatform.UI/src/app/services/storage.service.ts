@@ -15,6 +15,13 @@ export class StorageService {
     private http: HttpClient
     ) { }
 
+    uploadFiles(formData : FormData) {
+      return this.http.post<any>(this.resourseApiUrl + '/Storage/UploadFiles', formData, { 
+        reportProgress: true, 
+        observe: 'events' 
+      });
+    }
+
     // Далее идут методы для курсов
 
     getCourses(sampleSize: number, page: number) {
@@ -33,8 +40,12 @@ export class StorageService {
       return this.http.post<any>(this.resourseApiUrl + '/Storage/CreateCourse', course);
     }
 
-    updateCourse(course: CourseData) {
-      return this.http.post<any>(this.resourseApiUrl + '/Storage/UpdateCourse', course);
+    updateCourse(id: string, course: CourseData) {
+      return this.http.put<any>(this.resourseApiUrl + '/Storage/UpdateCourse/' + id, course);
+    }
+
+    deleteCourse(id: string) {
+      return this.http.delete<any>(this.resourseApiUrl + '/Storage/DeleteCourse/' + id);
     }
 
     // Далее идут методы для лекций
@@ -55,7 +66,11 @@ export class StorageService {
       return this.http.post<any>(this.resourseApiUrl + '/Storage/CreateLecture', lecture);
     }
 
-    updateLecture(lecture: LectureData) {
-      return this.http.post<any>(this.resourseApiUrl + '/Storage/UpdateLecture', lecture);
+    updateLecture(id: string, lecture: LectureData) {
+      return this.http.put<any>(this.resourseApiUrl + '/Storage/UpdateLecture/' + id, lecture);
+    }
+
+    deleteLecture(id: string) {
+      return this.http.delete<any>(this.resourseApiUrl + '/Storage/DeleteLecture/' + id);
     }
 }

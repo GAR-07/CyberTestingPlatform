@@ -9,6 +9,6 @@ namespace CyberTestingPlatform.DataAccess.Repositories
         Task<Course?> Get(Guid id);
         Task<List<Course>> GetAll();
         Task<List<Course>> GetSelection(int sampleSize, int page);
-        Task<Guid> Update(Guid id, string theme, string title, string description, string content, int price, string imagePath, DateTime lastUpdationDate);
+        Task<Guid> Update(Guid id, string name, string description, int price, string imagePath, DateTime lastUpdationDate);
     }
 }

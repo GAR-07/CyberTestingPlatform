@@ -2,10 +2,8 @@
 {
     public record CoursesResponse (
         Guid Id,
-        string Theme,
-        string Title,
+        string Name,
         string Description,
-        string Content,
         int Price,
         string ImagePath,
         Guid CreatorId,

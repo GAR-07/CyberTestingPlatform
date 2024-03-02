@@ -1,4 +1,5 @@
 ﻿using CyberTestingPlatform.Core.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace CyberTestingPlatform.Application.Services
 {
@@ -15,7 +16,8 @@ namespace CyberTestingPlatform.Application.Services
         Task<Lecture?> GetLecture(Guid id);
         Task<List<Course>?> GetSelectCourses(int sampleSize, int page);
         Task<List<Lecture>?> GetSelectLectures(int sampleSize, int page);
-        Task<Guid> UpdateCourse(Guid id, string theme, string title, string description, string content, int price, string imagePath, DateTime lastUpdationDate);
+        Task<Guid> UpdateCourse(Guid id, string name, string description, int price, string imagePath, DateTime lastUpdationDate);
         Task<Guid> UpdateLecture(Guid id, string theme, string title, string content, DateTime lastUpdationDate, Guid courseId);
+        Task<(string[], string)> SaveFiles(IFormFileCollection files);
     }
 }

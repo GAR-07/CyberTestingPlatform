@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\G25\\Documents\\GitHub\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Application\\CyberTestingPlatform.Application.csproj": {}
+    "C:\\Users\\Александр\\source\\repos\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Application\\CyberTestingPlatform.Application.csproj": {}
   },
   "projects": {
-    "C:\\Users\\G25\\Documents\\GitHub\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Application\\CyberTestingPlatform.Application.csproj": {
+    "C:\\Users\\Александр\\source\\repos\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Application\\CyberTestingPlatform.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\G25\\Documents\\GitHub\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Application\\CyberTestingPlatform.Application.csproj",
+        "projectUniqueName": "C:\\Users\\Александр\\source\\repos\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Application\\CyberTestingPlatform.Application.csproj",
         "projectName": "CyberTestingPlatform.Application",
-        "projectPath": "C:\\Users\\G25\\Documents\\GitHub\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Application\\CyberTestingPlatform.Application.csproj",
-        "packagesPath": "C:\\Users\\G25\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\G25\\Documents\\GitHub\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Application\\obj\\",
+        "projectPath": "C:\\Users\\Александр\\source\\repos\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Application\\CyberTestingPlatform.Application.csproj",
+        "packagesPath": "C:\\Users\\Александр\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Александр\\source\\repos\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Application\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\G25\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Александр\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -28,8 +32,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "C:\\Users\\G25\\Documents\\GitHub\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Core\\CyberTestingPlatform.Core.csproj": {
-                "projectPath": "C:\\Users\\G25\\Documents\\GitHub\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Core\\CyberTestingPlatform.Core.csproj"
+              "C:\\Users\\Александр\\source\\repos\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Core\\CyberTestingPlatform.Core.csproj": {
+                "projectPath": "C:\\Users\\Александр\\source\\repos\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Core\\CyberTestingPlatform.Core.csproj"
               }
             }
           }
@@ -69,21 +73,25 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.402\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\G25\\Documents\\GitHub\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Core\\CyberTestingPlatform.Core.csproj": {
+    "C:\\Users\\Александр\\source\\repos\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Core\\CyberTestingPlatform.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\G25\\Documents\\GitHub\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Core\\CyberTestingPlatform.Core.csproj",
+        "projectUniqueName": "C:\\Users\\Александр\\source\\repos\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Core\\CyberTestingPlatform.Core.csproj",
         "projectName": "CyberTestingPlatform.Core",
-        "projectPath": "C:\\Users\\G25\\Documents\\GitHub\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Core\\CyberTestingPlatform.Core.csproj",
-        "packagesPath": "C:\\Users\\G25\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\G25\\Documents\\GitHub\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Core\\obj\\",
+        "projectPath": "C:\\Users\\Александр\\source\\repos\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Core\\CyberTestingPlatform.Core.csproj",
+        "packagesPath": "C:\\Users\\Александр\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Александр\\source\\repos\\CyberTestingPlatform\\CyberTestingPlatform.API\\CyberTestingPlatform.Core\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\G25\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Александр\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -108,6 +116,12 @@
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
+          "dependencies": {
+            "Microsoft.AspNetCore.Http.Features": {
+              "target": "Package",
+              "version": "[3.1.32, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -124,7 +138,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.402\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
         }
       }
     }

@@ -1,0 +1,65 @@
+<div class="content-wrapper">
+  <div class="content-container">
+    <h1>Регистрация</h1>
+    <form [formGroup]="regForm" (ngSubmit)="onSubmit()" class="custom-form">
+  
+      <div class="form-group">
+        <div class="custom-input">
+          <input type="date" class="form-control" formControlName="birthday" placeholder="Дата рождения">
+        </div>
+        <app-validator-message [field]="regForm.get('birthday')"></app-validator-message>
+      </div>
+  
+      <div class="form-group">
+        <div class="custom-input">
+          <input type="text" class="form-control" formControlName="userName" placeholder="Имя">
+        </div>
+        <app-validator-message [field]="regForm.get('userName')"></app-validator-message>
+      </div>
+  
+      <div class="form-group">
+        <div class="custom-input">
+          <input type="text" class="form-control" formControlName="email" placeholder="Электронная почта">
+        </div>
+        <app-validator-message [field]="regForm.get('email')"></app-validator-message>
+      </div>
+  
+      <div class="form-group">
+        <div class="custom-radio-group">
+          <div class="title">Выберите роль:</div>
+          <label>
+            <input class="radio-btn" type="radio" value="User"
+            name ="role" formControlName="role">
+            Пользователь
+          </label>
+          <label>
+            <input class="radio-btn" type="radio" value="Teacher"
+            name ="role" formControlName="role">
+            Учитель
+          </label>
+        </div>
+      </div>
+  
+      <div formGroupName="passwords">
+  
+        <div class="form-group">
+          <div class="custom-input">
+            <input type="password" class="form-control" formControlName="password" placeholder="Пароль">
+          </div>
+          <app-validator-message [field]="regForm.get('passwords.password')"></app-validator-message>
+        </div>
+  
+        <div class="form-group">
+          <div class="custom-input">
+          <input type="password" class="form-control" formControlName="confirmPassword" placeholder="Повторите пароль">
+          </div>
+          <app-validator-message [field]="regForm.get('passwords')"></app-validator-message>
+        </div>
+        
+      </div>
+  
+      <button type="submit" class="btn primary" [disabled]="!regForm.valid">Зарегистрироваться</button>
+      <a class="link" routerLink="/login">Уже есть аккаунт?</a>
+    </form>
+  </div>
+</div>
