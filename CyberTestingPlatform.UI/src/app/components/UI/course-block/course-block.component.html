@@ -62,9 +62,9 @@
       <div class="form-group">
         <div class="upload-container">
           <div class="upload-input" draggable="true" ngClass="{{ dragAreaClass }}">
-            <input type="file" accept=".png, .jpg, .bmp" placeholder="Загрузить изображение" 
+            <input type="file" accept=".png, .jpg, .bmp" placeholder="Загрузить обложку" 
               #dragAreaInput multiple="false" (change)="uploadFile(dragAreaInput.files)">
-            <label (click)="dragAreaInput.click()">Загрузить изображение</label>
+            <label (click)="dragAreaInput.click()">Загрузить обложку</label>
           </div>
           <div *ngIf="courseForm.value.imagePath">
             <img [src]="createFilePath(courseForm.value.imagePath)">
@@ -103,8 +103,15 @@
       </div>
 
       <div class="form-group">
-        <div class="custom-input">
-          <input type="text" formControlName="imagePath" placeholder="Изображение">
+        <div class="upload-container">
+          <div class="upload-input" draggable="true" ngClass="{{ dragAreaClass }}">
+            <input type="file" accept=".png, .jpg, .bmp" placeholder="Загрузить обложку" 
+              #dragAreaInput multiple="false" (change)="uploadFile(dragAreaInput.files)">
+            <label (click)="dragAreaInput.click()">Загрузить обложку</label>
+          </div>
+          <div *ngIf="courseForm.value.imagePath">
+            <img [src]="createFilePath(courseForm.value.imagePath)">
+          </div>
         </div>
         <app-validator-message [field]="courseForm.get('imagePath')"></app-validator-message>
       </div>

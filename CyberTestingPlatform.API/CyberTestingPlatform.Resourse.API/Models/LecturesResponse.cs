@@ -5,6 +5,7 @@
         string Theme,
         string Title,
         string Content,
+        int Position,
         Guid CreatorId,
         DateTime CreationDate,
         DateTime LastUpdationDate,

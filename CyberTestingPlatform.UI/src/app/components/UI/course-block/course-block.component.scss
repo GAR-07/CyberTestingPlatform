@@ -85,6 +85,10 @@ h1, h2 {
       border-radius: 15px;
     }
 
+    input[type=file] {
+      margin-top: 10px;
+    }
+
     textarea {
       resize: vertical;
       min-height: 40px;

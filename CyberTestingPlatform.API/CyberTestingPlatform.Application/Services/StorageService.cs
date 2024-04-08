@@ -9,40 +9,39 @@ namespace CyberTestingPlatform.Application.Services
     {
         private readonly ICoursesRepository _coursesRepository;
         private readonly ILecturesRepository _lecturesRepository;
+        private readonly ITestsRepository _testsRepository;
 
         public StorageService(
             ICoursesRepository coursesRepository,
-            ILecturesRepository lecturesRepository)
+            ILecturesRepository lecturesRepository,
+            ITestsRepository testsRepository)
         {
             _coursesRepository = coursesRepository;
             _lecturesRepository = lecturesRepository;
+            _testsRepository = testsRepository;
         }
 
-        public async Task<(string[], string)> SaveFiles(IFormFileCollection files)
+        public async Task<(string, string)> SaveFile(IFormFile file)
         {
-            var error = ValidationFiles(files);
-            string[] fileNames = new string[files.Count];
-            string[] filePaths = new string[files.Count];
-            string[][] contentType = new string[files.Count][];
-            for (var i = 0; i < files.Count; i++)
+            string filePath = string.Empty;
+            string error = ValidationFile(file);
+            if (error == string.Empty)
             {
-                var fileType = ContentDispositionHeaderValue.Parse(files[i].ContentDisposition).Name.Trim('"');
-                var folderName = Path.Combine("Resources", fileType, SelectFolder());
+                var folderName = Path.Combine("Resources", GetContentType(file.ContentType), SelectFolder());
                 var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
                 if (!Directory.Exists(pathToSave))
                 {
                     Directory.CreateDirectory(pathToSave);
                 }
-                fileNames[i] = ContentDispositionHeaderValue.Parse(files[i].ContentDisposition).FileName.Trim('"');
-                var fullPath = RemoveFileNameCollision(Path.Combine(pathToSave, fileNames[i]));
+                string fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                var fullPath = RemoveFileNameCollision(Path.Combine(pathToSave, fileName));
                 await using (FileStream fileStream = new(fullPath, FileMode.Create, FileAccess.Write))
                 {
-                    await files[i].CopyToAsync(fileStream);
+                    await file.CopyToAsync(fileStream);
                 }
-                contentType[i] = files[i].ContentType.Split('/');
-                filePaths[i] = Path.Combine(folderName, fullPath.Split(@"\").Last());
+                filePath = Path.Combine(folderName, fullPath.Split(@"\").Last());
             }
-            return (filePaths, error);
+            return (filePath, error);
         }
 
         // Далее идут методы для курсов
@@ -100,16 +99,48 @@ namespace CyberTestingPlatform.Application.Services
         {
             return await _lecturesRepository.Create(lecture);
         }
-        public async Task<Guid> UpdateLecture(Guid id, string theme, string title, string content, DateTime lastUpdationDate, Guid courseId)
+        public async Task<Guid> UpdateLecture(Guid id, string theme, string title, string content, int position, DateTime lastUpdationDate, Guid courseId)
         {
-            return await _lecturesRepository.Update(id, theme, title, content, lastUpdationDate, courseId);
+            return await _lecturesRepository.Update(id, theme, title, content, position, lastUpdationDate, courseId);
         }
         public async Task<Guid> DeleteLecture(Guid userId)
         {
             return await _lecturesRepository.Delete(userId);
         }
 
-        /// Далее идут дополнительные методы
+        // Далее идут методы для тестов
+
+        public async Task<List<Test>> GetAllTests()
+        {
+            return await _testsRepository.GetAll();
+        }
+        public async Task<List<Test>?> GetSelectTests(int sampleSize, int page)
+        {
+            if (sampleSize > 0 && page > 0)
+            {
+                return await _testsRepository.GetSelection(sampleSize, page);
+            }
+
+            return null;
+        }
+        public async Task<Test?> GetTest(Guid id)
+        {
+            return await _testsRepository.Get(id);
+        }
+        public async Task<Guid> CreateTest(Test test)
+        {
+            return await _testsRepository.Create(test);
+        }
+        public async Task<Guid> UpdateTest(Guid id, string theme, string title, string questions, string answerOptions, string answerCorrect, int position, DateTime lastUpdationDate, Guid courseId)
+        {
+            return await _testsRepository.Update(id, theme, title, questions, answerOptions, answerCorrect, position, lastUpdationDate, courseId);
+        }
+        public async Task<Guid> DeleteTest(Guid userId)
+        {
+            return await _testsRepository.Delete(userId);
+        }
+
+        // Далее идут дополнительные методы
 
         public DateTime ConvertToDateTime(string inputDate)
         {
@@ -117,24 +148,22 @@ namespace CyberTestingPlatform.Application.Services
             return new DateTime(dateSplit[0], dateSplit[1], dateSplit[2]);
         }
 
-        private static string ValidationFiles(IFormFileCollection files)
+        private static string ValidationFile(IFormFile file)
         {
-            if (files.Count != 1)
+            var allowedContentTypes = new List<string> { "image/jpeg", "image/png", "image/bmp", "image/gif", "video/mp4" };
+            if (!allowedContentTypes.Contains(file.ContentType))
             {
-                return "Можно загружать только по одному файлу!";
+                return "Файл " + file.FileName + " имеет неверный формат!";
             }
-            foreach (var file in files)
+            if (file.Length <= 0)
             {
-                if (file.Length == 0)
-                {
-                    return "Файл " + file.FileName + " имеет нулевой размер!";
-                }
-                if (file.Length > 100000000)
-                {
-                    return "Файл " + file.FileName + " слишком большой!";
-                }
+                return "Файл " + file.FileName + " имеет нулевой размер!";
             }
-            return "";
+            if (file.Length > 104857600) // 100 MB
+            {
+                return "Файл " + file.FileName + " слишком большой!";
+            }
+            return string.Empty;
         }
 
         private static string RemoveFileNameCollision(string fullPath)

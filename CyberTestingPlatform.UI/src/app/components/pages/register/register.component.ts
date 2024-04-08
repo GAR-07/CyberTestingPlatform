@@ -9,7 +9,6 @@ import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn,
   styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent {
-
   modelData = new RegisterData('', '', '', '', '');
   regForm: FormGroup = this.formBuilder.group({
     birthday: [null, [
@@ -52,21 +51,23 @@ export class RegisterComponent {
   ngOnInit(): void { }
 
   onSubmit() {
-    this.modelData = {
-      birthday: this.regForm.value.birthday,
-      userName: this.regForm.value.userName,
-      email: this.regForm.value.email,
-      role: this.regForm.value.role,
-      password: this.regForm.value.passwords.password,
-    };
-    this.authService.register(this.modelData).subscribe({
-      next: (response: any) => {
-        console.log(response);
-      },
-      error: (response) => {
-        console.log(response);
-      }
-    });
+    if (this.regForm.valid) {
+      this.modelData = {
+        birthday: this.regForm.value.birthday,
+        userName: this.regForm.value.userName,
+        email: this.regForm.value.email,
+        role: this.regForm.value.role,
+        password: this.regForm.value.passwords.password,
+      };
+      this.authService.register(this.modelData).subscribe({
+        next: (response: any) => {
+          console.log(response);
+        },
+        error: (response) => {
+          console.log(response);
+        }
+      });
+    }
   }
 
   private birthdayValidator(): ValidatorFn {

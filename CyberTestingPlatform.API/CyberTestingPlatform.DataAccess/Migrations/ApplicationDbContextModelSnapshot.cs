@@ -22,6 +22,26 @@ namespace CyberTestingPlatform.DataAccess.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("CyberTestingPlatform.DataAccess.Entites.AccessControlEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("HasAccess")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("ObjectId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AccessControl");
+                });
+
             modelBuilder.Entity("CyberTestingPlatform.DataAccess.Entites.AccountEntity", b =>
                 {
                     b.Property<Guid>("UserId")
@@ -38,6 +58,9 @@ namespace CyberTestingPlatform.DataAccess.Migrations
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("RegistrationDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Roles")
                         .IsRequired()
@@ -126,6 +149,54 @@ namespace CyberTestingPlatform.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Lectures");
+                });
+
+            modelBuilder.Entity("CyberTestingPlatform.DataAccess.Entites.TestEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AnswerCorrect")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AnswerOptions")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("CourseId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("CreatorID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("LastUpdationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Position")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Questions")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Theme")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tests");
                 });
 #pragma warning restore 612, 618
         }

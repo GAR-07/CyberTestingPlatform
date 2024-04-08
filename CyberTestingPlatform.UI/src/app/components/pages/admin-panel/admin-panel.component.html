@@ -22,10 +22,10 @@
         </app-lecture-block>
       </div>
       <div id="test" class="tab-content" style="display: none;">
-        <app-lecture-block
+        <app-test-block
         [mods]="['create']"
         [courses]="courses">
-      </app-lecture-block>
+      </app-test-block>
       </div>
     </div>
   
@@ -60,6 +60,24 @@
             [courses]="courses"
             [lecture]="lecture">
           </app-lecture-block>
+        </ng-container>
+      </div>
+    </div>
+
+    <div class="content-block">
+      <div class="custom-table">
+        <div class="table-row header">
+          <div class="table-cell">Course Theme</div>
+          <div class="table-cell">Theme</div>
+          <div class="table-cell">Title</div>
+          <div class="table-cell">Actions</div>
+        </div>
+        <ng-container *ngFor="let test of tests" >
+          <app-test-block
+            [mods]="contentMods"
+            [courses]="courses"
+            [test]="test">
+          </app-test-block>
         </ng-container>
       </div>
     </div>

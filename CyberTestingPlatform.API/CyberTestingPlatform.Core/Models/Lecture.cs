@@ -5,12 +5,13 @@
         public const int MAX_THEME_LENGTH = 255;
         public const int MAX_TITLE_LENGTH = 255;
 
-        private Lecture(Guid id, string theme, string title, string content, Guid creatorID, DateTime creationDate, DateTime lastUpdationDate, Guid courseId)
+        private Lecture(Guid id, string theme, string title, string content, int position, Guid creatorID, DateTime creationDate, DateTime lastUpdationDate, Guid courseId)
         {
             Id = id;
             Theme = theme;
             Title = title;
             Content = content;
+            Position = position;
             CreatorID = creatorID;
             CreationDate = creationDate;
             LastUpdationDate = lastUpdationDate;
@@ -21,12 +22,13 @@
         public string Theme { get; }
         public string Title { get; }
         public string Content { get; }
+        public int Position { get; set; }
         public Guid CreatorID { get; }
         public DateTime CreationDate { get; }
         public DateTime LastUpdationDate { get; }
         public Guid CourseId { get; }
 
-        public static (Lecture lecture, string Error) Create(Guid id, string theme, string title, string content, Guid creatorID, DateTime creationDate, DateTime lastUpdationDate, Guid courseId)
+        public static (Lecture lecture, string Error) Create(Guid id, string theme, string title, string content, int position, Guid creatorID, DateTime creationDate, DateTime lastUpdationDate, Guid courseId)
         {
             var error = string.Empty;
 
@@ -38,8 +40,12 @@
             {
                 error = $"Заголовок не может быть пустым или превышать {MAX_TITLE_LENGTH} символов";
             }
+            if (position <= 0)
+            {
+                error = $"Позиция не должна повторяться и быть меньше или равна нулю";
+            }
 
-            var lecture = new Lecture(id, theme, title, content, creatorID, creationDate, lastUpdationDate, courseId);
+            var lecture = new Lecture(id, theme, title, content, position, creatorID, creationDate, lastUpdationDate, courseId);
 
             return (lecture, error);
         }

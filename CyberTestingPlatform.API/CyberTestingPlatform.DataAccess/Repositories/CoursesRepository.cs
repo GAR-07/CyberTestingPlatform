@@ -61,18 +61,18 @@ namespace CyberTestingPlatform.DataAccess.Repositories
                 : null;
         }
 
-        public async Task<Guid> Create(Course lecture)
+        public async Task<Guid> Create(Course course)
         {
             var courseEntity = new CourseEntity
             {
-                Id = lecture.Id,
-                Name = lecture.Name,
-                Description = lecture.Description,
-                Price = lecture.Price,
-                ImagePath = lecture.ImagePath,
-                CreatorID = lecture.CreatorID,
-                CreationDate = lecture.CreationDate,
-                LastUpdationDate = lecture.LastUpdationDate,
+                Id = course.Id,
+                Name = course.Name,
+                Description = course.Description,
+                Price = course.Price,
+                ImagePath = course.ImagePath,
+                CreatorID = course.CreatorID,
+                CreationDate = course.CreationDate,
+                LastUpdationDate = course.LastUpdationDate,
             };
 
             await _dbContext.Courses.AddAsync(courseEntity);

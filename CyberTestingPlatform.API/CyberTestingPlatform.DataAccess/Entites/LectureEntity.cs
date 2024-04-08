@@ -22,10 +22,9 @@ namespace CyberTestingPlatform.DataAccess.Entites
 
         public int Position { get; set; }
 
-        public Guid CreatorID { get; set; }
-
         public DateTime CreationDate { get; set; }
 
         public DateTime LastUpdationDate { get; set; }
+        public Guid CreatorID { get; set; }
     }
 }

@@ -21,7 +21,7 @@ namespace CyberTestingPlatform.DataAccess.Repositories
                 .ToListAsync();
 
             var lectures = lectureEntities
-                .Select(x => Lecture.Create(x.Id, x.Theme, x.Title, x.Content, x.CreatorID, x.CreationDate, x.LastUpdationDate, x.CourseId).lecture)
+                .Select(x => Lecture.Create(x.Id, x.Theme, x.Title, x.Content, x.Position, x.CreatorID, x.CreationDate, x.LastUpdationDate, x.CourseId).lecture)
                 .ToList();
 
             return lectures;
@@ -40,7 +40,7 @@ namespace CyberTestingPlatform.DataAccess.Repositories
                 .ToListAsync();
 
             var lectures = lectureEntities
-               .Select(x => Lecture.Create(x.Id, x.Theme, x.Title, x.Content, x.CreatorID, x.CreationDate, x.LastUpdationDate, x.CourseId).lecture)
+               .Select(x => Lecture.Create(x.Id, x.Theme, x.Title, x.Content, x.Position, x.CreatorID, x.CreationDate, x.LastUpdationDate, x.CourseId).lecture)
                .ToList();
 
             return lectures;
@@ -54,6 +54,7 @@ namespace CyberTestingPlatform.DataAccess.Repositories
                 lectureEntity.Theme,
                 lectureEntity.Title,
                 lectureEntity.Content,
+                lectureEntity.Position,
                 lectureEntity.CreatorID,
                 lectureEntity.CreationDate,
                 lectureEntity.LastUpdationDate,
@@ -69,6 +70,7 @@ namespace CyberTestingPlatform.DataAccess.Repositories
                 Theme = lecture.Theme,
                 Title = lecture.Title,
                 Content = lecture.Content,
+                Position = lecture.Position,
                 CreatorID = lecture.CreatorID,
                 CreationDate = lecture.CreationDate,
                 LastUpdationDate = lecture.LastUpdationDate,
@@ -81,7 +83,7 @@ namespace CyberTestingPlatform.DataAccess.Repositories
             return lectureEntity.Id;
         }
 
-        public async Task<Guid> Update(Guid id, string theme, string title, string content, DateTime lastUpdationDate, Guid courseId)
+        public async Task<Guid> Update(Guid id, string theme, string title, string content, int position, DateTime lastUpdationDate, Guid courseId)
         {
             var lectureEntity = await _dbContext.Lectures
                 .Where(p => p.Id == id)
@@ -92,6 +94,7 @@ namespace CyberTestingPlatform.DataAccess.Repositories
                 lectureEntity.Theme = theme;
                 lectureEntity.Title = title;
                 lectureEntity.Content = content;
+                lectureEntity.Position = position;
                 lectureEntity.LastUpdationDate = lastUpdationDate;
                 lectureEntity.CourseId = courseId;
 

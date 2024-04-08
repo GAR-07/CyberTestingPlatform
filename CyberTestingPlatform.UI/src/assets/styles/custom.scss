@@ -57,6 +57,10 @@ h2 {
   }
 }
 
+.content-image {
+  max-width: 90%;
+}
+
 .custom-form {
   display: flex;
   flex-direction: column;
@@ -148,13 +152,20 @@ h2 {
 
 .upload-container {
   display: flex;
+  flex-wrap: wrap;
   width: 100%;
   position: relative;
+  padding-top: 10px;
 
   img {
     width: 200px;
     height: 250px;
     margin: 0 20px 20px 20px;
+  }
+
+  .custom-input {
+    margin-left: 10px !important;
+    margin-right: 10px !important;
   }
 
   .upload-input {

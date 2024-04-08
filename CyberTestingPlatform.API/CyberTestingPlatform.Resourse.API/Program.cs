@@ -20,10 +20,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IStorageService, StorageService>();
 builder.Services.AddScoped<ICoursesRepository, CoursesRepository>();
 builder.Services.AddScoped<ILecturesRepository, LecturesRepository>();
+builder.Services.AddScoped<ITestsRepository, TestsRepository>();
 builder.Services.Configure<FormOptions>(options =>
 {
-    options.ValueLengthLimit = 250000000;
-    options.MultipartBodyLengthLimit = 250000000;
+    options.ValueLengthLimit = 262144000;
+    options.MultipartBodyLengthLimit = 262144000;
     options.MemoryBufferThreshold = int.MaxValue;
 });
 builder.Services.AddAuthentication(options =>

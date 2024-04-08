@@ -9,9 +9,7 @@ namespace CyberTestingPlatform.DataAccess.Entites
 
         public Guid UserId { get; set; }
 
-        public Guid CourseId { get; set; }
-
-        public Guid LectureId { get; set; }
+        public Guid ObjectId { get; set; }
 
         public bool HasAccess { get; set; }
     }

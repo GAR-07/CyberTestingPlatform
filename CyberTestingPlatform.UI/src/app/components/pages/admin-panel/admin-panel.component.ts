@@ -1,6 +1,7 @@
 import { Component, ElementRef, QueryList, Renderer2, ViewChildren} from '@angular/core';
 import { CourseData } from 'src/app/interfaces/courseData.model';
 import { LectureData } from 'src/app/interfaces/lectureData.model';
+import { TestData } from 'src/app/interfaces/testData.model';
 import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
@@ -14,6 +15,7 @@ export class AdminPanelComponent {
 
   courses: CourseData[] = [];
   lectures: LectureData[] = [];
+  tests: TestData[] = [];
   pageSize: number = 20;
   contentMods: string[] = ['list', 'view', 'create', 'edit']
 
@@ -25,6 +27,7 @@ export class AdminPanelComponent {
   ngOnInit(): void {
     this.getCourses(1);
     this.getLectures(1);
+    this.getTests(1);
   }
 
   getCourses(pageNum: number) {
@@ -37,8 +40,7 @@ export class AdminPanelComponent {
             this.courses.push(response[i]);
           }
         }
-        console.log(this.courses);
-11      },
+      },
       error: (response) => console.log(response)
     });
   }
@@ -51,6 +53,21 @@ export class AdminPanelComponent {
         if (response) {
           for (var i = 0; i < response.length; i++) {
             this.lectures.push(response[i]);
+          }
+        }
+      },
+      error: (response) => console.log(response)
+    });
+  }
+
+  getTests(pageNum: number) {
+    this.tests = [];
+    this.storageService.getTests(this.pageSize, pageNum)
+    .subscribe({
+      next: (response: TestData[]) => {
+        if (response) {
+          for (var i = 0; i < response.length; i++) {
+            this.tests.push(response[i]);
           }
         }
       },

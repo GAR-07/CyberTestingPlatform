@@ -1,0 +1,193 @@
+<ng-container [ngSwitch]="mode">
+
+  <div *ngSwitchCase="'list'">
+    <div *ngIf="test" class="table-row">
+      <div class="table-cell">{{course != null ? course.name : '-'}}</div>
+      <div class="table-cell">{{test.theme}}</div>
+      <div class="table-cell">{{test.title}}</div>
+      <div class="actions-cell">
+        <button class="btn" (click)="changeMode('view')">Развернуть</button>
+        <button class="btn" (click)="changeMode('edit')">Редактировать</button>
+        <button class="btn" (click)="showModal()">Удалить</button>
+      </div>
+    </div>
+    <app-modal-dialog 
+      *ngIf="isModalDialogVisible" 
+      [header]="'Внимание!'" 
+      [description]="'Уверены, что хотите удалить?'"
+      (isConfirmed)="closeModal($event)">
+  </app-modal-dialog>
+  </div>
+
+  <div *ngSwitchCase="'view'">
+    <div *ngIf="test">
+      <button class="btn primary" (click)="changeMode('list')">Свернуть</button>
+      <div class="row">
+        <div class="col-12">
+          <h2>Курс {{course != null ? course.name : ''}}</h2>
+          <h2>Тема {{test.theme}}</h2>
+          <h2>{{test.title}}</h2>
+          <p>{{test.questions}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngSwitchCase="'create'">
+    <h1>Добавление теста</h1>
+    <form [formGroup]="testForm" (ngSubmit)="createTest()" class="custom-form">
+
+      <div class="form-group">
+        <div class="custom-input">
+          <select formControlName="courseId" placeholder="Курс">
+            <option value="{{guidEmpty}}"></option>
+            <ng-container *ngFor="let course of courses">
+              <option value="{{course.id}}">{{course.name}}</option>
+            </ng-container>
+          </select>
+        </div>
+        <app-validator-message [field]="testForm.get('courseId')"></app-validator-message>
+      </div>
+    
+      <div class="form-group">
+        <div class="custom-input">
+          <input type="text" formControlName="theme" placeholder="Тема">
+        </div>
+        <app-validator-message [field]="testForm.get('theme')"></app-validator-message>
+      </div>
+    
+      <div class="form-group">
+        <div class="custom-input">
+          <input type="text" formControlName="title" placeholder="Заголовок">
+        </div>
+        <app-validator-message [field]="testForm.get('title')"></app-validator-message>
+      </div>
+    
+      <div class="form-group">
+        <div class="custom-input">
+          <textarea type="text" formControlName="questions" placeholder="Вопросы"></textarea>
+        </div>
+        <app-validator-message [field]="testForm.get('questions')"></app-validator-message>
+      </div>
+
+      <div class="form-group">
+        <div class="custom-input">
+          <textarea type="text" formControlName="answerOptions" placeholder="Варианты ответов"></textarea>
+        </div>
+        <app-validator-message [field]="testForm.get('answerOptions')"></app-validator-message>
+      </div>
+
+      <div class="form-group">
+        <div class="custom-input">
+          <textarea type="text" formControlName="answerCorrect" placeholder="Правильные ответы"></textarea>
+        </div>
+        <app-validator-message [field]="testForm.get('questions')"></app-validator-message>
+      </div>
+
+      <div class="form-group">
+        <div class="custom-input">
+          <input type="number" formControlName="position" placeholder="Позиция в списке">
+        </div>
+        <app-validator-message [field]="testForm.get('position')"></app-validator-message>
+      </div>
+
+      <div class="upload-container">
+        <div class="upload-input" draggable="true" ngClass="{{ dragAreaClass }}">
+          <input type="file" accept=".png, .jpg, .bmp" placeholder="Загрузить изображение" 
+            #dragAreaInput multiple="false" (change)="uploadFile(dragAreaInput.files)">
+          <label (click)="dragAreaInput.click()">Загрузить изображение</label>
+        </div>
+        <div class="form-group">
+          <div class="custom-input">
+            <input value="{{imagePath}}" type="text" placeholder="" readonly>
+          </div>
+        </div>
+        <div *ngIf="imagePath != ''">
+          <img [src]="createFilePath(imagePath)">
+        </div>
+      </div>
+    
+      <button type="submit" class="btn primary" [disabled]="!testForm.valid">Создать</button>
+    </form>
+  </div>
+
+  <div *ngSwitchCase="'edit'">
+    <h1>Изменение теста</h1>
+    <form [formGroup]="testForm" (ngSubmit)="editTest()" class="custom-form">
+
+      <div class="form-group">
+        <div class="custom-input">
+          <select formControlName="courseId" placeholder="Курс">
+            <option value="{{guidEmpty}}"></option>
+            <ng-container *ngFor="let course of courses">
+              <option value="{{course.id}}">{{course.name}}</option>
+            </ng-container>
+          </select>
+        </div>
+        <app-validator-message [field]="testForm.get('courseId')"></app-validator-message>
+      </div>
+    
+      <div class="form-group">
+        <div class="custom-input">
+          <input type="text" formControlName="theme" placeholder="Тема">
+        </div>
+        <app-validator-message [field]="testForm.get('theme')"></app-validator-message>
+      </div>
+    
+      <div class="form-group">
+        <div class="custom-input">
+          <input type="text" formControlName="title" placeholder="Заголовок">
+        </div>
+        <app-validator-message [field]="testForm.get('title')"></app-validator-message>
+      </div>
+    
+      <div class="form-group">
+        <div class="custom-input">
+          <textarea type="text" formControlName="questions" placeholder="Вопросы"></textarea>
+        </div>
+        <app-validator-message [field]="testForm.get('questions')"></app-validator-message>
+      </div>
+
+      <div class="form-group">
+        <div class="custom-input">
+          <textarea type="text" formControlName="answerOptions" placeholder="Варианты ответов"></textarea>
+        </div>
+        <app-validator-message [field]="testForm.get('answerOptions')"></app-validator-message>
+      </div>
+
+      <div class="form-group">
+        <div class="custom-input">
+          <textarea type="text" formControlName="answerCorrect" placeholder="Правильные ответы"></textarea>
+        </div>
+        <app-validator-message [field]="testForm.get('answerCorrect')"></app-validator-message>
+      </div>
+
+      <div class="upload-container">
+        <div class="upload-input" draggable="true" ngClass="{{ dragAreaClass }}">
+          <input type="file" accept=".png, .jpg, .bmp" placeholder="Загрузить изображение" 
+            #dragAreaInput multiple="false" (change)="uploadFile(dragAreaInput.files)">
+          <label (click)="dragAreaInput.click()">Загрузить изображение</label>
+        </div>
+        <div class="form-group" *ngIf="imagePath != ''">
+          <div class="custom-input">
+            <input value="{{imagePath}}" type="text" placeholder="Ссылка для вставки" readonly>
+          </div>
+        </div>
+        <div *ngIf="imagePath != ''">
+          <img [src]="createFilePath(imagePath)">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="custom-input">
+          <input type="number" formControlName="position" placeholder="Позиция в списке">
+        </div>
+        <app-validator-message [field]="testForm.get('position')"></app-validator-message>
+      </div>
+    
+      <button type="submit" class="btn primary" [disabled]="!testForm.valid">Сохранить</button>
+      <button class="btn primary" (click)="changeMode('view')">Отменить</button>
+    </form>
+
+  </div>
+</ng-container>

@@ -82,6 +82,7 @@ export class CourseBlockComponent {
     
     this.storageService.createCourse(this.course).subscribe({
       next: (response: any) => {
+        window.location.reload();
         console.log(response);
       },
       error: (response) => {
@@ -107,6 +108,7 @@ export class CourseBlockComponent {
     
     this.storageService.updateCourse(this.course.id, this.course).subscribe({
       next: (response: any) => {
+        window.location.reload();
         console.log(response);
       },
       error: (response) => {
@@ -118,6 +120,7 @@ export class CourseBlockComponent {
   deleteCourse(id: string) {
     this.storageService.deleteCourse(id).subscribe({
       next: (response: any) => {
+        window.location.reload();
         console.log(response);
       },
       error: (response) => {
@@ -149,7 +152,7 @@ export class CourseBlockComponent {
           if (event.body.error) {
             console.log(event.body.error);
           } else {
-            this.courseForm.patchValue({ imagePath: event.body.filePath[0] });
+            this.courseForm.patchValue({ imagePath: event.body.filePath });
           }
         }
       },
@@ -169,7 +172,6 @@ export class CourseBlockComponent {
 	}
 
   createFilePath = (serverPath: string) => { 
-    console.log(environment.resourseApiUrl);
     return `${environment.resourseApiUrl}/${serverPath}`; 
   }
 

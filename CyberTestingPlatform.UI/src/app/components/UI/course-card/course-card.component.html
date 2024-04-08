@@ -1,0 +1,11 @@
+<div class="card card-vertical">
+  <div class="image">
+    <img [src]="createFilePath(course.imagePath)" alt="Product Image">
+  </div>
+  <div class="info">
+    <h2 class="title">{{course.name}}</h2>
+    <p class="description">{{course.description}}</p>
+    <p *ngIf="course.price == 0" class="price">Бесплатно</p>
+    <p *ngIf="course.price != 0" class="price">{{course.price}} рублей</p>
+  </div>
+</div>

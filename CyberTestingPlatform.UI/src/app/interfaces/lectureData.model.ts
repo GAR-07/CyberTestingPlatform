@@ -4,6 +4,7 @@ export class LectureData {
       public theme: string,
       public title: string,
       public content: string,
+      public position: number,
       public creatorId: string,
       public creationDate: string,
       public lastUpdationDate: string,
