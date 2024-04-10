@@ -2,6 +2,59 @@ h1, h2 {
   text-align: center;
 }
 
+.card {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 200px;
+  height: 300px;
+  margin: 20px;
+  border-radius: 15px;
+  overflow: hidden;
+  position: relative;
+  background-color: var(--bg-color-additional);
+  transition: all 0.2s ease-in;
+
+  &:hover {
+    box-shadow: 0 5px 15px var(--additional-transparent);
+  }
+
+  .image {
+    display: flex;
+    justify-content: center;
+    height: 40%;
+    background-color: var(--font-color-white);
+
+    img {
+      height: 100%;
+    }
+  }
+
+  .info {
+    padding: 10px;
+  }
+
+  .title {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+
+  .description {
+    font-size: 14px;
+    color: var(--font-color-grey);
+    margin-bottom: 10px;
+  }
+
+  .price {
+    font-size: 18px;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    font-weight: bold;
+    color: var(--primary-color);
+  }
+}
+
 .table-row {
   display: flex;
   margin: 5px 0 0 0;

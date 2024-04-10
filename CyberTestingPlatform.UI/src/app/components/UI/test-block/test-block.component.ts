@@ -15,7 +15,8 @@ import { environment } from 'src/environments/environment';
 export class TestBlockComponent {
 
   @Input() mods: string[] = [];
-  @Input() courses: CourseData[] = [];
+  @Input() roles: string[] = [];
+  @Input() courses!: CourseData[];
   @Input() test!: TestData;
 
   mode: string = '';

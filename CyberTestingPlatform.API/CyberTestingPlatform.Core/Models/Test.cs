@@ -60,9 +60,9 @@
             {
                 error = $"Количество вопросов и ответов должно совпадать";
             }
-            if (position <= 0)
+            if (position < 0)
             {
-                error = $"Позиция не должна повторяться и быть меньше или равна нулю";
+                error = $"Позиция не должна повторяться или быть меньше нуля";
             }
             
             var test = new Test(id, theme, title, questions, answerOptions, answerCorrect, position, creatorID, creationDate, lastUpdationDate, courseId);

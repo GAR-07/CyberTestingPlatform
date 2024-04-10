@@ -30,16 +30,18 @@
     </div>
   
     <div class="content-block">
+      <h2>Курсы</h2>
       <div class="custom-table">
         <div class="table-row header">
-          <div class="table-cell">Name</div>
-          <div class="table-cell">Price</div> 
-          <div class="table-cell">Image</div>
-          <div class="table-cell">Actions</div>
+          <div class="table-cell">Название</div>
+          <div class="table-cell">Описание</div> 
+          <div class="table-cell">Цена</div>
+          <div class="table-cell">Действия</div>
         </div>
         <ng-container *ngFor="let course of courses" >
           <app-course-block
             [mods]="contentMods"
+            [roles]="roles"
             [course]="course">
           </app-course-block>
         </ng-container>
@@ -47,37 +49,45 @@
     </div>
 
     <div class="content-block">
+      <h2>Лекции</h2>
       <div class="custom-table">
         <div class="table-row header">
-          <div class="table-cell">Course Theme</div>
-          <div class="table-cell">Theme</div>
-          <div class="table-cell">Title</div>
-          <div class="table-cell">Actions</div>
+          <div class="table-cell">Курс</div>
+          <div class="table-cell">Тема</div>
+          <div class="table-cell">Заголовок</div>
+          <div class="table-cell">Действия</div>
         </div>
-        <ng-container *ngFor="let lecture of lectures" >
-          <app-lecture-block
-            [mods]="contentMods"
-            [courses]="courses"
-            [lecture]="lecture">
-          </app-lecture-block>
+        <ng-container *ngIf="courses && lectures">
+          <ng-container *ngFor="let lecture of lectures" >
+            <app-lecture-block
+              [mods]="contentMods"
+              [roles]="roles"
+              [courses]="allCourses"
+              [lecture]="lecture">
+            </app-lecture-block>
+          </ng-container>
         </ng-container>
       </div>
     </div>
 
     <div class="content-block">
+      <h2>Тесты</h2>
       <div class="custom-table">
         <div class="table-row header">
-          <div class="table-cell">Course Theme</div>
-          <div class="table-cell">Theme</div>
-          <div class="table-cell">Title</div>
-          <div class="table-cell">Actions</div>
+          <div class="table-cell">Курс</div>
+          <div class="table-cell">Тема</div>
+          <div class="table-cell">Заголовок</div>
+          <div *ngIf="roles.includes('Admin') || roles.includes('Editor')" class="table-cell">Действия</div>
         </div>
-        <ng-container *ngFor="let test of tests" >
-          <app-test-block
-            [mods]="contentMods"
-            [courses]="courses"
-            [test]="test">
-          </app-test-block>
+        <ng-container *ngIf="courses && tests">
+          <ng-container *ngFor="let test of tests" >
+            <app-test-block
+              [mods]="contentMods"
+              [roles]="roles"
+              [courses]="allCourses"
+              [test]="test">
+            </app-test-block>
+          </ng-container>
         </ng-container>
       </div>
     </div>

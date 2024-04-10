@@ -25,6 +25,10 @@ export class StorageService {
 
     // Далее идут методы для курсов
 
+    getAllCourses() {
+      return this.http.get<any>(this.resourseApiUrl + '/Course/GetAllCourses');
+    }
+
     getCourses(sampleSize: number, page: number) {
       const params = new HttpParams()
         .set('Content-Type', 'application/json')

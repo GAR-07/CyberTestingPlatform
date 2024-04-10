@@ -40,9 +40,9 @@
             {
                 error = $"Заголовок не может быть пустым или превышать {MAX_TITLE_LENGTH} символов";
             }
-            if (position <= 0)
+            if (position < 0)
             {
-                error = $"Позиция не должна повторяться и быть меньше или равна нулю";
+                error = $"Позиция не должна повторяться или быть меньше нуля";
             }
 
             var lecture = new Lecture(id, theme, title, content, position, creatorID, creationDate, lastUpdationDate, courseId);

@@ -16,6 +16,24 @@ h2 {
   margin-top: 10px;
 }
 
+h3 {
+  color: var(--font-color);
+  font-size: 1.25rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin-top: 5px;
+}
+
+p {
+  color: var(--font-color);
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin-top: 5px;
+}
+
 .btn {
   display: block;
   font-size: 16px;
@@ -57,8 +75,14 @@ h2 {
   }
 }
 
-.content-image {
-  max-width: 90%;
+.content-img-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+
+  img {
+    max-width: 100%;
+  }
 }
 
 .custom-form {

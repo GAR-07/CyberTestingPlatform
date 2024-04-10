@@ -13,6 +13,7 @@ import { environment } from 'src/environments/environment';
 })
 export class CourseBlockComponent {
   @Input() mods: string[] = [];
+  @Input() roles: string[] = [];
   @Input() course!: CourseData;
 
   mode: string = '';
@@ -33,7 +34,7 @@ export class CourseBlockComponent {
     imagePath: [null, [
       Validators.required,
     ]]
-  }) 
+  })
 
   constructor(
     private authService: AuthService,

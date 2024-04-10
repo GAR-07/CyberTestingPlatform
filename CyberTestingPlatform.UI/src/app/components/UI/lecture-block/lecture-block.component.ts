@@ -1,12 +1,13 @@
 import { HttpEventType } from '@angular/common/http';
-import { Component, Input,} from '@angular/core';
+import { Component, HostListener, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DomSanitizer } from '@angular/platform-browser';
 import { CourseData } from 'src/app/interfaces/courseData.model';
 import { LectureData } from 'src/app/interfaces/lectureData.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { environment } from 'src/environments/environment';
+import { AdminPanelComponent } from '../../pages/admin-panel/admin-panel.component';
+import { convertImgPathToTag, convertTagToImgPath } from 'src/app/utils/conversion-helper';
 
 @Component({
   selector: 'app-lecture-block',
@@ -16,12 +17,13 @@ import { environment } from 'src/environments/environment';
 export class LectureBlockComponent {
 
   @Input() mods: string[] = [];
-  @Input() courses: CourseData[] = [];
+  @Input() roles: string[] = [];
+  @Input() courses!: CourseData[];
   @Input() lecture!: LectureData;
 
   mode: string = '';
-  course!: CourseData;
   progress: number = 0;
+  course!: CourseData;
   imagePath: string = '';
   dragAreaClass: string = 'dragarea';
   isModalDialogVisible: boolean = false;
@@ -43,18 +45,16 @@ export class LectureBlockComponent {
     ]],
     position: [null, [
       Validators.required,
-      Validators.min(1),
+      Validators.min(0),
       Validators.max(100),
     ]]
   }) 
-
-  trustedHtml: any
 
   constructor(
     private authService: AuthService,
     private storageService: StorageService,
     private formBuilder: FormBuilder,
-    private sanitizer: DomSanitizer
+    private adminPanel: AdminPanelComponent,
   ) { }
 
   ngOnInit(): void {
@@ -66,6 +66,14 @@ export class LectureBlockComponent {
 
   changeMode(mode: string) {
     this.mode = this.mods.includes(mode) ? mode : this.mods[0];
+    
+    if (this.mode !== 'create') {
+      if (this.mode === 'view') {
+        this.lecture.content = convertImgPathToTag(environment.resourseApiUrl, this.lecture.content);
+      } else {
+        this.lecture.content = convertTagToImgPath(environment.resourseApiUrl, this.lecture.content);
+      }
+    }
 
     if(this.mode === 'edit') {
       if(this.course) {
@@ -80,7 +88,6 @@ export class LectureBlockComponent {
         position: this.lecture.position,
         courseId: this.lecture.courseId
       });
-
     } else {
       this.lectureForm.patchValue({
         theme: null,
@@ -89,17 +96,6 @@ export class LectureBlockComponent {
         position: null,
         courseId: null
       });
-    }
-    if(this.mode === 'view') {
-      if (this.lecture.content) {
-        const lines = this.lecture.content.split('\n');
-        for (let i = 0; i < lines.length; i++) {
-          if (lines[i].includes('Resources\\Images\\')) {
-            lines[i] = `<img class="content-image" src="${this.createFilePath(lines[i])}" alt="Изображение">`;
-          }
-        }
-        this.lecture.content = lines.join('<br>');
-      }
     }
   }
 
@@ -148,7 +144,7 @@ export class LectureBlockComponent {
     
     this.storageService.updateLecture(this.lecture.id, this.lecture).subscribe({
       next: (response: any) => {
-        window.location.reload();
+        this.mode = "view";
         console.log(response);
       },
       error: (response) => {
@@ -221,5 +217,31 @@ export class LectureBlockComponent {
 
   createFilePath = (serverPath: string) => { 
     return `${environment.resourseApiUrl}/${serverPath}`; 
+  }
+
+  @HostListener("dragover", ["$event"]) onDragOver(event: any) {
+    this.dragAreaClass = "droparea";
+    event.preventDefault();
+  }
+  @HostListener("dragenter", ["$event"]) onDragEnter(event: any) {
+    this.dragAreaClass = "droparea";
+    event.preventDefault();
+  }
+  @HostListener("dragend", ["$event"]) onDragEnd(event: any) {
+    this.dragAreaClass = "dragarea";
+    event.preventDefault();
+  }
+  @HostListener("dragleave", ["$event"]) onDragLeave(event: any) {
+    this.dragAreaClass = "dragarea";
+    event.preventDefault();
+  }
+  @HostListener("drop", ["$event"]) onDrop(event: any) {
+    this.dragAreaClass = "dragarea";
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.dataTransfer.files) {
+      let files: FileList = event.dataTransfer.files;
+      this.uploadFile(files);
+    }
   }
 }

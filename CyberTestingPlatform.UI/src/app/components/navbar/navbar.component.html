@@ -13,7 +13,7 @@
           </li>
         </ul>
         <ul class="navbar-nav" *ngIf="roles.length != 0">
-          <li class="nav-item" *ngIf="roles.includes('Admin')">
+          <li class="nav-item" *ngIf="roles.includes('Admin') || roles.includes('Editor') || roles.includes('Moder')">
             <a class="nav-link" routerLink="/adminPanel">AdminPanel</a>
           </li>
           <li class="nav-item">

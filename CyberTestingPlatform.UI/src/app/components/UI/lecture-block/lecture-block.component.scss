@@ -2,6 +2,53 @@ h1, h2 {
   text-align: center;
 }
 
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.content-wrapper {
+  width: 100%;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 5px;
+  border-color: var(--font-color-grey);
+
+  .theme {
+    margin: 10px;
+    text-align: left;
+  }
+
+  .title {
+    padding: 5px;
+    color: var(--font-color-white);
+    background-color: var(--primary-color);
+  }
+
+  .content {
+    text-align: justify;
+    margin: 10px;
+    font-size: 1rem;
+    line-height: 1.25;
+  }
+  
+}
+
+.actions {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  flex: 1;
+  padding: 5px;
+
+  .btn {
+    margin: 5px;
+    font-size: 1rem;
+  }
+}
+
 .table-row {
   display: flex;
   margin: 5px 0 0 0;

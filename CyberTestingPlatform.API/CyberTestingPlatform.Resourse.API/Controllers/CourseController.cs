@@ -72,6 +72,34 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
             return BadRequest("Invalid model object");
         }
 
+        [HttpGet]
+        [Authorize]
+        [Route("GetAllCourses")]
+        public async Task<IActionResult> GetAllCourses()
+        {
+            if (ModelState.IsValid)
+            {
+                var courses = await _storageService.GetAllCourses();
+
+                if (courses != null)
+                {
+                    var response = courses.Select(x => new CoursesResponse(
+                        x.Id,
+                        x.Name,
+                        x.Description,
+                        x.Price,
+                        x.ImagePath,
+                        x.CreatorID,
+                        x.CreationDate,
+                        x.LastUpdationDate));
+
+                    return Ok(response);
+                }
+                return BadRequest("No objects found");
+            }
+            return BadRequest("Invalid model object");
+        }
+
         [Route("CreateCourse")]
         [Authorize(Roles = "Admin,Creator")]
         [HttpPost]

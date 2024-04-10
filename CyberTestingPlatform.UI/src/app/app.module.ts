@@ -23,7 +23,6 @@ import { CourseBlockComponent } from './components/UI/course-block/course-block.
 import { ErrorComponent } from './components/pages/error/error.component';
 import { NotificationComponent } from './components/UI/notification/notification.component';
 import { ModalDialogComponent } from './components/UI/modal-dialog/modal-dialog.component';
-import { CourseCardComponent } from './components/UI/course-card/course-card.component';
 import { TestBlockComponent } from './components/UI/test-block/test-block.component';
 
 export function tokenGetter() {
@@ -47,7 +46,6 @@ export function tokenGetter() {
     ErrorComponent,
     NotificationComponent,
     ModalDialogComponent,
-    CourseCardComponent,
     TestBlockComponent
   ],
   imports: [
