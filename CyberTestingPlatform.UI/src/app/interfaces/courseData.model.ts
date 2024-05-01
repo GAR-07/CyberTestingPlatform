@@ -5,7 +5,7 @@ export class CourseData {
     public description: string,
     public price: number,
     public imagePath: string,
-    public creatorID: string,
+    public creatorId: string,
     public creationDate: string,
     public lastUpdationDate: string,
   ) {  }

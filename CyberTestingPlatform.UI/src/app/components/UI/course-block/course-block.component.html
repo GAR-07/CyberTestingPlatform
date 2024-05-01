@@ -1,6 +1,74 @@
 <ng-container [ngSwitch]="mode">
 
-  <div *ngSwitchCase="'list'">
+  <ng-container *ngSwitchCase="'view'">
+    <ng-container *ngIf="course">
+      <main class="content-wrapper">
+        <div class="content-container">
+          <div class="progress-bar-wrapper">
+          </div>
+          <div class="content-block">
+            <h1 class="title">{{ course.name }}</h1>
+
+            <!-- Отображение групп лекций -->
+            <ng-container *ngIf="course && lectures">
+              <ng-container *ngFor="let group of groupedLecturesArray">
+                <h2>{{ group.theme }}</h2> <!-- Заголовок с темой лекций -->
+                <ng-container *ngFor="let lecture of group.lectures">
+                  <a class="content-row" [routerLink]="['/lecture', lecture.id]">
+                    <p>{{ lecture.title }}</p>
+                  </a>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+
+            <!-- Отображение групп тестов -->
+            <ng-container *ngIf="course && lectures">
+              <ng-container *ngFor="let group of groupedTestsArray">
+                <h2>{{ group.theme }}</h2> <!-- Заголовок с темой тестов -->
+                <ng-container *ngFor="let test of group.tests">
+                  <a class="content-row" [routerLink]="['/test', test.id]">
+                    <p>{{ test.title }}</p>
+                  </a>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+          </div>
+
+          <div class="content-block">
+            <div class="actions">
+              <button class="btn primary" [routerLink]="['/']">Назад</button>
+              <button *ngIf="lectures && lectures.length > 0" class="btn primary" [routerLink]="['/lecture/', lectures[0].id]">Начать</button>
+              <!-- (click)="checkAccessRoute('/lecture/', lectures[0].id)" -->
+            </div>
+            <app-modal-dialog 
+              *ngIf="isModalDialogVisible" 
+              [header]="'Внимание!'" 
+              [description]="'Уверены, что хотите удалить?'"
+              (isConfirmed)="closeModal($event)">
+            </app-modal-dialog>
+          </div>
+        </div>
+      </main>
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'card'">
+    <ng-container *ngIf="course">
+      <a class="card" [routerLink]="['/course', course.id]">
+        <div class="image">
+          <img [src]="createFilePath(course.imagePath)" alt="Product Image">
+        </div>
+        <div class="info">
+          <div class="title">{{course.name}}</div>
+          <div class="description">{{course.description}}</div>
+          <div *ngIf="course.price === 0" class="price">Бесплатно</div>
+          <div *ngIf="course.price !== 0" class="price">{{course.price}} рублей</div>
+        </div>
+      </a>
+    </ng-container>
+  </ng-container>
+
+  <div *ngSwitchCase="'list'"  class="list-wrapper">
     <div *ngIf="course" class="table-row">
       <div class="table-cell">{{course.name}}</div>
       <div class="table-cell">{{course.description}}</div>
@@ -19,46 +87,7 @@
     </app-modal-dialog>
   </div>
 
-  <div *ngSwitchCase="'card'">
-    <a class="card" href="#">
-      <div class="image">
-        <img [src]="createFilePath(course.imagePath)" alt="Product Image">
-      </div>
-      <div class="info">
-        <h2 class="title">{{course.name}}</h2>
-        <p class="description">{{course.description}}</p>
-        <p *ngIf="course.price == 0" class="price">Бесплатно</p>
-        <p *ngIf="course.price != 0" class="price">{{course.price}} рублей</p>
-        <div *ngIf="roles.includes('Admin') || roles.includes('Editor')" class="actions">
-          <button class="btn primary" (click)="changeMode('list')">Свернуть</button>
-          <button class="btn primary" (click)="changeMode('edit')">Редактировать</button>
-          <button class="btn primary" (click)="showModal()">Удалить</button>
-        </div>
-        <app-modal-dialog 
-          *ngIf="isModalDialogVisible" 
-          [header]="'Внимание!'" 
-          [description]="'Уверены, что хотите удалить?'"
-          (isConfirmed)="closeModal($event)">
-        </app-modal-dialog>
-      </div>
-    </a>
-  </div>
-
-  <div *ngSwitchCase="'view'">
-    <div *ngIf="course">
-      <button class="btn primary" (click)="changeMode('list')">Свернуть</button>
-      <div class="row">
-        <div class="col-12">
-          <h2>Name {{course.name}}</h2>
-          <p>Descr {{course.description}}</p>
-          <p>Price {{course.price}}</p>
-          <p>ImagePath {{course.imagePath}}</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div *ngSwitchCase="'edit'">
+  <div *ngSwitchCase="'edit'" class="edit-create-wrapper">
     <h1>Изменение курса</h1>
     <form [formGroup]="courseForm" (ngSubmit)="editCourse()" class="custom-form">
 
@@ -91,7 +120,16 @@
             <label (click)="dragAreaInput.click()">Загрузить обложку</label>
           </div>
           <div *ngIf="courseForm.value.imagePath">
-            <img [src]="createFilePath(courseForm.value.imagePath)">
+            <a class="card">
+              <div class="image">
+                <img [src]="createFilePath(courseForm.value.imagePath)">
+              </div>
+              <div class="info">
+                <div class="title">Заголовок</div>
+                <div class="description">Описание описание описание описание описание</div>
+                <div class="price">Цена</div>
+              </div>
+            </a>
           </div>
         </div>
         <app-validator-message [field]="courseForm.get('imagePath')"></app-validator-message>
@@ -102,7 +140,7 @@
     </form>
   </div>
 
-  <div *ngSwitchCase="'create'">
+  <div *ngSwitchCase="'create'" class="edit-create-wrapper">
     <h1>Добавление курса</h1>
     <form [formGroup]="courseForm" (ngSubmit)="createCourse()" class="custom-form">
     
@@ -135,7 +173,16 @@
             <label (click)="dragAreaInput.click()">Загрузить обложку</label>
           </div>
           <div *ngIf="courseForm.value.imagePath">
-            <img [src]="createFilePath(courseForm.value.imagePath)">
+            <a class="card">
+              <div class="image">
+                <img [src]="createFilePath(courseForm.value.imagePath)">
+              </div>
+              <div class="info">
+                <div class="title">Заголовок</div>
+                <div class="description">Описание описание описание описание описание</div>
+                <div class="price">Цена</div>
+              </div>
+            </a>
           </div>
         </div>
         <app-validator-message [field]="courseForm.get('imagePath')"></app-validator-message>

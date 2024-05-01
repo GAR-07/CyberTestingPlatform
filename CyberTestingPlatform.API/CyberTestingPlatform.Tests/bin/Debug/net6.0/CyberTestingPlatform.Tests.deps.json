@@ -1644,6 +1644,7 @@
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "6.0.26",
           "Microsoft.EntityFrameworkCore": "6.0.27",
           "Microsoft.EntityFrameworkCore.SqlServer": "6.0.26",
+          "Newtonsoft.Json": "13.0.1",
           "Swashbuckle.AspNetCore": "6.5.0"
         },
         "runtime": {

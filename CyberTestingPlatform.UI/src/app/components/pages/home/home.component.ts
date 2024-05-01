@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { CourseData } from 'src/app/interfaces/courseData.model';
 import { LectureData } from 'src/app/interfaces/lectureData.model';
+import { NotificationMessage } from 'src/app/interfaces/notificationMessage.model';
 import { TestData } from 'src/app/interfaces/testData.model';
+import { NotificationService } from 'src/app/services/notification.service';
 import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
@@ -10,8 +12,8 @@ import { StorageService } from 'src/app/services/storage.service';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent {
-  courses: CourseData[] = [];
-  lectures: LectureData[] = [];
+  courses!: CourseData[];
+  lectures!: LectureData[];
   tests!: TestData[];
   pageNum: number = 1;
   pageSize: number = 20;
@@ -19,16 +21,13 @@ export class HomeComponent {
 
   constructor(
     private storageService: StorageService,
+    private notificationService: NotificationService,
   ) { }
 
   async ngOnInit(): Promise<void> {
-    try {
-      await this.getCourses(this.pageNum);
-      await this.getLectures(this.pageNum);
-      await this.getTests(this.pageNum);
-    } catch (error) {
-      console.error('Ошибка загрузки курсов:', error);
-    }
+    await this.getCourses(this.pageNum);
+    await this.getLectures(this.pageNum);
+    await this.getTests(this.pageNum);
   }
 
   getCourses(pageNum: number): Promise<void> {
@@ -44,9 +43,9 @@ export class HomeComponent {
           }
           resolve();
         },
-        error: (error) => {
-          console.log(error);
-          reject(error);
+        error: (response) => {
+          this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
+          reject();
         }
       });
     });
@@ -65,9 +64,9 @@ export class HomeComponent {
           }
           resolve();
         },
-        error: (error) => {
-          console.log(error);
-          reject(error);
+        error: (response) => {
+          this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
+          reject();
         }
       });
     });
@@ -86,9 +85,9 @@ export class HomeComponent {
           }
           resolve();
         },
-        error: (error) => {
-          console.log(error);
-          reject(error);
+        error: (response) => {
+          this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
+          reject();
         }
       });
     });

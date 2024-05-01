@@ -20,7 +20,7 @@ namespace CyberTestingPlatform.DataAccess.Entites
 
         public string AnswerOptions { get; set; }
 
-        public string AnswerCorrect { get; set; }
+        public string CorrectAnswers { get; set; }
 
         public int Position { get; set; }
 

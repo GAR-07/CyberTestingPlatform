@@ -10,145 +10,182 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
     [Route("[controller]")]
     public class TestController : Controller
     {
-        private readonly IStorageService _storageService;
+        private readonly ITestService _testService;
 
-        public TestController(IStorageService storageService)
+        public TestController(ITestService testService)
         {
-            _storageService = storageService;
+            _testService = testService;
         }
 
-        [HttpGet("Gettest/{id}")]
+        [HttpPost("CheckResultTest/{id}")]
         [Authorize]
-        public async Task<IActionResult> Gettest(Guid id)
+        public async Task<IActionResult> CheckResultTest(Guid id, [FromBody] TestsRequest request)
         {
             if (ModelState.IsValid)
             {
-                var test = await _storageService.GetTest(id);
+                var test = await _testService.GetTestAsync(id);
+                var response = request.CorrectAnswers.Equals(test.CorrectAnswers, StringComparison.OrdinalIgnoreCase);
 
-                if (test != null)
-                {
-                    var response = new TestsResponse(
-                        test.Id,
-                        test.Theme,
-                        test.Title,
-                        test.Questions,
-                        test.AnswerOptions,
-                        test.AnswerCorrect,
-                        test.Position,
-                        test.CreatorID,
-                        test.CreationDate,
-                        test.LastUpdationDate,
-                        test.CourseId);
+                return Ok(response);
+            }
+            return BadRequest("Invalid model object");
+        }
 
-                    return Ok(response);
-                }
-                return BadRequest("No objects found");
+        [HttpGet("GetCorrectAnswersTest/{id}")]
+        [Authorize]
+        public async Task<IActionResult> GetCorrectAnswersTest(Guid id)
+        {
+            if (ModelState.IsValid)
+            {
+                var test = await _testService.GetTestAsync(id);
+                var response = test.CorrectAnswers;
+
+                return Ok(response);
+            }
+            return BadRequest("Invalid model object");
+        }
+
+        [HttpGet("GetTestsByCourseId/{id}")]
+        [Authorize]
+        public async Task<IActionResult> GetTestsByCourseId(Guid id)
+        {
+            if (ModelState.IsValid)
+            {
+                var tests = await _testService.GetTestsByCourseIdAsync(id);
+
+                var response = tests.Select(x => new TestsResponse(
+                    x.Id,
+                    x.Theme,
+                    x.Title,
+                    x.Questions,
+                    x.AnswerOptions,
+                    null,
+                    x.Position,
+                    x.CreatorID,
+                    x.CreationDate,
+                    x.LastUpdationDate,
+                    x.CourseId));
+
+                return Ok(response);
+            }
+            return BadRequest("Invalid model object");
+        }
+
+        [HttpGet("GetTest/{id}")]
+        [Authorize]
+        public async Task<IActionResult> GetTest(Guid id)
+        {
+            if (ModelState.IsValid)
+            {
+                var test = await _testService.GetTestAsync(id);
+
+                var response = new TestsResponse(
+                    test.Id,
+                    test.Theme,
+                    test.Title,
+                    test.Questions,
+                    test.AnswerOptions,
+                    null,
+                    test.Position,
+                    test.CreatorID,
+                    test.CreationDate,
+                    test.LastUpdationDate,
+                    test.CourseId);
+
+                return Ok(response);
             }
             return BadRequest("Invalid model object");
         }
 
         [HttpGet]
         [Authorize]
-        [Route("Gettests")]
-        public async Task<IActionResult> Gettests([FromQuery] ItemsRequest request)
+        [Route("GetTests")]
+        public async Task<IActionResult> GetTests([FromQuery] ItemsRequest request)
         {
             if (ModelState.IsValid)
             {
-                var tests = await _storageService.GetSelectTests(request.SampleSize, request.Page);
+                var tests = await _testService.GetSelectTestsAsync(request.SampleSize, request.Page);
 
-                if (tests != null)
-                {
-                    var response = tests.Select(x => new TestsResponse(
-                        x.Id,
-                        x.Theme,
-                        x.Title,
-                        x.Questions,
-                        x.AnswerOptions,
-                        x.AnswerCorrect,
-                        x.Position,
-                        x.CreatorID,
-                        x.CreationDate,
-                        x.LastUpdationDate,
-                        x.CourseId));
+                var response = tests.Select(x => new TestsResponse(
+                    x.Id,
+                    x.Theme,
+                    x.Title,
+                    x.Questions,
+                    x.AnswerOptions,
+                    null,
+                    x.Position,
+                    x.CreatorID,
+                    x.CreationDate,
+                    x.LastUpdationDate,
+                    x.CourseId));
 
-                    return Ok(response);
-                }
-                return BadRequest("No objects found");
+                return Ok(response);
             }
             return BadRequest("Invalid model object");
         }
 
         [HttpPost]
         [Authorize(Roles = "Admin,Creator")]
-        [Route("Createtest")]
-        public async Task<IActionResult> Createtest([FromBody] TestsRequest request)
+        [Route("CreateTest")]
+        public async Task<IActionResult> CreateTest([FromBody] TestsRequest request)
         {
             if (ModelState.IsValid)
             {
-                var creationDate = _storageService.ConvertToDateTime(request.CreationDate);
-
-                var (test, error) = Test.Create(
+                var test = new Test(
                     Guid.NewGuid(),
                     request.Theme,
                     request.Title,
                     request.Questions,
                     request.AnswerOptions,
-                    request.AnswerCorrect,
+                    request.CorrectAnswers,
                     request.Position,
                     request.CreatorId,
-                    creationDate,
-                    creationDate,
+                    DateTime.Now,
+                    DateTime.Now,
                     request.CourseId);
 
-                if (!string.IsNullOrEmpty(error))
-                {
-                    return BadRequest(error);
-                }
+                await _testService.CreateTestAsync(test);
 
-                var response = await _storageService.CreateTest(test);
-
-                return Ok(response);
+                return Ok();
             }
             return BadRequest("Invalid model object");
         }
 
-        [HttpPut("Updatetest/{id}")]
+        [HttpPut("UpdateTest/{id}")]
         [Authorize(Roles = "Admin,Creator")]
-        public async Task<IActionResult> Updatetest(Guid id, [FromBody] TestsRequest request)
+        public async Task<IActionResult> UpdateTest(Guid id, [FromBody] TestsRequest request)
         {
             if (ModelState.IsValid)
             {
-                var updationDate = _storageService.ConvertToDateTime(request.LastUpdationDate);
-
-                var response = await _storageService.UpdateTest(
-                    id, 
-                    request.Theme, 
+                var test = new Test(
+                    id,
+                    request.Theme,
                     request.Title,
                     request.Questions,
                     request.AnswerOptions,
-                    request.AnswerCorrect,
-                    request.Position, 
-                    updationDate, 
+                    request.CorrectAnswers,
+                    request.Position,
+                    request.CreatorId,
+                    DateTime.Parse(request.CreationDate),
+                    DateTime.Now,
                     request.CourseId);
+
+                var response = await _testService.UpdateTestAsync(test);
 
                 return Ok(response);
             }
             return BadRequest("Invalid model object");
         }
 
-        [HttpDelete("Deletetest/{id}")]
-        [Authorize]
-        public async Task<IActionResult> Deletetest(Guid id)
+        [HttpDelete("DeleteTest/{id}")]
+        [Authorize(Roles = "Admin,Creator")]
+        public async Task<IActionResult> DeleteTest(Guid id)
         {
             if (ModelState.IsValid)
             {
-                var response = await _storageService.DeleteTest(id);
+                var response = await _testService.DeleteTestAsync(id);
 
-                if (response != Guid.Empty)
-                {
-                    return Ok(response);
-                }
-                return BadRequest("No objects found");
+                return Ok(response);
             }
             return BadRequest("Invalid model object");
         }

@@ -16,4 +16,8 @@
     <ProjectReference Include="..\CyberTestingPlatform.Core\CyberTestingPlatform.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Mappers\" />
+  </ItemGroup>
+
 </Project>

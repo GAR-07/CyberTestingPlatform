@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { LoginData } from 'src/app/interfaces/loginData.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NotificationService } from 'src/app/services/notification.service';
+import { NotificationMessage } from 'src/app/interfaces/notificationMessage.model';
 
 @Component({
   selector: 'app-login',
@@ -9,7 +11,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-
   modelData = new LoginData('', '');
   loginForm: FormGroup = this.formBuilder.group({
     email: [null, [
@@ -25,7 +26,8 @@ export class LoginComponent {
 
   constructor(
     private authService: AuthService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private notificationService: NotificationService,
   ) { }
 
   ngOnInit(): void { }
@@ -33,11 +35,11 @@ export class LoginComponent {
   onSubmit() {
     this.modelData = this.loginForm.value;
     this.authService.login(this.modelData).subscribe({
-      next: (response: any) => {
-        console.log(response);
+      next: () => {
+        this.notificationService.addMessage(new NotificationMessage('success', 'Вы вошли в аккаунт'));
       },
       error: (response) => {
-        console.log(response);
+        this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
       }
     });
   }

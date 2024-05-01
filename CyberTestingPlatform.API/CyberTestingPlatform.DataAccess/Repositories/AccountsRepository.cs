@@ -14,22 +14,27 @@ namespace CyberTestingPlatform.DataAccess.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<List<Account>> GetAll()
+        public async Task<List<Account>?> GetAllAsync()
         {
             var accountEntities = await _dbContext.Accounts
                 .AsNoTracking()
                 .ToListAsync();
 
+            if (accountEntities == null)
+            {
+                return null;
+            }
+
             var accounts = accountEntities
-                .Select(x => Account.Create(x.UserId, x.Birthday, x.Email, x.UserName, x.PasswordHash, x.Roles).account)
+                .Select(x => new Account(x.UserId, x.Birthday, x.Email, x.UserName, x.PasswordHash, x.Roles))
                 .ToList();
 
             return accounts;
         }
 
-        public async Task<List<Account>> GetSelection(int sampleSize, int page)
+        public async Task<List<Account>?> GetSelectionAsync(int sampleSize, int page)
         {
-            var totalCount = await _dbContext.Accounts.CountAsync();
+            var totalCount = await _dbContext.Accounts.AsNoTracking().CountAsync();
             var startIndex = Math.Max(0, totalCount - sampleSize * page);
             var countToTake = Math.Min(sampleSize, totalCount - startIndex);
 
@@ -39,40 +44,55 @@ namespace CyberTestingPlatform.DataAccess.Repositories
                 .AsNoTracking()
                 .ToListAsync();
 
+            if (accountEntities == null)
+            {
+                return null;
+            }
+
             var accounts = accountEntities
-               .Select(x => Account.Create(x.UserId, x.Birthday, x.Email, x.UserName, "", x.Roles).account)
+               .Select(x => new Account(x.UserId, x.Birthday, x.Email, x.UserName, "", x.Roles))
                .ToList();
 
             return accounts;
         }
 
-        public async Task<Account?> GetByEmail(string email)
+        public async Task<Account?> GetByEmailAsync(string email)
         {
-            var accountEntity = await _dbContext.Accounts.FirstOrDefaultAsync(p => p.Email == email);
-            return accountEntity != null ? Account.Create(
+            var accountEntity = await _dbContext.Accounts.AsNoTracking().FirstOrDefaultAsync(p => p.Email == email);
+
+            if (accountEntity == null)
+            {
+                return null;
+            }
+
+            return new Account(
                 accountEntity.UserId,
                 accountEntity.Birthday,
                 accountEntity.Email,
                 accountEntity.UserName,
                 accountEntity.PasswordHash,
-                accountEntity.Roles).account
-                : null;
+                accountEntity.Roles);
         }
 
-        public async Task<Account?> Get(Guid userId)
+        public async Task<Account?> GetAsync(Guid userId)
         {
             var accountEntity = await _dbContext.Accounts.FirstOrDefaultAsync(p => p.UserId == userId);
-            return accountEntity != null ? Account.Create(
+
+            if (accountEntity == null)
+            {
+                return null;
+            }
+
+            return new Account(
                 accountEntity.UserId,
                 accountEntity.Birthday,
                 accountEntity.Email,
                 accountEntity.UserName,
                 accountEntity.PasswordHash,
-                accountEntity.Roles).account
-                : null;
+                accountEntity.Roles);
         }
 
-        public async Task<Guid> Create(Account account)
+        public async Task<Guid?> CreateAsync(Account account)
         {
             var accountEntity = new AccountEntity
             {
@@ -90,43 +110,39 @@ namespace CyberTestingPlatform.DataAccess.Repositories
             return accountEntity.UserId;
         }
 
-        public async Task<Guid> Update(Guid userId, DateTime birthday, string email, string userName, string passwordHash, string roles)
+        public async Task<Guid?> UpdateAsync(Account account)
         {
             var accountEntity = await _dbContext.Accounts
-                .Where(p => p.UserId == userId)
+                .Where(p => p.UserId == account.UserId)
                 .FirstOrDefaultAsync();
 
-            if (accountEntity != null)
+            if (accountEntity == null)
             {
-                accountEntity.Birthday = birthday;
-                accountEntity.Email = email;
-                accountEntity.UserName = userName;
-                accountEntity.PasswordHash = passwordHash;
-                accountEntity.Roles = roles;
-
-                await _dbContext.SaveChangesAsync();
-
-                return userId;
+                return null;
             }
 
-            return Guid.Empty;
+            accountEntity.Birthday = account.Birthday;
+            accountEntity.Email = account.Email;
+            accountEntity.UserName = account.UserName;
+            accountEntity.PasswordHash = account.PasswordHash;
+            accountEntity.Roles = account.Roles;
+
+            await _dbContext.SaveChangesAsync();
+
+            return accountEntity.UserId;
         }
 
-        public async Task<Guid> Delete(Guid userId)
+        public async Task<Guid?> DeleteAsync(Guid userId)
         {
             var accountEntity = await _dbContext.Accounts
                 .Where(p => p.UserId == userId)
-                .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync()
+                ?? throw new Exception($"Пользователь {userId} не найден");
 
-            if (accountEntity != null)
-            {
-                _dbContext.Remove(accountEntity);
-                await _dbContext.SaveChangesAsync();
+            _dbContext.Remove(accountEntity);
+            await _dbContext.SaveChangesAsync();
 
-                return userId;
-            }
-
-            return Guid.Empty;
+            return accountEntity.UserId;
         }
     }
 }

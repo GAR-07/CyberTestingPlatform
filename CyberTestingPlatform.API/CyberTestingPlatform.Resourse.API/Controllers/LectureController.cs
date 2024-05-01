@@ -10,11 +10,35 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
     [Route("[controller]")]
     public class LectureController : Controller
     {
-        private readonly IStorageService _storageService;
+        private readonly ILectureService _lectureService;
 
-        public LectureController(IStorageService storageService)
+        public LectureController(ILectureService lectureService)
         {
-            _storageService = storageService;
+            _lectureService = lectureService;
+        }
+
+        [HttpGet("GetLecturesByCourseId/{id}")]
+        [Authorize]
+        public async Task<IActionResult> GetLecturesByCourseId(Guid id)
+        {
+            if (ModelState.IsValid)
+            {
+                var lectures = await _lectureService.GetLecturesByCourseIdAsync(id);
+
+                var response = lectures.Select(x => new LecturesResponse(
+                    x.Id,
+                    x.Theme,
+                    x.Title,
+                    x.Content,
+                    x.Position,
+                    x.CreatorID,
+                    x.CreationDate,
+                    x.LastUpdationDate,
+                    x.CourseId));
+
+                return Ok(response);
+            }
+            return BadRequest("Invalid model object");
         }
 
         [HttpGet("GetLecture/{id}")]
@@ -23,24 +47,20 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
         {
             if (ModelState.IsValid)
             {
-                var lecture = await _storageService.GetLecture(id);
+                var lecture = await _lectureService.GetLectureAsync(id);
 
-                if (lecture != null)
-                {
-                    var response = new LecturesResponse(
-                        lecture.Id,
-                        lecture.Theme,
-                        lecture.Title,
-                        lecture.Content,
-                        lecture.Position,
-                        lecture.CreatorID,
-                        lecture.CreationDate,
-                        lecture.LastUpdationDate,
-                        lecture.CourseId);
+                var response = new LecturesResponse(
+                    lecture.Id,
+                    lecture.Theme,
+                    lecture.Title,
+                    lecture.Content,
+                    lecture.Position,
+                    lecture.CreatorID,
+                    lecture.CreationDate,
+                    lecture.LastUpdationDate,
+                    lecture.CourseId);
 
-                    return Ok(response);
-                }
-                return BadRequest("No objects found");
+                return Ok(response);
             }
             return BadRequest("Invalid model object");
         }
@@ -52,24 +72,20 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
         {
             if (ModelState.IsValid)
             {
-                var lectures = await _storageService.GetSelectLectures(request.SampleSize, request.Page);
+                var lectures = await _lectureService.GetSelectLecturesAsync(request.SampleSize, request.Page);
 
-                if (lectures != null)
-                {
-                    var response = lectures.Select(x => new LecturesResponse(
-                        x.Id,
-                        x.Theme,
-                        x.Title,
-                        x.Content,
-                        x.Position,
-                        x.CreatorID,
-                        x.CreationDate,
-                        x.LastUpdationDate,
-                        x.CourseId));
+                var response = lectures.Select(x => new LecturesResponse(
+                    x.Id,
+                    x.Theme,
+                    x.Title,
+                    x.Content,
+                    x.Position,
+                    x.CreatorID,
+                    x.CreationDate,
+                    x.LastUpdationDate,
+                    x.CourseId));
 
-                    return Ok(response);
-                }
-                return BadRequest("No objects found");
+                return Ok(response);
             }
             return BadRequest("Invalid model object");
         }
@@ -81,27 +97,20 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
         {
             if (ModelState.IsValid)
             {
-                var creationDate = _storageService.ConvertToDateTime(request.CreationDate);
-
-                var (lecture, error) = Lecture.Create(
+                var lecture = new Lecture(
                     Guid.NewGuid(),
                     request.Theme,
                     request.Title,
                     request.Content,
                     request.Position,
                     request.CreatorId,
-                    creationDate,
-                    creationDate,
+                    DateTime.Now,
+                    DateTime.Now,
                     request.CourseId);
 
-                if (!string.IsNullOrEmpty(error))
-                {
-                    return BadRequest(error);
-                }
+                await _lectureService.CreateLectureAsync(lecture);
 
-                var response = await _storageService.CreateLecture(lecture);
-
-                return Ok(response);
+                return Ok();
             }
             return BadRequest("Invalid model object");
         }
@@ -112,16 +121,18 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
         {
             if (ModelState.IsValid)
             {
-                var updationDate = _storageService.ConvertToDateTime(request.LastUpdationDate);
-
-                var response = await _storageService.UpdateLecture(
-                    id, 
-                    request.Theme, 
-                    request.Title, 
-                    request.Content, 
+                var lecture = new Lecture(
+                    id,
+                    request.Theme,
+                    request.Title,
+                    request.Content,
                     request.Position,
-                    updationDate, 
+                    request.CreatorId,
+                    DateTime.Parse(request.CreationDate),
+                    DateTime.Now,
                     request.CourseId);
+
+                var response = await _lectureService.UpdateLectureAsync(lecture);
 
                 return Ok(response);
             }
@@ -129,18 +140,14 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
         }
 
         [HttpDelete("DeleteLecture/{id}")]
-        [Authorize]
+        [Authorize(Roles = "Admin,Creator")]
         public async Task<IActionResult> DeleteLecture(Guid id)
         {
             if (ModelState.IsValid)
             {
-                var response = await _storageService.DeleteLecture(id);
-
-                if (response != Guid.Empty)
-                {
-                    return Ok(response);
-                }
-                return BadRequest("No objects found");
+                var response = await _lectureService.DeleteLectureAsync(id);
+                
+                return Ok(response);
             }
             return BadRequest("Invalid model object");
         }

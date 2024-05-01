@@ -14,22 +14,23 @@ namespace CyberTestingPlatform.DataAccess.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<List<Course>> GetAll()
+        public async Task<List<Course>> GetAllAsync()
         {
             var courseEntities = await _dbContext.Courses
                 .AsNoTracking()
-                .ToListAsync();
+                .ToListAsync()
+                ?? throw new Exception($"Результатов не найдено");
 
             var courses = courseEntities
-                .Select(x => Course.Create(x.Id, x.Name, x.Description, x.Price, x.ImagePath, x.CreatorID, x.CreationDate, x.LastUpdationDate).course)
+                .Select(x => new Course(x.Id, x.Name, x.Description, x.Price, x.ImagePath, x.CreatorID, x.CreationDate, x.LastUpdationDate))
                 .ToList();
 
             return courses;
         }
 
-        public async Task<List<Course>> GetSelection(int sampleSize, int page)
+        public async Task<List<Course>> GetSelectionAsync(int sampleSize, int page)
         {
-            var totalCount = await _dbContext.Courses.CountAsync();
+            var totalCount = await _dbContext.Courses.AsNoTracking().CountAsync();
             var startIndex = Math.Max(0, totalCount - sampleSize * page);
             var countToTake = Math.Min(sampleSize, totalCount - startIndex);
 
@@ -37,19 +38,22 @@ namespace CyberTestingPlatform.DataAccess.Repositories
                 .Skip(startIndex)
                 .Take(countToTake)
                 .AsNoTracking()
-                .ToListAsync();
+                .ToListAsync()
+                ?? throw new Exception($"Результатов не найдено");
 
             var courses = courseEntities
-               .Select(x => Course.Create(x.Id, x.Name, x.Description, x.Price, x.ImagePath, x.CreatorID, x.CreationDate, x.LastUpdationDate).course)
+               .Select(x => new Course(x.Id, x.Name, x.Description, x.Price, x.ImagePath, x.CreatorID, x.CreationDate, x.LastUpdationDate))
                .ToList();
 
             return courses;
         }
 
-        public async Task<Course?> Get(Guid id)
+        public async Task<Course> GetAsync(Guid id)
         {
-            var courseEntity = await _dbContext.Courses.FirstOrDefaultAsync(p => p.Id == id);
-            return courseEntity != null ? Course.Create(
+            var courseEntity = await _dbContext.Courses.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id)
+                ?? throw new Exception($"Курс {id} не найден");
+
+            return new Course(
                 courseEntity.Id,
                 courseEntity.Name,
                 courseEntity.Description,
@@ -57,11 +61,10 @@ namespace CyberTestingPlatform.DataAccess.Repositories
                 courseEntity.ImagePath,
                 courseEntity.CreatorID,
                 courseEntity.CreationDate,
-                courseEntity.LastUpdationDate).course
-                : null;
+                courseEntity.LastUpdationDate);
         }
 
-        public async Task<Guid> Create(Course course)
+        public async Task<Guid> CreateAsync(Course course)
         {
             var courseEntity = new CourseEntity
             {
@@ -81,43 +84,35 @@ namespace CyberTestingPlatform.DataAccess.Repositories
             return courseEntity.Id;
         }
 
-        public async Task<Guid> Update(Guid id, string name, string description, int price, string imagePath, DateTime lastUpdationDate)
+        public async Task<Guid> UpdateAsync(Course course)
         {
             var courseEntity = await _dbContext.Courses
-                .Where(p => p.Id == id)
-                .FirstOrDefaultAsync();
+                .Where(p => p.Id == course.Id)
+                .FirstOrDefaultAsync() 
+                ?? throw new Exception($"Курс {course.Id} не найден");
 
-            if (courseEntity != null)
-            {
-                courseEntity.Name = name;
-                courseEntity.Description = description;
-                courseEntity.Price = price;
-                courseEntity.ImagePath = imagePath;
-                courseEntity.LastUpdationDate = lastUpdationDate;
+            courseEntity.Name = course.Name;
+            courseEntity.Description = course.Description;
+            courseEntity.Price = course.Price;
+            courseEntity.ImagePath = course.ImagePath;
+            courseEntity.LastUpdationDate = course.LastUpdationDate;
 
-                await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
 
-                return id;
-            }
-
-            return Guid.Empty;
+            return courseEntity.Id;
         }
 
-        public async Task<Guid> Delete(Guid id)
+        public async Task<Guid> DeleteAsync(Guid id)
         {
             var courseEntity = await _dbContext.Courses
                 .Where(p => p.Id == id)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync()
+                ?? throw new Exception($"Курс {id} не найден");
 
-            if (courseEntity != null)
-            {
-                _dbContext.Remove(courseEntity);
-                await _dbContext.SaveChangesAsync();
+            _dbContext.Remove(courseEntity);
+            await _dbContext.SaveChangesAsync();
 
-                return id;
-            }
-
-            return Guid.Empty;
+            return courseEntity.Id;
         }
     }
 }

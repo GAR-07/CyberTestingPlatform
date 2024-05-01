@@ -2,11 +2,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using CyberTestingPlatform.DataAccess;
-using CyberTestingPlatform.Application.Services;
-using CyberTestingPlatform.Application.Models;
-using CyberTestingPlatform.DataAccess.Repositories;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.AspNetCore.Diagnostics;
+using Newtonsoft.Json;
+using CyberTestingPlatform.Application.Services;
+using CyberTestingPlatform.DataAccess.Repositories;
+using CyberTestingPlatform.DataAccess;
+using CyberTestingPlatform.Core.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 builder.Services.AddScoped<IStorageService, StorageService>();
+builder.Services.AddScoped<ICourseService, CourseService>();
+builder.Services.AddScoped<ILectureService, LectureService>();
+builder.Services.AddScoped<ITestService, TestService>();
 builder.Services.AddScoped<ICoursesRepository, CoursesRepository>();
 builder.Services.AddScoped<ILecturesRepository, LecturesRepository>();
 builder.Services.AddScoped<ITestsRepository, TestsRepository>();
@@ -59,6 +64,10 @@ builder.Services.AddCors(options =>
 });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+//builder.Services.AddLogging(builder =>
+//{
+//    builder.AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Information);
+//});
 
 var app = builder.Build();
 
@@ -68,6 +77,33 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        context.Response.ContentType = "application/json";
+
+        var exceptionHandlerPathFeature =
+            context.Features.Get<IExceptionHandlerPathFeature>();
+
+        if (exceptionHandlerPathFeature.Error is CustomHttpException customHttpException)
+        {
+            context.Response.StatusCode = customHttpException.StatusCode;
+            var errorMessage = exceptionHandlerPathFeature.Error.Message;
+
+            var result = JsonConvert.SerializeObject(new CustomErrorResponse(errorMessage, 422));
+            await context.Response.WriteAsync(result);
+        }
+        else
+        {
+            // Обработка других типов исключений
+            var errorMessage = exceptionHandlerPathFeature.Error.Message;
+            var result = JsonConvert.SerializeObject(new CustomErrorResponse(errorMessage, 500));
+            await context.Response.WriteAsync(result);
+        }
+    });
+});
 
 app.UseRouting();
 app.UseCors();

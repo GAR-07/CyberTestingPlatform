@@ -4,11 +4,11 @@ namespace CyberTestingPlatform.DataAccess.Repositories
 {
     public interface ICoursesRepository
     {
-        Task<Guid> Create(Course lecture);
-        Task<Guid> Delete(Guid id);
-        Task<Course?> Get(Guid id);
-        Task<List<Course>> GetAll();
-        Task<List<Course>> GetSelection(int sampleSize, int page);
-        Task<Guid> Update(Guid id, string name, string description, int price, string imagePath, DateTime lastUpdationDate);
+        Task<Guid> CreateAsync(Course course);
+        Task<Guid> DeleteAsync(Guid id);
+        Task<Course> GetAsync(Guid id);
+        Task<List<Course>> GetSelectionAsync(int sampleSize, int page);
+        Task<List<Course>> GetAllAsync();
+        Task<Guid> UpdateAsync(Course course);
     }
 }

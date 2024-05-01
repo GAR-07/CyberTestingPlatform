@@ -1,8 +1,13 @@
 import { HttpEventType } from '@angular/common/http';
 import { Component, HostListener, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { CourseData } from 'src/app/interfaces/courseData.model';
+import { LectureData } from 'src/app/interfaces/lectureData.model';
+import { NotificationMessage } from 'src/app/interfaces/notificationMessage.model';
+import { TestData } from 'src/app/interfaces/testData.model';
 import { AuthService } from 'src/app/services/auth.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { environment } from 'src/environments/environment';
 
@@ -12,14 +17,21 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./course-block.component.scss']
 })
 export class CourseBlockComponent {
-  @Input() mods: string[] = [];
-  @Input() roles: string[] = [];
+  @Input() mods: string[] = ['view', 'edit'];
   @Input() course!: CourseData;
 
   mode: string = '';
+  roles: string[] = [];
+  lectures!: LectureData[];
+  tests!: TestData[];
+  groupedLectures: { [key: string]: LectureData[] } = {};
+  groupedTests: { [key: string]: TestData[] } = {};
+  groupedLecturesArray: { theme: string, lectures: LectureData[] }[] = [];
+  groupedTestsArray: { theme: string, tests: TestData[] }[] = [];
   progress: number = 0;
   dragAreaClass: string = 'dragarea';
   isModalDialogVisible: boolean = false;
+  guidEmpty: string = '00000000-0000-0000-0000-000000000000';
   courseForm: FormGroup = this.formBuilder.group({
     name: [null, [
       Validators.required,
@@ -39,16 +51,21 @@ export class CourseBlockComponent {
   constructor(
     private authService: AuthService,
     private storageService: StorageService,
+    private notificationService: NotificationService,
     private formBuilder: FormBuilder,
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
+    var accountData = this.authService.accountData();
+    this.roles = accountData ? accountData.role : [];
     this.changeMode(this.mode);
+    this.getComponentData();
   }
 
-  changeMode(mode: string) {
+  async changeMode(mode: string) {
     this.mode = this.mods.includes(mode) ? mode : this.mods[0];
-    
+
     if(this.mode === 'edit') {
       this.courseForm.patchValue({
         name: this.course.name,
@@ -56,28 +73,93 @@ export class CourseBlockComponent {
         price: this.course.price,
         imagePath: this.course.imagePath,
       });
-    } else {
-      this.courseForm.patchValue({
-        name: null,
-        description: null,
-        price: null,
-        imagePath: null,
-      });
     }
   }
 
-  createCourse() {
-    const date = new Date();
-    const convertedDate = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+  async getComponentData() {
+    if (this.mode !== 'create') {
+      if (!this.course) {
+        var guid = this.route.snapshot.paramMap.get('guid');
+        await this.getCourse(guid !== null ? guid : '');
+      }
 
+      if(this.mode !== 'card') {
+        await this.getCourseLectures(this.course.id);
+        await this.getCourseTests(this.course.id);
+
+        this.lectures.sort((a, b) => a.position - b.position);
+        this.tests.sort((a, b) => a.position - b.position);
+
+        this.groupedLectures = this.groupItemsByTheme(this.lectures);
+        this.groupedLecturesArray = Object.keys(this.groupedLectures).map(theme => ({
+          theme: theme,
+          lectures: this.groupedLectures[theme]
+        }));
+        this.groupedTests = this.groupItemsByTheme(this.tests);
+        this.groupedTestsArray = Object.keys(this.groupedTests).map(theme => ({
+          theme: theme,
+          tests: this.groupedTests[theme]
+        }));
+      }
+    }
+  }
+
+  getCourse(id: string) {
+    return new Promise<void>((resolve, reject) => {
+      this.storageService.getCourse(id).subscribe({
+        next: (response: CourseData) => {
+          this.course = response;          
+          resolve();
+        },
+        error: (response) => {
+          this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
+          reject();
+        }
+      });
+    });
+  }
+
+  getCourseLectures(courseId: string) {
+    return new Promise<void>((resolve, reject) => {
+      this.storageService.getLecturesByCourseId(courseId).subscribe({
+        next: (response: LectureData[]) => {
+          response.sort((a, b) => a.position - b.position);
+          this.lectures = response;
+          resolve();
+        },
+        error: (response) => {
+          this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
+          reject();
+        }
+      });
+    });
+  }
+
+  getCourseTests(courseId: string) {
+    return new Promise<void>((resolve, reject) => {
+      this.storageService.getTestsByCourseId(courseId).subscribe({
+        next: (response: TestData[]) => {
+          response.sort((a, b) => a.position - b.position); 
+          this.tests = response;
+          resolve();
+        },
+        error: (response) => {
+          this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
+          reject();
+        }
+      });
+    });
+  }
+
+  createCourse() {
     this.course = {
       id: '',
       name: this.courseForm.value.name,
       description: this.courseForm.value.description,
       price: this.courseForm.value.price,
       imagePath: this.courseForm.value.imagePath,
-      creatorID: this.authService.accountData().sub,
-      creationDate: convertedDate,
+      creatorId: this.authService.accountData().sub,
+      creationDate: '',
       lastUpdationDate: '',
     };
     
@@ -87,33 +169,30 @@ export class CourseBlockComponent {
         console.log(response);
       },
       error: (response) => {
-        console.log(response);
+        this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
       }
     });
   }
 
   editCourse() {
-    const date = new Date();
-    const convertedDate = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
-
     this.course = {
       id: this.course.id,
       name: this.courseForm.value.name,
       description: this.courseForm.value.description,
       price: this.courseForm.value.price,
       imagePath: this.courseForm.value.imagePath,
-      creatorID: this.course.creatorID,
+      creatorId: this.course.creatorId,
       creationDate: this.course.creationDate,
-      lastUpdationDate: convertedDate,
+      lastUpdationDate: '',
     };
     
     this.storageService.updateCourse(this.course.id, this.course).subscribe({
       next: (response: any) => {
-        window.location.reload();
+        this.mode = "";
         console.log(response);
       },
       error: (response) => {
-        console.log(response);
+        this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
       }
     });
   }
@@ -125,12 +204,16 @@ export class CourseBlockComponent {
         console.log(response);
       },
       error: (response) => {
-        console.log(response);
+        this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
       }
     });
   }
 
   uploadFile = (files : any) => {
+    if (files.length === 0) {
+      return;
+    }
+
     const formData = new FormData();
 
     for(var i = 0; i < files.length; i++) {
@@ -151,14 +234,29 @@ export class CourseBlockComponent {
           console.log(this.progress);
         } else if (event.type === HttpEventType.Response) {
           if (event.body.error) {
-            console.log(event.body.error);
+            this.notificationService.addMessage(new NotificationMessage('error', event.body.error.Message));
           } else {
             this.courseForm.patchValue({ imagePath: event.body.filePath });
           }
         }
       },
-      error: (response: any) => console.log(response)
+      error: (response) => {
+        this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
+      }
     });
+  }
+
+  groupItemsByTheme(items: any[]): { [key: string]: any[] } {
+    const groupedItems: { [key: string]: any[] } = {};
+
+    items.forEach(item => {
+      if (!groupedItems[item.theme]) {
+        groupedItems[item.theme] = [];
+      }
+      groupedItems[item.theme].push(item);
+    });
+
+    return groupedItems;
   }
 
   showModal() {
@@ -172,7 +270,7 @@ export class CourseBlockComponent {
     }
 	}
 
-  createFilePath = (serverPath: string) => { 
+  createFilePath(serverPath: string) {
     return `${environment.resourseApiUrl}/${serverPath}`; 
   }
 

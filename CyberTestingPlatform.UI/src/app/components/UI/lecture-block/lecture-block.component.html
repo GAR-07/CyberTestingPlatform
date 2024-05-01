@@ -1,9 +1,66 @@
 <ng-container [ngSwitch]="mode">
 
-  <div *ngSwitchCase="'list'">
+  <ng-container *ngSwitchCase="'view'">
+    <ng-container *ngIf="lecture">
+      <main class="content-wrapper">
+        <div class="content-container">
+          <div class="progress-bar">
+            <ng-container *ngIf="lectures && lectures.length > 0">
+              <ng-container *ngFor="let _lecture of lectures; let i = index">
+                <a *ngIf="lecture.id === _lecture.id" class="circle primary" [routerLink]="['/lecture', _lecture.id]">{{i+1}}</a>
+                <a *ngIf="lecture.id !== _lecture.id" class="circle" [routerLink]="['/lecture', _lecture.id]">{{i+1}}</a>
+              </ng-container>
+            </ng-container>
+            <ng-container *ngIf="tests && tests.length > 0">
+              <ng-container *ngFor="let _test of tests; let i = index">
+                <a class="circle" [routerLink]="['/test', _test.id]">{{lectures.length + i + 1}}</a>
+              </ng-container>
+            </ng-container>
+          </div>
+
+          <div class="content-block">
+            <div class="theme" *ngIf="course">
+              <a class="link" [routerLink]="['/course', course.id]">{{course ? course.name + ' / ' : ''}}</a>
+              <a class="link" [routerLink]="['/course', course.id]">{{lecture.theme}}</a>
+            </div>
+            <h1 class="title">{{lecture.title}}</h1>
+            
+            <div class="content" [innerHTML]="lecture.content"></div>
+            
+            <div class="content-block">
+              <div class="actions">
+                <button *ngIf="course && lectures && getPreviousLectureId(lecture.id) !== ''" 
+                  class="btn primary" [routerLink]="['/lecture/', getPreviousLectureId(lecture.id)]">К предыдущей лекции
+                </button>
+
+                <button *ngIf="!course" class="btn primary" [routerLink]="['/']">На главную</button>
+                <button *ngIf="course" class="btn primary" [routerLink]="['/course/', course.id]">К списку</button>
+
+                <button *ngIf="course && lectures && getNextLectureId(lecture.id) !== ''" 
+                  class="btn primary" [routerLink]="['/lecture/', getNextLectureId(lecture.id)]">К следующей лекции
+                </button>
+                <button *ngIf="course && tests && getNextLectureId(lecture.id) === ''" 
+                class="btn primary" [routerLink]="['/test/', tests[0].id]">К тесту
+              </button>
+                <!-- (click)="checkAccessRoute('/lecture/', lectures[0].id)" -->
+              </div>
+              <app-modal-dialog 
+                *ngIf="isModalDialogVisible" 
+                [header]="'Внимание!'" 
+                [description]="'Уверены, что хотите удалить?'"
+                (isConfirmed)="closeModal($event)">
+              </app-modal-dialog>
+            </div>
+          </div>
+        </div>
+      </main>
+    </ng-container>
+  </ng-container>
+
+  <div *ngSwitchCase="'list'"  class="list-wrapper">
     <div *ngIf="lecture" class="table-row">
-      <div *ngIf="course != null" class="table-cell">{{course.name}}</div>
-      <div *ngIf="course == null" class="table-cell">-</div>
+      <div *ngIf="course" class="table-cell">{{course.name}}</div>
+      <div *ngIf="!course" class="table-cell">-</div>
       <div class="table-cell">{{lecture.theme}}</div>
       <div class="table-cell">{{lecture.title}}</div>
       <div *ngIf="roles.includes('Admin') || roles.includes('Editor')" class="actions-cell">
@@ -20,43 +77,13 @@
     </app-modal-dialog>
   </div>
 
-  <div *ngSwitchCase="'view'">
-    <div *ngIf="lecture">
-      <div class="row">
-        <div class="col-12">
-            <div class="progress-bar-wrapper">
-            </div>
-            <div class="content-wrapper">
-              <h2 class="theme">
-                <a href="#">{{course != null ? course.name + ' / ' : ''}}</a>
-                <a href="#">{{lecture.theme}}</a>
-              </h2>
-              <h1 class="title">{{lecture.title}}</h1>
-              <div class="content" [innerHTML]="lecture.content"></div>
-              <div *ngIf="roles.includes('Admin') || roles.includes('Editor')" class="actions">
-                <button class="btn primary" (click)="changeMode('list')">Свернуть</button>
-                <button class="btn primary" (click)="changeMode('edit')">Редактировать</button>
-                <button class="btn primary" (click)="showModal()">Удалить</button>
-              </div>
-              <app-modal-dialog 
-                *ngIf="isModalDialogVisible" 
-                [header]="'Внимание!'" 
-                [description]="'Уверены, что хотите удалить?'"
-                (isConfirmed)="closeModal($event)">
-              </app-modal-dialog>
-            </div>
-          </div>
-        </div>
-      </div>
-  </div>
-
-  <div *ngSwitchCase="'edit'">
+  <div *ngSwitchCase="'edit'" class="edit-create-wrapper">
     <h1>Изменение лекции</h1>
     <form [formGroup]="lectureForm" (ngSubmit)="editLecture()" class="custom-form">
 
       <div class="form-group">
         <div class="custom-input">
-          <select formControlName="courseId" placeholder="Курс">
+          <select formControlName="courseId" (click)="getAllCourses()" placeholder="Курс">
             <option value="{{guidEmpty}}"></option>
             <ng-container *ngFor="let course of courses">
               <option value="{{course.id}}">{{course.name}}</option>
@@ -93,12 +120,12 @@
             #dragAreaInput multiple="false" (change)="uploadFile(dragAreaInput.files)">
           <label (click)="dragAreaInput.click()">Загрузить изображение</label>
         </div>
-        <div class="form-group" *ngIf="imagePath != ''">
+        <div class="form-group" *ngIf="imagePath !== ''">
           <div class="custom-input">
             <input value="{{imagePath}}" type="text" placeholder="Ссылка для вставки" readonly>
           </div>
         </div>
-        <div *ngIf="imagePath != ''">
+        <div *ngIf="imagePath !== ''">
           <img [src]="createFilePath(imagePath)">
         </div>
       </div>
@@ -111,18 +138,18 @@
       </div>
     
       <button type="submit" class="btn primary" [disabled]="!lectureForm.valid">Сохранить</button>
-      <button class="btn primary" (click)="changeMode('view')">Отменить</button>
+      <button class="btn primary" (click)="changeMode('')">Отменить</button>
     </form>
 
   </div>
 
-  <div *ngSwitchCase="'create'">
+  <div *ngSwitchCase="'create'" class="edit-create-wrapper">
     <h1>Добавление лекции</h1>
     <form [formGroup]="lectureForm" (ngSubmit)="createLecture()" class="custom-form">
 
       <div class="form-group">
         <div class="custom-input">
-          <select formControlName="courseId" placeholder="Курс">
+          <select formControlName="courseId" (click)="getAllCourses()" placeholder="Курс">
             <option value="{{guidEmpty}}"></option>
             <ng-container *ngFor="let course of courses">
               <option value="{{course.id}}">{{course.name}}</option>
@@ -171,7 +198,7 @@
             <input value="{{imagePath}}" type="text" placeholder="" readonly>
           </div>
         </div>
-        <div *ngIf="imagePath != ''">
+        <div *ngIf="imagePath !== ''">
           <img [src]="createFilePath(imagePath)">
         </div>
       </div>

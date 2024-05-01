@@ -1,16 +1,12 @@
-﻿using CyberTestingPlatform.DataAccess.Repositories;
-using CyberTestingPlatform.Application.Models;
-using CyberTestingPlatform.Core.Models;
-using Microsoft.Extensions.Configuration;
-using System.IdentityModel.Tokens.Jwt;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using BCrypt.Net;
-
-// Сервисы соединяют базу данных с контроллерами API
-// Контроллер будет вызывать эти сервисы
-// Использование репозиториев, с их помощью осущ. валидация, кэширование, обращение к другим базам данных - всё это здесь
-// Сейчас методы простые, но логику в контроллерах хранить не хорошо, поэтому эта логика будет тут
+using CyberTestingPlatform.DataAccess.Repositories;
+using CyberTestingPlatform.Core.Models;
+using CyberTestingPlatform.Core.Shared;
+using System.Security.Principal;
 
 namespace CyberTestingPlatform.Application.Services
 {
@@ -53,80 +49,95 @@ namespace CyberTestingPlatform.Application.Services
             return new JwtSecurityTokenHandler().WriteToken(jwtToken);
         }
 
-        public async Task<List<Account>> GetAllAccounts()
+        public async Task<List<Account>> GetAllAccountsAsync()
         {
-            return await _accountsRepository.GetAll();
+            return await _accountsRepository.GetAllAsync() ?? throw new CustomHttpException($"Результатов не найдено", 422);
         }
 
-        public async Task<List<Account>?> GetSelectAccounts(int sampleSize, int page)
+        public async Task<List<Account>> GetSelectAccountsAsync(int sampleSize, int page)
         {
-            if (sampleSize > 0 && page > 0)
+            if (sampleSize <= 0 || page < 0)
             {
-                return await _accountsRepository.GetSelection(sampleSize, page);
+                throw new CustomHttpException($"Заданы невозможные параметры для выборки", 422);
             }
 
-            return null;
+            return await _accountsRepository.GetSelectionAsync(sampleSize, page) ?? throw new CustomHttpException($"Результатов не найдено", 422);
         }
 
-        public async Task<Account?> GetAccountByEmail(string email)
+        public async Task<Account> GetAccountByEmailAsync(string email)
         {
-            return await _accountsRepository.GetByEmail(email);
+            return await _accountsRepository.GetByEmailAsync(email) ?? throw new CustomHttpException($"Аккаунт с почтой {email} не найден", 422);
         }
 
-        public async Task<Guid> CreateAccount(Account account)
+        public async Task<Account> GetAccountAsync(Guid userId)
         {
-            return await _accountsRepository.Create(account);
+            return await _accountsRepository.GetAsync(userId) ?? throw new CustomHttpException($"Аккаунт не найден", 422);
         }
 
-        public async Task<Guid> UpdateAccount(Guid userId, DateTime birthday, string email, string userName, string passwordHash, string roles)
+        public async Task<Guid> CreateAccountAsync(Account account)
         {
-            return await _accountsRepository.Update(userId, birthday, email, userName, passwordHash, roles);
+            return await _accountsRepository.CreateAsync(account) ?? throw new CustomHttpException($"Аккаунт {account.UserId} не найден", 422);
         }
 
-        public async Task<Guid> DeleteAccount(Guid userId)
+        public async Task<Guid> UpdateAccountAsync(Account account)
         {
-            return await _accountsRepository.Delete(userId);
+            return await _accountsRepository.UpdateAsync(account) ?? throw new CustomHttpException($"Аккаунт {account.UserId} не найден", 422);
         }
 
-        public string? ValidateAccount(Account? account, string password)
+        public async Task<Guid> DeleteAccountAsync(Guid userId)
+        {
+            return await _accountsRepository.DeleteAsync(userId) ?? throw new CustomHttpException($"Аккаунт {userId} не найден", 422);
+        }
+
+        public bool ValidateAccount(Account account, string password)
         {
             if (account == null)
-                return "The account does not exist";
-
-            if (!IsPasswordValid(password, account.PasswordHash))
-                return "Password is not valid";
+                throw new CustomHttpException($"Аккаунт {account} не существует", 422);
 
             if (IsAccountBanned(account.Roles))
-                return "Your account has been blocked";
+                throw new CustomHttpException($"Аккаунт {account} заблокирован", 422);
 
-            return null;
+            if (!IsPasswordValid(password, account.PasswordHash))
+                throw new CustomHttpException($"Неверный пароль", 422);
+
+            return true;
         }
 
-        public async Task<string?> ValidateRegistration(string email, string role)
+        public async Task<bool> ValidateRegistration(string email, string role)
         {
-            if (role == "Admin" || role == "Moder")
-                return "Incorrect roles";
+            if (role != "User" && role != "Teacher")
+                throw new CustomHttpException($"Задана неверная роль пользователя", 422);
 
             if (await IsEmailAlreadyExists(email))
-                return "Email already exists";
+                throw new CustomHttpException($"Адрес электронной почты уже занят", 422);
 
-            return null;
+            return true;
         }
 
-        public bool IsPasswordValid(string password, string passwordHash)
+        public string GetPasswordHash(string password)
+        {
+            return BCrypt.Net.BCrypt.EnhancedHashPassword(password, HashType.SHA512);
+        }
+
+        public DateTime ConvertBirtdayDate(string birthday)
+        {
+            var date = birthday.Split('-').Select(Int32.Parse).ToArray();
+            return new DateTime(date[0], date[1], date[2]);
+        }
+
+        private static bool IsPasswordValid(string password, string passwordHash)
         {
             return BCrypt.Net.BCrypt.EnhancedVerify(password, passwordHash, HashType.SHA512);
         }
 
-        public bool IsAccountBanned(string roles)
+        private static bool IsAccountBanned(string roles)
         {
             return roles.Split(',').Contains("Banned");
         }
 
-        public async Task<bool> IsEmailAlreadyExists(string email)
+        private async Task<bool> IsEmailAlreadyExists(string email)
         {
-            var existingAccount = await _accountsRepository.GetByEmail(email);
-            return existingAccount != null;
+            return await _accountsRepository.GetByEmailAsync(email) != null;
         }
     }
 }

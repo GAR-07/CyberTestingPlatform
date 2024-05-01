@@ -6,7 +6,7 @@
         string Title,
         string Questions,
         string AnswerOptions,
-        string AnswerCorrect,
+        string CorrectAnswers,
         int Position,
         Guid CreatorId,
         DateTime CreationDate,

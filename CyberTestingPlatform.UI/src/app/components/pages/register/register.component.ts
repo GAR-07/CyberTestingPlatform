@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { RegisterData } from 'src/app/interfaces/registerData.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { NotificationService } from 'src/app/services/notification.service';
+import { NotificationMessage } from 'src/app/interfaces/notificationMessage.model';
 
 @Component({
   selector: 'app-register',
@@ -11,31 +13,31 @@ import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn,
 export class RegisterComponent {
   modelData = new RegisterData('', '', '', '', '');
   regForm: FormGroup = this.formBuilder.group({
-    birthday: [null, [
+    birthday: ['2023-10-12', [
       Validators.required, 
       this.birthdayValidator()
     ]],
-    email: [null, [
+    email: ['ya@ya.ru', [
       Validators.required,
       Validators.maxLength(1000),
       Validators.email
     ]],
-    userName: [null, [
+    userName: ['newUser', [
       Validators.required,
       Validators.minLength(1),
       Validators.maxLength(50),
       this.userNameValidator()
     ]],
-    role: [null, [
+    role: ['User', [
       Validators.required
     ]],
     passwords: this.formBuilder.group({
-      password: [null, [
+      password: ['123123123', [
         Validators.required,
         Validators.minLength(8),
         Validators.maxLength(500)
       ]],
-      confirmPassword: [null, [
+      confirmPassword: ['123123123', [
         Validators.required,
         Validators.minLength(8),
         Validators.maxLength(500),
@@ -46,6 +48,7 @@ export class RegisterComponent {
   constructor(
     private authService: AuthService,
     private formBuilder: FormBuilder,
+    private notificationService: NotificationService,
   ) { }
 
   ngOnInit(): void { }
@@ -60,11 +63,11 @@ export class RegisterComponent {
         password: this.regForm.value.passwords.password,
       };
       this.authService.register(this.modelData).subscribe({
-        next: (response: any) => {
-          console.log(response);
+        next: () => {
+          this.notificationService.addMessage(new NotificationMessage('success', 'Вы успешно зарегистрировались'));
         },
         error: (response) => {
-          console.log(response);
+          this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
         }
       });
     }

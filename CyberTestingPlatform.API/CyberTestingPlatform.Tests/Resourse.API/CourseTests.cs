@@ -11,9 +11,8 @@ namespace CyberTestingPlatform.Tests.Resourse.API
     public class CourseTests
     {
         private readonly IStorageService _storageService;
+        private readonly ICourseService _courseService;
         private readonly CoursesRepository _coursesRepository;
-        private readonly LecturesRepository _lecturesRepository;
-        private readonly TestsRepository _testsRepository;
 
         public CourseTests() { }
 
@@ -33,10 +32,10 @@ namespace CyberTestingPlatform.Tests.Resourse.API
             var expectedCourseId = Guid.NewGuid();
 
             var coursesRepository = A.Fake<ICoursesRepository>();
-            A.CallTo(() => coursesRepository.Create(A<Course>._))
+            A.CallTo(() => coursesRepository.CreateAsync(A<Course>._))
                 .Returns(Task.FromResult(expectedCourseId));
 
-            var service = new StorageService(coursesRepository, _lecturesRepository, _testsRepository);
+            var service = new CourseService(coursesRepository);
             var controller = new CourseController(service);
 
             // Act
@@ -63,7 +62,7 @@ namespace CyberTestingPlatform.Tests.Resourse.API
                 CreationDate: "2020-2-20",
                 LastUpdationDate: "");
 
-            var controller = new CourseController(_storageService);
+            var controller = new CourseController(_courseService);
             controller.ModelState.AddModelError("Name", "The Name field is required.");
 
             // Act

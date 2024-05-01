@@ -13,5 +13,6 @@ namespace CyberTestingPlatform.DataAccess
         public DbSet<CourseEntity> Courses { get; set; }
         public DbSet<LectureEntity> Lectures { get; set; }
         public DbSet<TestEntity> Tests { get; set; }
+        public DbSet<TestResultEntity> TestResults { get; set; }
     }
 }

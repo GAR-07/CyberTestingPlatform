@@ -5,7 +5,7 @@ export class TestData {
       public title: string,
       public questions: string,
       public answerOptions: string,
-      public answerCorrect: string,
+      public correctAnswers: string,
       public position: number,
       public creatorId: string,
       public creationDate: string,

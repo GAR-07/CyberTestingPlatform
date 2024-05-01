@@ -1,10 +1,15 @@
 import { HttpEventType } from '@angular/common/http';
-import { Component, Input} from '@angular/core';
+import { Component, HostListener, Input} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { CourseData } from 'src/app/interfaces/courseData.model';
+import { LectureData } from 'src/app/interfaces/lectureData.model';
+import { NotificationMessage } from 'src/app/interfaces/notificationMessage.model';
 import { TestData } from 'src/app/interfaces/testData.model';
 import { AuthService } from 'src/app/services/auth.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { StorageService } from 'src/app/services/storage.service';
+import { convertImgPathToTag, convertTagToImgPath } from 'src/app/utils/conversion-helper';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -14,20 +19,27 @@ import { environment } from 'src/environments/environment';
 })
 export class TestBlockComponent {
 
-  @Input() mods: string[] = [];
-  @Input() roles: string[] = [];
-  @Input() courses!: CourseData[];
+  @Input() mods: string[] = ['view', 'edit'];
   @Input() test!: TestData;
+  @Input() course!: CourseData;
 
   mode: string = '';
-  course!: CourseData;
+  roles: string[] = [];
+  lectures!: LectureData[];
+  tests!: TestData[];
+  courses!: CourseData[];
+  questions: string[] = [];
+  answerOptions: string[] = [];
+  correctAnswers: string[] = [];
+  currentQuestion: number = 0;
   progress: number = 0;
   imagePath: string = '';
+  currentGuid: string | null = null;
   dragAreaClass: string = 'dragarea';
   isModalDialogVisible: boolean = false;
   guidEmpty: string = '00000000-0000-0000-0000-000000000000';
   testForm: FormGroup = this.formBuilder.group({
-    courseId: [null, [
+    courseId: [this.guidEmpty, [
       Validators.maxLength(255), 
     ]],
     theme: [null, [
@@ -40,32 +52,46 @@ export class TestBlockComponent {
     ]],
     questions: [null, [
       Validators.required,
-    ]],    
+    ]],
     answerOptions: [null, [
       Validators.required,
-    ]],    
-    answerCorrect: [null, [
+    ]],
+    correctAnswers: [null, [
       Validators.required,
     ]],
     position: [null, [
       Validators.required,
-      Validators.min(1),
+      Validators.min(0),
       Validators.max(100),
     ]]
-  }) 
+  })
 
   constructor(
     private authService: AuthService,
     private storageService: StorageService,
+    private notificationService: NotificationService,
     private formBuilder: FormBuilder,
-  ) {}
+    private route: ActivatedRoute
+  ) { }
 
   ngOnInit(): void {
+    var accountData = this.authService.accountData();
+    this.roles = accountData ? accountData.role : [];
     this.changeMode(this.mode);
-    if(this.mode !== 'create') {
-      this.getCourseById(this.test.courseId)
-      console.log(this.courses);
-    }
+    this.getComponentData();
+
+    this.route.paramMap.subscribe(params => {
+      const newGuid = params.get('guid');
+
+      if (newGuid !== this.currentGuid) {
+        this.currentGuid = newGuid;
+
+        if (newGuid !== null) {
+          this.getComponentData();
+          console.log('update test!');
+        }
+      }
+    });
   }
 
   changeMode(mode: string) {
@@ -82,36 +108,132 @@ export class TestBlockComponent {
         title: this.test.title,
         questions: this.test.questions,
         answerOptions: this.test.answerOptions,
-        answerCorrect: this.test.answerCorrect,
+        correctAnswers: this.test.correctAnswers,
         position: this.test.position,
         courseId: this.test.courseId
       });
-
-    } else {
-      this.testForm.patchValue({
-        theme: null,
-        title: null,
-        questions: null,
-        answerOptions: null,
-        answerCorrect: null,
-        courseId: null
-      });
     }
+  }
+
+  async getComponentData() {
+    if (this.mode !== 'create') {
+      if (!this.test) {
+        this.currentGuid = this.route.snapshot.paramMap.get('guid');
+        await this.getTest(this.currentGuid !== null ? this.currentGuid : this.guidEmpty);
+      }
+  
+      if (!this.course && this.test.courseId !== this.guidEmpty) {
+        await this.getCourse(this.test.courseId);
+      }
+
+      if (this.mode === 'view') {
+        await this.getCourseLectures(this.test.courseId);
+        await this.getCourseTests(this.test.courseId);
+        
+        for (let i = 0; i < this.questions.length; i++) {
+          this.questions[i] = convertImgPathToTag(environment.resourseApiUrl, this.questions[i]);
+        }
+      } else {
+        for (let i = 0; i < this.questions.length; i++) {
+          this.questions[i] = convertTagToImgPath(environment.resourseApiUrl, this.questions[i]);
+        }
+      }
+    }
+  }
+
+  getTest(id: string) {
+    return new Promise<void>((resolve, reject) => {
+      this.storageService.getTest(id).subscribe({
+        next: (response: TestData) => {
+          this.test = response;
+          this.questions = response.questions.split('\n');
+          this.answerOptions = response.answerOptions.split('\n');
+          resolve();
+        },
+        error: (response) => {
+          this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
+          reject();
+        }
+      });
+    });
+  }
+
+  getCourse(id: string) {
+    return new Promise<void>((resolve, reject) => {
+      this.storageService.getCourse(id).subscribe({
+        next: (response: CourseData) => {
+          this.course = response;
+          resolve();
+        },
+        error: (response) => {
+          this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
+          reject();
+        }
+      });
+    });
+  }
+
+  getCourseLectures(courseId: string) {
+    return new Promise<void>((resolve, reject) => {
+      this.storageService.getLecturesByCourseId(courseId).subscribe({
+        next: (response: LectureData[]) => {
+          response.sort((a, b) => a.position - b.position);
+          this.lectures = response;
+          resolve();
+        },
+        error: (response) => {
+          this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
+          reject();
+        }
+      });
+    });
+  }
+
+  getCourseTests(courseId: string) {
+    return new Promise<void>((resolve, reject) => {
+      this.storageService.getTestsByCourseId(courseId).subscribe({
+        next: (response: TestData[]) => {
+          response.sort((a, b) => a.position - b.position);
+          this.tests = response;
+          resolve();
+        },
+        error: (response) => {
+          this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
+          reject();
+        }
+      });
+    });
+  }
+
+  getAllCourses() {
+    return new Promise<void>((resolve, reject) => {
+      this.storageService.getAllCourses().subscribe({
+        next: (response: CourseData[]) => {
+          this.courses = response;
+          resolve();
+        },
+        error: (response) => {
+          this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
+          reject();
+        }
+      });
+    });
   }
 
   createTest() {
     const date = new Date();
     const convertedDate = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
 
+    var accountData = this.authService.accountData();
     this.test = {
       id: '',
       theme: this.testForm.value.theme,
       title: this.testForm.value.title,
       questions: this.testForm.value.questions,
       answerOptions: this.testForm.value.answerOptions,
-      answerCorrect: this.testForm.value.answerCorrect,
+      correctAnswers: this.testForm.value.correctAnswers,
       position: this.testForm.value.position,
-      creatorId: this.authService.accountData().sub,
+      creatorId: accountData ? accountData.sub : '',
       creationDate: convertedDate,
       lastUpdationDate: '',
       courseId: this.testForm.value.courseId,
@@ -123,7 +245,7 @@ export class TestBlockComponent {
         console.log(response);
       },
       error: (response) => {
-        console.log(response);
+        this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
       }
     });
   }
@@ -138,7 +260,7 @@ export class TestBlockComponent {
       title: this.testForm.value.title,
       questions: this.testForm.value.questions,
       answerOptions: this.testForm.value.answerOptions,
-      answerCorrect: this.testForm.value.answerCorrect,
+      correctAnswers: this.testForm.value.correctAnswers,
       position: this.testForm.value.position,
       creatorId: this.test.creatorId,
       creationDate: this.test.creationDate,
@@ -148,11 +270,11 @@ export class TestBlockComponent {
     
     this.storageService.updateTest(this.test.id, this.test).subscribe({
       next: (response: any) => {
-        window.location.reload();
+        this.mode = "";
         console.log(response);
       },
       error: (response) => {
-        console.log(response);
+        this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
       }
     });
   }
@@ -163,18 +285,22 @@ export class TestBlockComponent {
         window.location.reload();
         console.log(response);
       },
-      error: (response) => {
-        console.log(response);
+      error: (response: any) => {
+        console.log(response.error.Message);
       }
     });
   }
 
   uploadFile = (files : any) => {
+    if (files.length === 0) {
+      return;
+    }
+    
     const formData = new FormData();
 
     for(var i = 0; i < files.length; i++) {
       var fileToUpload = <File>files[i];
-      // Добавить проверки файла
+      // Здесь можно добавить проверки файла, например:
       // if (fileToUpload.size > 100000000) {
       //   this.message = 'Файл '+ fileToUpload.name +' слишком большой!';
       //   return;
@@ -196,8 +322,58 @@ export class TestBlockComponent {
           }
         }
       },
-      error: (response: any) => console.log(response)
+      error: (response) => {
+        this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
+      }
     });
+  }
+
+  testResults() {
+    var answers = this.correctAnswers.join('\n');
+    this.storageService.checkResultTest(this.test.id, answers).subscribe({
+      next: (response: any) => {
+        console.log(response);
+      },
+      error: (response) => {
+        this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
+      }
+    });
+  }
+
+  nextQuestion() {
+    if (this.currentQuestion < this.questions.length - 1) {
+      this.currentQuestion += 1;
+    }
+  }
+
+  previousQuestion() {
+    if (this.currentQuestion >= 1) {
+      this.currentQuestion -= 1;
+    }
+  }
+
+  getNextTestId(id: string) {
+    const currentIndex = this.tests.findIndex(test => test.id === id);
+    if (currentIndex !== -1) {
+      const nextIndex = currentIndex + 1;
+      if (nextIndex < this.tests.length) {
+        const nextTestId = this.tests[nextIndex].id;
+        return nextTestId;
+      }
+    }
+    return '';
+  }
+
+  getPreviousTestId(id: string) {
+    const currentIndex = this.tests.findIndex(test => test.id === id);
+    if (currentIndex !== -1) {
+      const previousIndex = currentIndex - 1;
+      if (previousIndex >= 0) {
+        const previousTestId = this.tests[previousIndex].id;
+        return previousTestId;
+      }
+    }
+    return '';
   }
 
   showModal() {
@@ -211,15 +387,33 @@ export class TestBlockComponent {
     }
 	}
 
-  getCourseById(id: string) {
-    this.courses.forEach(course => {
-      if (course.id === id) {
-        this.course = course;
-      }
-    });
+  createFilePath(serverPath: string) { 
+    return `${environment.resourseApiUrl}/${serverPath}`; 
   }
 
-  createFilePath = (serverPath: string) => { 
-    return `${environment.resourseApiUrl}/${serverPath}`; 
+  @HostListener("dragover", ["$event"]) onDragOver(event: any) {
+    this.dragAreaClass = "droparea";
+    event.preventDefault();
+  }
+  @HostListener("dragenter", ["$event"]) onDragEnter(event: any) {
+    this.dragAreaClass = "droparea";
+    event.preventDefault();
+  }
+  @HostListener("dragend", ["$event"]) onDragEnd(event: any) {
+    this.dragAreaClass = "dragarea";
+    event.preventDefault();
+  }
+  @HostListener("dragleave", ["$event"]) onDragLeave(event: any) {
+    this.dragAreaClass = "dragarea";
+    event.preventDefault();
+  }
+  @HostListener("drop", ["$event"]) onDrop(event: any) {
+    this.dragAreaClass = "dragarea";
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.dataTransfer.files) {
+      let files: FileList = event.dataTransfer.files;
+      this.uploadFile(files);
+    }
   }
 }

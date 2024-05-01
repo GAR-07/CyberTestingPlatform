@@ -14,22 +14,9 @@ namespace CyberTestingPlatform.DataAccess.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<List<Lecture>> GetAll()
+        public async Task<List<Lecture>> GetSelectionAsync(int sampleSize, int page)
         {
-            var lectureEntities = await _dbContext.Lectures
-                .AsNoTracking()
-                .ToListAsync();
-
-            var lectures = lectureEntities
-                .Select(x => Lecture.Create(x.Id, x.Theme, x.Title, x.Content, x.Position, x.CreatorID, x.CreationDate, x.LastUpdationDate, x.CourseId).lecture)
-                .ToList();
-
-            return lectures;
-        }
-
-        public async Task<List<Lecture>> GetSelection(int sampleSize, int page)
-        {
-            var totalCount = await _dbContext.Lectures.CountAsync();
+            var totalCount = await _dbContext.Lectures.AsNoTracking().CountAsync();
             var startIndex = Math.Max(0, totalCount - sampleSize * page);
             var countToTake = Math.Min(sampleSize, totalCount - startIndex);
 
@@ -37,19 +24,37 @@ namespace CyberTestingPlatform.DataAccess.Repositories
                 .Skip(startIndex)
                 .Take(countToTake)
                 .AsNoTracking()
-                .ToListAsync();
+                .ToListAsync()
+                ?? throw new Exception($"Результатов не найдено");
 
             var lectures = lectureEntities
-               .Select(x => Lecture.Create(x.Id, x.Theme, x.Title, x.Content, x.Position, x.CreatorID, x.CreationDate, x.LastUpdationDate, x.CourseId).lecture)
+               .Select(x => new Lecture(x.Id, x.Theme, x.Title, x.Content, x.Position, x.CreatorID, x.CreationDate, x.LastUpdationDate, x.CourseId))
                .ToList();
 
             return lectures;
         }
 
-        public async Task<Lecture?> Get(Guid id)
+        public async Task<List<Lecture>> GetByCourseIdAsync(Guid id)
         {
-            var lectureEntity = await _dbContext.Lectures.FirstOrDefaultAsync(p => p.Id == id);
-            return lectureEntity != null ? Lecture.Create(
+            var lectureEntities = await _dbContext.Lectures
+                .Where(lecture => lecture.CourseId == id)
+                .AsNoTracking()
+                .ToListAsync()
+                ?? throw new Exception($"Результатов не найдено");
+
+            var lectures = lectureEntities
+               .Select(x => new Lecture(x.Id, x.Theme, x.Title, x.Content, x.Position, x.CreatorID, x.CreationDate, x.LastUpdationDate, x.CourseId))
+               .ToList();
+
+            return lectures;
+        }
+
+        public async Task<Lecture> GetAsync(Guid id)
+        {
+            var lectureEntity = await _dbContext.Lectures.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id)
+                 ?? throw new Exception($"Лекция {id} не найдена");
+
+            return new Lecture(
                 lectureEntity.Id,
                 lectureEntity.Theme,
                 lectureEntity.Title,
@@ -58,11 +63,10 @@ namespace CyberTestingPlatform.DataAccess.Repositories
                 lectureEntity.CreatorID,
                 lectureEntity.CreationDate,
                 lectureEntity.LastUpdationDate,
-                lectureEntity.CourseId).lecture
-                : null;
+                lectureEntity.CourseId);
         }
 
-        public async Task<Guid> Create(Lecture lecture)
+        public async Task<Guid> CreateAsync(Lecture lecture)
         {
             var lectureEntity = new LectureEntity
             {
@@ -83,44 +87,36 @@ namespace CyberTestingPlatform.DataAccess.Repositories
             return lectureEntity.Id;
         }
 
-        public async Task<Guid> Update(Guid id, string theme, string title, string content, int position, DateTime lastUpdationDate, Guid courseId)
+        public async Task<Guid> UpdateAsync(Lecture lecture)
         {
             var lectureEntity = await _dbContext.Lectures
-                .Where(p => p.Id == id)
-                .FirstOrDefaultAsync();
+                .Where(p => p.Id == lecture.Id)
+                .FirstOrDefaultAsync()
+                ?? throw new Exception($"Лекция {lecture.Id} не найдена");
 
-            if (lectureEntity != null)
-            {
-                lectureEntity.Theme = theme;
-                lectureEntity.Title = title;
-                lectureEntity.Content = content;
-                lectureEntity.Position = position;
-                lectureEntity.LastUpdationDate = lastUpdationDate;
-                lectureEntity.CourseId = courseId;
+            lectureEntity.Theme = lecture.Theme;
+            lectureEntity.Title = lecture.Title;
+            lectureEntity.Content = lecture.Content;
+            lectureEntity.Position = lecture.Position;
+            lectureEntity.LastUpdationDate = lecture.LastUpdationDate;
+            lectureEntity.CourseId = lecture.CourseId;
 
-                await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
 
-                return id;
-            }
-
-            return Guid.Empty;
+            return lectureEntity.Id;
         }
 
-        public async Task<Guid> Delete(Guid id)
+        public async Task<Guid> DeleteAsync(Guid id)
         {
             var lectureEntity = await _dbContext.Lectures
                 .Where(p => p.Id == id)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync()
+                ?? throw new Exception($"Лекция {id} не найдена");
 
-            if (lectureEntity != null)
-            {
-                _dbContext.Remove(lectureEntity);
-                await _dbContext.SaveChangesAsync();
+            _dbContext.Remove(lectureEntity);
+            await _dbContext.SaveChangesAsync();
 
-                return id;
-            }
-
-            return Guid.Empty;
+            return lectureEntity.Id;
         }
     }
 }

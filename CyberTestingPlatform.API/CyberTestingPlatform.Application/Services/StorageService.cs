@@ -1,25 +1,11 @@
-﻿using CyberTestingPlatform.DataAccess.Repositories;
-using CyberTestingPlatform.Core.Models;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using System.Net.Http.Headers;
 
 namespace CyberTestingPlatform.Application.Services
 {
     public class StorageService : IStorageService
     {
-        private readonly ICoursesRepository _coursesRepository;
-        private readonly ILecturesRepository _lecturesRepository;
-        private readonly ITestsRepository _testsRepository;
-
-        public StorageService(
-            ICoursesRepository coursesRepository,
-            ILecturesRepository lecturesRepository,
-            ITestsRepository testsRepository)
-        {
-            _coursesRepository = coursesRepository;
-            _lecturesRepository = lecturesRepository;
-            _testsRepository = testsRepository;
-        }
+        public StorageService() { }
 
         public async Task<(string, string)> SaveFile(IFormFile file)
         {
@@ -42,110 +28,6 @@ namespace CyberTestingPlatform.Application.Services
                 filePath = Path.Combine(folderName, fullPath.Split(@"\").Last());
             }
             return (filePath, error);
-        }
-
-        // Далее идут методы для курсов
-
-        public async Task<List<Course>> GetAllCourses()
-        {
-            return await _coursesRepository.GetAll();
-        }
-        public async Task<List<Course>?> GetSelectCourses(int sampleSize, int page)
-        {
-            if (sampleSize > 0 && page > 0)
-            {
-                return await _coursesRepository.GetSelection(sampleSize, page);
-            }
-
-            return null;
-        }
-        public async Task<Course?> GetCourse(Guid id)
-        {
-            return await _coursesRepository.Get(id);
-        }
-        public async Task<Guid> CreateCourse(Course course)
-        {
-            return await _coursesRepository.Create(course);
-        }
-        public async Task<Guid> UpdateCourse(Guid id, string name, string description, int price, string imagePath, DateTime lastUpdationDate)
-        {
-            return await _coursesRepository.Update(id, name, description, price, imagePath, lastUpdationDate);
-        }
-        public async Task<Guid> DeleteCourse(Guid userId)
-        {
-            return await _coursesRepository.Delete(userId);
-        }
-
-        // Далее идут методы для лекций
-
-        public async Task<List<Lecture>> GetAllLectures()
-        {
-            return await _lecturesRepository.GetAll();
-        }
-        public async Task<List<Lecture>?> GetSelectLectures(int sampleSize, int page)
-        {
-            if (sampleSize > 0 && page > 0)
-            {
-                return await _lecturesRepository.GetSelection(sampleSize, page);
-            }
-
-            return null;
-        }
-        public async Task<Lecture?> GetLecture(Guid id)
-        {
-            return await _lecturesRepository.Get(id);
-        }
-        public async Task<Guid> CreateLecture(Lecture lecture)
-        {
-            return await _lecturesRepository.Create(lecture);
-        }
-        public async Task<Guid> UpdateLecture(Guid id, string theme, string title, string content, int position, DateTime lastUpdationDate, Guid courseId)
-        {
-            return await _lecturesRepository.Update(id, theme, title, content, position, lastUpdationDate, courseId);
-        }
-        public async Task<Guid> DeleteLecture(Guid userId)
-        {
-            return await _lecturesRepository.Delete(userId);
-        }
-
-        // Далее идут методы для тестов
-
-        public async Task<List<Test>> GetAllTests()
-        {
-            return await _testsRepository.GetAll();
-        }
-        public async Task<List<Test>?> GetSelectTests(int sampleSize, int page)
-        {
-            if (sampleSize > 0 && page > 0)
-            {
-                return await _testsRepository.GetSelection(sampleSize, page);
-            }
-
-            return null;
-        }
-        public async Task<Test?> GetTest(Guid id)
-        {
-            return await _testsRepository.Get(id);
-        }
-        public async Task<Guid> CreateTest(Test test)
-        {
-            return await _testsRepository.Create(test);
-        }
-        public async Task<Guid> UpdateTest(Guid id, string theme, string title, string questions, string answerOptions, string answerCorrect, int position, DateTime lastUpdationDate, Guid courseId)
-        {
-            return await _testsRepository.Update(id, theme, title, questions, answerOptions, answerCorrect, position, lastUpdationDate, courseId);
-        }
-        public async Task<Guid> DeleteTest(Guid userId)
-        {
-            return await _testsRepository.Delete(userId);
-        }
-
-        // Далее идут дополнительные методы
-
-        public DateTime ConvertToDateTime(string inputDate)
-        {
-            var dateSplit = inputDate.Split('-').Select(Int32.Parse).ToArray();
-            return new DateTime(dateSplit[0], dateSplit[1], dateSplit[2]);
         }
 
         private static string ValidationFile(IFormFile file)

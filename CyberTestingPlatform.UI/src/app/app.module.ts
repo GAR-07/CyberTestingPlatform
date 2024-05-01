@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http'
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
@@ -20,7 +20,6 @@ import { StartPageComponent } from './components/pages/start-page/start-page.com
 import { FooterComponent } from './components/footer/footer.component';
 import { LectureBlockComponent} from './components/UI/lecture-block/lecture-block.component';
 import { CourseBlockComponent } from './components/UI/course-block/course-block.component';
-import { ErrorComponent } from './components/pages/error/error.component';
 import { NotificationComponent } from './components/UI/notification/notification.component';
 import { ModalDialogComponent } from './components/UI/modal-dialog/modal-dialog.component';
 import { TestBlockComponent } from './components/UI/test-block/test-block.component';
@@ -43,7 +42,6 @@ export function tokenGetter() {
     FooterComponent,
     LectureBlockComponent,
     CourseBlockComponent,
-    ErrorComponent,
     NotificationComponent,
     ModalDialogComponent,
     TestBlockComponent
@@ -53,6 +51,7 @@ export function tokenGetter() {
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
+    FormsModule,
 
     JwtModule.forRoot({
       config: {

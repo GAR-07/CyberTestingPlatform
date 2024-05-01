@@ -10,6 +10,7 @@ import { AdminPanelComponent } from './components/pages/admin-panel/admin-panel.
 import { StartPageComponent } from './components/pages/start-page/start-page.component';
 import { CourseBlockComponent } from './components/UI/course-block/course-block.component';
 import { LectureBlockComponent } from './components/UI/lecture-block/lecture-block.component';
+import { TestBlockComponent } from './components/UI/test-block/test-block.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent, canActivate: [AuthGuard] },
@@ -20,6 +21,7 @@ const routes: Routes = [
   { path: 'adminPanel', component: AdminPanelComponent, canActivate: [AdminGuard] },
   { path: 'course/:guid', component: CourseBlockComponent, canActivate: [AuthGuard] },
   { path: 'lecture/:guid', component: LectureBlockComponent, canActivate: [AuthGuard] },
+  { path: 'test/:guid', component: TestBlockComponent, canActivate: [AuthGuard] },
   { path: '**', component: HomeComponent, canActivate: [AuthGuard] }
 ];
 

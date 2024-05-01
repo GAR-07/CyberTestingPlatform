@@ -162,3 +162,4 @@ C:\Users\G25\Documents\GitHub\CyberTestingPlatform\CyberTestingPlatform.API\Cybe
 C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Resourse.API\bin\Debug\net6.0\CyberTestingPlatform.Application.dll
 C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Resourse.API\bin\Debug\net6.0\CyberTestingPlatform.Application.pdb
 C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Resourse.API\obj\Debug\net6.0\CyberTestingPlatform.Resourse.API.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Resourse.API\bin\Debug\net6.0\Newtonsoft.Json.dll

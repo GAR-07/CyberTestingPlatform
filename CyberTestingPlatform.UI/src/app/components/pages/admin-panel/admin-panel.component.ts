@@ -1,8 +1,10 @@
 import { Component, ElementRef, QueryList, Renderer2, ViewChildren} from '@angular/core';
 import { CourseData } from 'src/app/interfaces/courseData.model';
 import { LectureData } from 'src/app/interfaces/lectureData.model';
+import { NotificationMessage } from 'src/app/interfaces/notificationMessage.model';
 import { TestData } from 'src/app/interfaces/testData.model';
 import { AuthService } from 'src/app/services/auth.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
@@ -21,45 +23,24 @@ export class AdminPanelComponent {
   pageNum: number = 1;
   pageSize: number = 20;
   roles : string[] = []
-  contentMods: string[] = ['list', 'view', 'create', 'edit']
+  adminMods: string[] = ['list', 'view', 'edit']
 
   constructor(
     private authService: AuthService,
     private storageService: StorageService,
     private renderer: Renderer2,
+    private notificationService: NotificationService,
   ) {}
 
   async ngOnInit(): Promise<void> {
     this.checkAccountData();
     try {
-      await this.getAllCourses();
       await this.getCourses(this.pageNum);
       await this.getLectures(this.pageNum);
       await this.getTests(this.pageNum);
-    } catch (error) {
-      console.error('Ошибка загрузки курсов:', error);
+    } catch (response: any) {
+      this.notificationService.addMessage(new NotificationMessage('error', response.toString()));
     }
-  }
-
-  getAllCourses(): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      this.allCourses = [];
-      this.storageService.getAllCourses()
-      .subscribe({
-        next: (response: CourseData[]) => {
-          if (response) {
-            for (var i = 0; i < response.length; i++) {
-              this.allCourses.push(response[i]);
-            }
-          }
-          resolve();
-        },
-        error: (error) => {
-          console.log(error);
-          reject(error);
-        }
-      });
-    });
   }
 
   getCourses(pageNum: number): Promise<void> {
@@ -75,9 +56,9 @@ export class AdminPanelComponent {
           }
           resolve();
         },
-        error: (error) => {
-          console.log(error);
-          reject(error);
+        error: (response) => {
+          this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
+          reject();
         }
       });
     });
@@ -96,9 +77,9 @@ export class AdminPanelComponent {
           }
           resolve();
         },
-        error: (error) => {
-          console.log(error);
-          reject(error);
+        error: (response) => {
+          this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
+          reject();
         }
       });
     });
@@ -117,9 +98,9 @@ export class AdminPanelComponent {
           }
           resolve();
         },
-        error: (error) => {
-          console.log(error);
-          reject(error);
+        error: (response) => {
+          this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
+          reject();
         }
       });
     });

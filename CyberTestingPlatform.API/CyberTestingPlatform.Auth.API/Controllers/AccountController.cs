@@ -4,6 +4,7 @@ using CyberTestingPlatform.Application.Services;
 using CyberTestingPlatform.Auth.API.Models;
 using CyberTestingPlatform.Core.Models;
 using BCrypt.Net;
+using CyberTestingPlatform.Resourse.API.Models;
 
 namespace CyberTestingPlatform.Auth.API.Controllers
 {
@@ -20,64 +21,38 @@ namespace CyberTestingPlatform.Auth.API.Controllers
 
         [Route("Login")]
         [HttpPost]
-        public async Task<IActionResult> Login([FromBody] LoginViewModel model)
+        public async Task<IActionResult> Login([FromBody] LoginRequest model)
         {
             if (ModelState.IsValid)
             {
-                var account = await _accountService.GetAccountByEmail(model.Email);
+                var account = await _accountService.GetAccountByEmailAsync(model.Email);
 
-                var validateError = _accountService.ValidateAccount(account, model.Password);
-                if (!string.IsNullOrEmpty(validateError))
-                {
-                    return BadRequest(validateError);
-                }
+                _accountService.ValidateAccount(account, model.Password);
 
-                var response = new
-                {
-                    accessToken = _accountService.GenerateJwt(account),
-                };
-                return Ok(response);
+                return Ok(new { accessToken = _accountService.GenerateJwt(account) });
             }
             return BadRequest("Invalid model object");
         }
 
         [Route("Register")]
         [HttpPost]
-        public async Task<IActionResult> Register([FromBody] RegisterViewModel model)
+        public async Task<IActionResult> Register([FromBody] RegisterRequest model)
         {
             if (ModelState.IsValid)
             {
-                var validateError = await _accountService.ValidateRegistration(model.Email, model.Role);
-                if (!string.IsNullOrEmpty(validateError))
-                {
-                    return BadRequest(validateError);
-                }
+                await _accountService.ValidateRegistration(model.Email, model.Role);
 
-                var passwordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(model.Password, HashType.SHA512);
-                var inputDate = model.Birthday.Split('-').Select(Int32.Parse).ToArray();
-                var birthday = new DateTime(inputDate[0], inputDate[1], inputDate[2]);
-
-                var (account, accountError) = Account.Create(
+                var account = new Account(
                     Guid.NewGuid(),
-                    birthday,
+                    _accountService.ConvertBirtdayDate(model.Birthday),
                     model.Email,
                     model.UserName,
-                    passwordHash,
+                    _accountService.GetPasswordHash(model.Password),
                     model.Role);
 
-                if (!string.IsNullOrEmpty(accountError))
-                {
-                    return BadRequest(accountError);
-                }
+                await _accountService.CreateAccountAsync(account);
 
-                await _accountService.CreateAccount(account);
-
-                var response = new
-                {
-                    accessToken = _accountService.GenerateJwt(account),
-                };
-                return Ok(response);
-
+                return Ok(new { accessToken = _accountService.GenerateJwt(account) });
             }
             return BadRequest("Invalid model object");
         }
@@ -85,11 +60,11 @@ namespace CyberTestingPlatform.Auth.API.Controllers
         [HttpGet]
         [Authorize(Roles = "Admin")]
         [Route("GetAccounts")]
-        public async Task<IActionResult> GetAccounts([FromQuery] ItemsViewModel model)
+        public async Task<IActionResult> GetAccounts([FromQuery] ItemsRequest model)
         {
             if (ModelState.IsValid)
             {
-                var accounts = await _accountService.GetSelectAccounts(model.SampleSize, model.Page);
+                var accounts = await _accountService.GetSelectAccountsAsync(model.SampleSize, model.Page);
 
                 return Ok(accounts);
             }

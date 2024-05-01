@@ -34,6 +34,26 @@ p {
   margin-top: 5px;
 }
 
+.circle {
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 1rem;
+  padding: 5px;
+  margin: 5px;
+  display: inline-block;
+  color: var(--primary-color);
+  background: var(--font-color-white);
+  text-decoration: none;
+}
+
+.circle.primary {
+  color: var(--font-color-white);
+  background: var(--primary-color);
+}
+
 .btn {
   display: block;
   font-size: 16px;
@@ -75,10 +95,21 @@ p {
   }
 }
 
+.notification-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 9998;
+}
+
 .content-img-wrapper {
   display: flex;
   justify-content: center;
   width: 100%;
+  padding: 10px 0;
 
   img {
     max-width: 100%;
@@ -182,8 +213,8 @@ p {
   padding-top: 10px;
 
   img {
-    width: 200px;
-    height: 250px;
+    width: auto;
+    max-height: 200px;
     margin: 0 20px 20px 20px;
   }
 

@@ -162,3 +162,4 @@ C:\Users\G25\Documents\GitHub\CyberTestingPlatform\CyberTestingPlatform.API\Cybe
 C:\Users\G25\Documents\GitHub\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Auth.API\obj\Debug\net6.0\CyberTestingPlatform.Auth.API.genruntimeconfig.cache
 C:\Users\G25\Documents\GitHub\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Auth.API\obj\Debug\net6.0\ref\CyberTestingPlatform.Auth.API.dll
 C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Auth.API\obj\Debug\net6.0\CyberTestingPlatform.Auth.API.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\Александр\source\repos\CyberTestingPlatform\CyberTestingPlatform.API\CyberTestingPlatform.Auth.API\bin\Debug\net6.0\Newtonsoft.Json.dll

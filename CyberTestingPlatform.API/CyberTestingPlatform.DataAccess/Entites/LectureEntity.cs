@@ -20,7 +20,7 @@ namespace CyberTestingPlatform.DataAccess.Entites
 
         public Guid CourseId { get; set; }
 
-        public int Position { get; set; }
+        public int Position { get; set; } = 0;
 
         public DateTime CreationDate { get; set; }
 

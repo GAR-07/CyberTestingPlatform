@@ -6,8 +6,11 @@ import { LectureData } from 'src/app/interfaces/lectureData.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { environment } from 'src/environments/environment';
-import { AdminPanelComponent } from '../../pages/admin-panel/admin-panel.component';
 import { convertImgPathToTag, convertTagToImgPath } from 'src/app/utils/conversion-helper';
+import { ActivatedRoute } from '@angular/router';
+import { TestData } from 'src/app/interfaces/testData.model';
+import { NotificationService } from 'src/app/services/notification.service';
+import { NotificationMessage } from 'src/app/interfaces/notificationMessage.model';
 
 @Component({
   selector: 'app-lecture-block',
@@ -16,20 +19,23 @@ import { convertImgPathToTag, convertTagToImgPath } from 'src/app/utils/conversi
 })
 export class LectureBlockComponent {
 
-  @Input() mods: string[] = [];
-  @Input() roles: string[] = [];
-  @Input() courses!: CourseData[];
+  @Input() mods: string[] = ['view', 'edit'];
   @Input() lecture!: LectureData;
+  @Input() course!: CourseData;
 
   mode: string = '';
+  roles: string[] = [];
+  lectures!: LectureData[];
+  tests!: TestData[];
+  courses!: CourseData[];
   progress: number = 0;
-  course!: CourseData;
   imagePath: string = '';
+  currentGuid: string | null = null;
   dragAreaClass: string = 'dragarea';
   isModalDialogVisible: boolean = false;
   guidEmpty: string = '00000000-0000-0000-0000-000000000000';
   lectureForm: FormGroup = this.formBuilder.group({
-    courseId: [null, [
+    courseId: [this.guidEmpty, [
       Validators.maxLength(255), 
     ]],
     theme: [null, [
@@ -53,27 +59,33 @@ export class LectureBlockComponent {
   constructor(
     private authService: AuthService,
     private storageService: StorageService,
+    private notificationService: NotificationService,
     private formBuilder: FormBuilder,
-    private adminPanel: AdminPanelComponent,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
+    var accountData = this.authService.accountData();
+    this.roles = accountData ? accountData.role : [];
     this.changeMode(this.mode);
-    if(this.mode !== 'create') {
-      this.getCourseById(this.lecture.courseId)
-    }
+    this.getComponentData();
+
+    this.route.paramMap.subscribe(params => {
+      const newGuid = params.get('guid');
+
+      if (newGuid !== this.currentGuid) {
+        this.currentGuid = newGuid;
+
+        if (newGuid !== null) {
+          this.updateComponentData();
+          console.log('update lecture!');
+        }
+      }
+    });
   }
 
   changeMode(mode: string) {
     this.mode = this.mods.includes(mode) ? mode : this.mods[0];
-    
-    if (this.mode !== 'create') {
-      if (this.mode === 'view') {
-        this.lecture.content = convertImgPathToTag(environment.resourseApiUrl, this.lecture.content);
-      } else {
-        this.lecture.content = convertTagToImgPath(environment.resourseApiUrl, this.lecture.content);
-      }
-    }
 
     if(this.mode === 'edit') {
       if(this.course) {
@@ -88,15 +100,128 @@ export class LectureBlockComponent {
         position: this.lecture.position,
         courseId: this.lecture.courseId
       });
-    } else {
-      this.lectureForm.patchValue({
-        theme: null,
-        title: null,
-        content: null,
-        position: null,
-        courseId: null
-      });
     }
+  }
+
+  async getComponentData() {
+    if (this.mode !== 'create') {
+      if (!this.lecture) {
+        this.currentGuid = this.route.snapshot.paramMap.get('guid');
+        await this.getLecture(this.currentGuid !== null ? this.currentGuid : this.guidEmpty);
+      }
+  
+      if (!this.course && this.lecture.courseId !== this.guidEmpty) {
+        await this.getCourse(this.lecture.courseId);
+      }
+
+      if (this.mode === 'view') {
+        await this.getCourseLectures(this.lecture.courseId);
+        await this.getCourseTests(this.lecture.courseId);
+        
+        this.lecture.content = convertImgPathToTag(environment.resourseApiUrl, this.lecture.content);
+      } else {
+        this.lecture.content = convertTagToImgPath(environment.resourseApiUrl, this.lecture.content);
+      }
+    }
+  }
+
+  async updateComponentData() {
+    this.currentGuid = this.route.snapshot.paramMap.get('guid');
+    await this.getLecture(this.currentGuid !== null ? this.currentGuid : this.guidEmpty);
+
+    if (this.course.id !== this.lecture.courseId) {
+      await this.getCourse(this.lecture.courseId);
+    }
+
+    if(this.mode !== 'create' && this.mode !== 'card') {
+      await this.getCourseLectures(this.lecture.courseId);
+      await this.getCourseTests(this.lecture.courseId);
+    }
+    
+    if (this.mode !== 'create') {
+      if (this.mode === 'view') {
+        this.lecture.content = convertImgPathToTag(environment.resourseApiUrl, this.lecture.content);
+      } else {
+        this.lecture.content = convertTagToImgPath(environment.resourseApiUrl, this.lecture.content);
+      }
+    }
+  }
+
+  getLecture(id: string) {
+    return new Promise<void>((resolve, reject) => {
+      this.storageService.getLecture(id).subscribe({
+        next: (response: LectureData) => {
+          this.lecture = response;
+          resolve();
+        },
+        error: (response) => {
+          this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
+          reject();
+        }
+      });
+    });
+  }
+
+  getCourse(id: string) {
+    return new Promise<void>((resolve, reject) => {
+      this.storageService.getCourse(id).subscribe({
+        next: (response: CourseData) => {
+          this.course = response;
+          resolve();
+        },
+        error: (response) => {
+          this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
+          reject();
+        }
+      });
+    });
+  }
+
+  getCourseLectures(courseId: string) {
+    return new Promise<void>((resolve, reject) => {
+      this.storageService.getLecturesByCourseId(courseId).subscribe({
+        next: (response: LectureData[]) => {
+          response.sort((a, b) => a.position - b.position);
+          this.lectures = response;
+          resolve();
+        },
+        error: (response) => {
+          this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
+          reject();
+        }
+      });
+    });
+  }
+
+  getCourseTests(courseId: string) {
+    return new Promise<void>((resolve, reject) => {
+      this.storageService.getTestsByCourseId(courseId).subscribe({
+        next: (response: TestData[]) => {
+          response.sort((a, b) => a.position - b.position); 
+          this.tests = response;
+          resolve();
+        },
+        error: (response) => {
+          this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
+          reject();
+        }
+      });
+    });
+  }
+
+  getAllCourses() {
+    return new Promise<void>((resolve, reject) => {
+      this.storageService.getAllCourses().subscribe({
+        next: (response: CourseData[]) => {
+          this.courses = response;
+          resolve();
+        },
+        error: (response) => {
+          this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
+          reject();
+        }
+      });
+    });
   }
 
   createLecture() {
@@ -121,7 +246,7 @@ export class LectureBlockComponent {
         console.log(response);
       },
       error: (response) => {
-        console.log(response);
+        this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
       }
     });
   }
@@ -144,11 +269,11 @@ export class LectureBlockComponent {
     
     this.storageService.updateLecture(this.lecture.id, this.lecture).subscribe({
       next: (response: any) => {
-        this.mode = "view";
+        this.mode = "";
         console.log(response);
       },
       error: (response) => {
-        console.log(response);
+        this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
       }
     });
   }
@@ -159,13 +284,17 @@ export class LectureBlockComponent {
         window.location.reload();
         console.log(response);
       },
-      error: (response) => {
-        console.log(response);
+      error: (response: any) => {
+        console.log(response.error.Message);
       }
     });
   }
 
   uploadFile = (files : any) => {
+    if (files.length === 0) {
+      return;
+    }
+
     const formData = new FormData();
 
     for(var i = 0; i < files.length; i++) {
@@ -192,8 +321,38 @@ export class LectureBlockComponent {
           }
         }
       },
-      error: (response: any) => console.log(response)
+      error: (response) => {
+        this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
+      }
     });
+  }
+
+  getNextLectureId(id: string) {
+    const currentIndex = this.lectures.findIndex(lecture => lecture.id === id);
+
+    if (currentIndex !== -1) {
+        const nextIndex = currentIndex + 1;
+
+        if (nextIndex < this.lectures.length) {
+            const nextLectureId = this.lectures[nextIndex].id;
+            return nextLectureId;
+        }
+    }
+    return '';
+  }
+
+  getPreviousLectureId(id: string) {
+    const currentIndex = this.lectures.findIndex(lecture => lecture.id === id);
+
+    if (currentIndex !== -1) {
+        const previousIndex = currentIndex - 1;
+
+        if (previousIndex >= 0) {
+            const previousLectureId = this.lectures[previousIndex].id;
+            return previousLectureId;
+        }
+    }
+    return '';
   }
 
   showModal() {
@@ -207,15 +366,7 @@ export class LectureBlockComponent {
     }
 	}
 
-  getCourseById(id: string) {
-    this.courses.forEach(course => {
-      if (course.id === id) {
-        this.course = course;
-      }
-    });
-  }
-
-  createFilePath = (serverPath: string) => { 
+  createFilePath(serverPath: string) { 
     return `${environment.resourseApiUrl}/${serverPath}`; 
   }
 

@@ -4,17 +4,16 @@ namespace CyberTestingPlatform.Application.Services
 {
     public interface IAccountService
     {
-        Task<Guid> CreateAccount(Account account);
-        Task<Guid> DeleteAccount(Guid userId);
+        DateTime ConvertBirtdayDate(string birthday);
+        Task<Guid> CreateAccountAsync(Account account);
+        Task<Guid> DeleteAccountAsync(Guid userId);
         string GenerateJwt(Account account);
-        Task<Account?> GetAccountByEmail(string email);
-        Task<List<Account>> GetAllAccounts();
-        Task<List<Account>?> GetSelectAccounts(int sampleSize, int page);
-        bool IsAccountBanned(string roles);
-        Task<bool> IsEmailAlreadyExists(string email);
-        bool IsPasswordValid(string password, string passwordHash);
-        Task<Guid> UpdateAccount(Guid userId, DateTime birthday, string email, string userName, string passwordHash, string roles);
-        string? ValidateAccount(Account? account, string password);
-        Task<string?> ValidateRegistration(string email, string role);
+        Task<Account> GetAccountByEmailAsync(string email);
+        Task<List<Account>> GetAllAccountsAsync();
+        string GetPasswordHash(string password);
+        Task<List<Account>> GetSelectAccountsAsync(int sampleSize, int page);
+        Task<Guid> UpdateAccountAsync(Account account);
+        bool ValidateAccount(Account account, string password);
+        Task<bool> ValidateRegistration(string email, string role);
     }
 }

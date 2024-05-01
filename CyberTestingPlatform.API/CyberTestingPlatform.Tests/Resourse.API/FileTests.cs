@@ -45,7 +45,7 @@ namespace CyberTestingPlatform.Tests.Resourse.API
             var httpContext = new DefaultHttpContext();
             httpContext.Request.Form = new FormCollection(new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>(), formFileCollection);
 
-            var service = new StorageService(_coursesRepository, _lecturesRepository, _testsRepository);
+            var service = new StorageService();
             var controller = new StorageController(service);
 
             controller.ControllerContext = new ControllerContext
@@ -95,7 +95,7 @@ namespace CyberTestingPlatform.Tests.Resourse.API
 
                 files.Add(formFile);
             }
-            var service = new StorageService(_coursesRepository, _lecturesRepository, _testsRepository);
+            var service = new StorageService();
 
             // Act
             List<(string?, string?)> results = new();
@@ -159,7 +159,7 @@ namespace CyberTestingPlatform.Tests.Resourse.API
 
                 files.Add(formFile);
             }
-            var service = new StorageService(_coursesRepository, _lecturesRepository, _testsRepository);
+            var service = new StorageService();
 
             // Act
             List<(string?, string?)> results = new();

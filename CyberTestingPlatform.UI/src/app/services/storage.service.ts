@@ -55,6 +55,10 @@ export class StorageService {
 
     // Далее идут методы для лекций
 
+    getLecturesByCourseId(courseId: string) {
+      return this.http.get<any>(this.resourseApiUrl + '/Lecture/GetLecturesByCourseId/' + courseId);
+    }
+
     getLectures(sampleSize: number, page: number) {
       const params = new HttpParams()
         .set('Content-Type', 'application/json')
@@ -80,6 +84,15 @@ export class StorageService {
     }
 
     // Далее идут методы для тестов
+
+    checkResultTest(id: string, answers: string) {
+      const requestBody = { answers: answers };
+      return this.http.post<any>(this.resourseApiUrl + '/Test/CheckResultTest/' + id, requestBody);
+    }
+
+    getTestsByCourseId(courseId: string) {
+      return this.http.get<any>(this.resourseApiUrl + '/Test/GetTestsByCourseId/' + courseId);
+    }
 
     getTests(sampleSize: number, page: number) {
       const params = new HttpParams()

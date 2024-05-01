@@ -1,1 +1,8 @@
-<p>notification works!</p>
+<!-- <div class="notification-wrapper"> -->
+  <a (click)="close()">
+    <div class="notification {{notificationMessage.type}}">
+      <p>{{notificationMessage.message}}</p>
+    </div>
+  </a>
+<!-- </div> -->
+
