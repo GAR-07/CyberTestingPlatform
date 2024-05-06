@@ -17,7 +17,7 @@
         <app-validator-message [field]="loginForm.get('password')"></app-validator-message>
       </div>
       
-      <button type="submit" class="btn primary" [disabled]="!loginForm.valid">Войти</button>
+      <button id="loginBtn" type="submit" class="btn primary">Войти</button>
         <a class="link" routerLink="/register">Регистрация</a>
         <a class="link" routerLink="/register">Забыли пароль?</a>
     </form>

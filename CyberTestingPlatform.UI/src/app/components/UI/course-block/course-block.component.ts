@@ -40,7 +40,7 @@ export class CourseBlockComponent {
     description: [null, [
       Validators.required,
     ]],
-    price: [null, [
+    price: [0, [
       Validators.required,
     ]],
     imagePath: [null, [

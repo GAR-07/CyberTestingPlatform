@@ -32,15 +32,15 @@
           <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="81 111 350 290"><path fill="#FFFFFF" d="M406 161H106c-13.8 0-25-11.2-25-25s11.2-25 25-25h300c13.8 0 25 11.2 25 25s-11.2 25-25 25zm0 70H106c-13.8 0-25 11.2-25 25s11.2 25 25 25h300c13.8 0 25-11.2 25-25s-11.2-25-25-25zm0 120H106c-13.8 0-25 11.2-25 25s11.2 25 25 25h300c13.8 0 25-11.2 25-25s-11.2-25-25-25z" data-original="#000000"/></svg>
         </a>
       </div>
-      <div #dropdown_wrapper class="dropdown-wrapper">
+      <div #dropdown_wrapper class="dropdown-wrapper" (click)="changeNavbarType()">
         <div #dropdown_content class="dropdown-content">
           <div class="container">
             <a class="logo" routerLink="">
               <p>КиберТест</p>
             </a>
             <div class="navbar-menu">
-              <button class="navbar-button" (click)="changeNavbarType()"></button>
-              <a class="nav-link" (click)="changeNavbarType()">
+              <button class="navbar-button"></button>
+              <a class="nav-link">
                 <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="81 111 350 290"><path fill="#FFFFFF" d="M406 161H106c-13.8 0-25-11.2-25-25s11.2-25 25-25h300c13.8 0 25 11.2 25 25s-11.2 25-25 25zm0 70H106c-13.8 0-25 11.2-25 25s11.2 25 25 25h300c13.8 0 25-11.2 25-25s-11.2-25-25-25zm0 120H106c-13.8 0-25 11.2-25 25s11.2 25 25 25h300c13.8 0 25-11.2 25-25s-11.2-25-25-25z" data-original="#000000"/></svg>
               </a>
             </div>

@@ -30,17 +30,17 @@
             <div class="content-block">
               <div class="actions">
                 <button *ngIf="course && lectures && getPreviousLectureId(lecture.id) !== ''" 
-                  class="btn primary" [routerLink]="['/lecture/', getPreviousLectureId(lecture.id)]">К предыдущей лекции
+                  class="btn primary" [routerLink]="['/lecture/', getPreviousLectureId(lecture.id)]">Предыдущая теория
                 </button>
 
                 <button *ngIf="!course" class="btn primary" [routerLink]="['/']">На главную</button>
-                <button *ngIf="course" class="btn primary" [routerLink]="['/course/', course.id]">К списку</button>
+                <button *ngIf="course" class="btn primary" [routerLink]="['/course/', course.id]">Вернуться к курсу</button>
 
                 <button *ngIf="course && lectures && getNextLectureId(lecture.id) !== ''" 
-                  class="btn primary" [routerLink]="['/lecture/', getNextLectureId(lecture.id)]">К следующей лекции
+                  class="btn primary" [routerLink]="['/lecture/', getNextLectureId(lecture.id)]">Следующая теория
                 </button>
                 <button *ngIf="course && tests && getNextLectureId(lecture.id) === ''" 
-                class="btn primary" [routerLink]="['/test/', tests[0].id]">К тесту
+                class="btn primary" [routerLink]="['/test/', tests[0].id]">Начать тест
               </button>
                 <!-- (click)="checkAccessRoute('/lecture/', lectures[0].id)" -->
               </div>

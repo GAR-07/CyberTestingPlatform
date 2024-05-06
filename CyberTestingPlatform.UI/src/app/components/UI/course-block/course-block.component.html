@@ -4,33 +4,43 @@
     <ng-container *ngIf="course">
       <main class="content-wrapper">
         <div class="content-container">
-          <div class="progress-bar-wrapper">
-          </div>
+          <div class="progress-bar-wrapper"></div>
           <div class="content-block">
-            <h1 class="title">{{ course.name }}</h1>
-
-            <!-- Отображение групп лекций -->
+            <h1>{{ course.name }}</h1>
             <ng-container *ngIf="course && lectures">
-              <ng-container *ngFor="let group of groupedLecturesArray">
-                <h2>{{ group.theme }}</h2> <!-- Заголовок с темой лекций -->
-                <ng-container *ngFor="let lecture of group.lectures">
-                  <a class="content-row" [routerLink]="['/lecture', lecture.id]">
-                    <p>{{ lecture.title }}</p>
-                  </a>
-                </ng-container>
-              </ng-container>
+              <div class="custom-section-wrapper">
+                <div class="custom-section-name">Теоретический материал</div>
+                <ul class="section-list">
+                  <ng-container *ngFor="let group of groupedLecturesArray">
+                    <li>
+                      <div class="theme-name">{{ group.theme }}</div>
+                      <ul class="theme-list">
+                        <ng-container *ngFor="let lecture of group.lectures">
+                          <li><a [routerLink]="['/lecture', lecture.id]">{{ lecture.title }}</a></li>
+                        </ng-container>
+                      </ul>
+                    </li>
+                  </ng-container>
+                </ul>
+              </div>
             </ng-container>
 
-            <!-- Отображение групп тестов -->
-            <ng-container *ngIf="course && lectures">
-              <ng-container *ngFor="let group of groupedTestsArray">
-                <h2>{{ group.theme }}</h2> <!-- Заголовок с темой тестов -->
-                <ng-container *ngFor="let test of group.tests">
-                  <a class="content-row" [routerLink]="['/test', test.id]">
-                    <p>{{ test.title }}</p>
-                  </a>
-                </ng-container>
-              </ng-container>
+            <ng-container *ngIf="course && tests">
+              <div class="custom-section-wrapper">
+                <div class="custom-section-name">Тесты для закрепления материала</div>
+                <ul class="section-list">
+                  <ng-container *ngFor="let group of groupedTestsArray">
+                    <li>
+                      <div class="theme-name">{{ group.theme }}</div>
+                      <ul class="theme-list">
+                        <ng-container *ngFor="let test of group.tests">
+                          <li><a [routerLink]="['/test', test.id]">{{ test.title }}</a></li>
+                        </ng-container>
+                      </ul>
+                    </li>
+                  </ng-container>
+                </ul>
+              </div>
             </ng-container>
           </div>
 
@@ -42,7 +52,7 @@
             </div>
             <app-modal-dialog 
               *ngIf="isModalDialogVisible" 
-              [header]="'Внимание!'" 
+              [header]="'Внимание!'"
               [description]="'Уверены, что хотите удалить?'"
               (isConfirmed)="closeModal($event)">
             </app-modal-dialog>
@@ -52,23 +62,24 @@
     </ng-container>
   </ng-container>
 
-  <ng-container *ngSwitchCase="'card'">
+  <div *ngSwitchCase="'card'" class="card-wrapper">
     <ng-container *ngIf="course">
       <a class="card" [routerLink]="['/course', course.id]">
-        <div class="image">
-          <img [src]="createFilePath(course.imagePath)" alt="Product Image">
+        <div class="card__top-wrap">
+          <div class="image">
+            <img [src]="createFilePath(course.imagePath)" alt="Course image">
+          </div>
         </div>
-        <div class="info">
-          <div class="title">{{course.name}}</div>
-          <div class="description">{{course.description}}</div>
-          <div *ngIf="course.price === 0" class="price">Бесплатно</div>
-          <div *ngIf="course.price !== 0" class="price">{{course.price}} рублей</div>
+        <div class="card__bottom-wrap">
+            <div class="title">{{course.name}}</div>
+            <div class="description">{{course.description}}</div>
+            <div *ngIf="course.price !== 0" class="price">{{course.price}} рублей</div>
         </div>
       </a>
     </ng-container>
-  </ng-container>
+  </div>
 
-  <div *ngSwitchCase="'list'"  class="list-wrapper">
+  <div *ngSwitchCase="'list'" class="list-wrapper">
     <div *ngIf="course" class="table-row">
       <div class="table-cell">{{course.name}}</div>
       <div class="table-cell">{{course.description}}</div>
@@ -119,17 +130,31 @@
               #dragAreaInput multiple="false" (change)="uploadFile(dragAreaInput.files)">
             <label (click)="dragAreaInput.click()">Загрузить обложку</label>
           </div>
-          <div *ngIf="courseForm.value.imagePath">
-            <a class="card">
-              <div class="image">
-                <img [src]="createFilePath(courseForm.value.imagePath)">
+          <div *ngIf="courseForm.value.imagePath" class="demo-card-wrapper">
+            <div class="card" style="width: 100%; max-width: 300px; height: 320px;" >
+              <div class="card__top-wrap">
+                <div class="image">
+                  <img [src]="createFilePath(courseForm.value.imagePath)" alt="Course image">
+                </div>
               </div>
-              <div class="info">
+              <div class="card__bottom-wrap">
                 <div class="title">Заголовок</div>
-                <div class="description">Описание описание описание описание описание</div>
+                <div class="description">Довольно длинное описание будет отображаться на этом самом месте</div>
                 <div class="price">Цена</div>
               </div>
-            </a>
+            </div>
+            <div class="card" style="width: 100%; max-width: 200px; height: 320px;" >
+              <div class="card__top-wrap">
+                <div class="image">
+                  <img [src]="createFilePath(courseForm.value.imagePath)" alt="Course image">
+                </div>
+              </div>
+              <div class="card__bottom-wrap">
+                <div class="title">Заголовок</div>
+                <div class="description">Довольно длинное описание будет отображаться на этом самом месте</div>
+                <div class="price">Цена</div>
+              </div>
+            </div>
           </div>
         </div>
         <app-validator-message [field]="courseForm.get('imagePath')"></app-validator-message>
@@ -172,17 +197,31 @@
               #dragAreaInput multiple="false" (change)="uploadFile(dragAreaInput.files)">
             <label (click)="dragAreaInput.click()">Загрузить обложку</label>
           </div>
-          <div *ngIf="courseForm.value.imagePath">
-            <a class="card">
-              <div class="image">
-                <img [src]="createFilePath(courseForm.value.imagePath)">
+          <div *ngIf="courseForm.value.imagePath" class="demo-card-wrapper">
+            <div class="card" style="width: 100%; max-width: 300px; height: 320px;" >
+              <div class="card__top-wrap">
+                <div class="image">
+                  <img [src]="createFilePath(courseForm.value.imagePath)" alt="Course image">
+                </div>
               </div>
-              <div class="info">
+              <div class="card__bottom-wrap">
                 <div class="title">Заголовок</div>
-                <div class="description">Описание описание описание описание описание</div>
+                <div class="description">Довольно длинное описание будет отображаться на этом самом месте</div>
                 <div class="price">Цена</div>
               </div>
-            </a>
+            </div>
+            <div class="card" style="width: 100%; max-width: 200px; height: 320px;" >
+              <div class="card__top-wrap">
+                <div class="image">
+                  <img [src]="createFilePath(courseForm.value.imagePath)" alt="Course image">
+                </div>
+              </div>
+              <div class="card__bottom-wrap">
+                <div class="title">Заголовок</div>
+                <div class="description">Довольно длинное описание будет отображаться на этом самом месте</div>
+                <div class="price">Цена</div>
+              </div>
+            </div>
           </div>
         </div>
         <app-validator-message [field]="courseForm.get('imagePath')"></app-validator-message>

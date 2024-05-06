@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RegisterData } from 'src/app/interfaces/registerData.model';
 import { AuthService } from 'src/app/services/auth.service';
-import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup,ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { NotificationService } from 'src/app/services/notification.service';
 import { NotificationMessage } from 'src/app/interfaces/notificationMessage.model';
 
@@ -13,31 +13,31 @@ import { NotificationMessage } from 'src/app/interfaces/notificationMessage.mode
 export class RegisterComponent {
   modelData = new RegisterData('', '', '', '', '');
   regForm: FormGroup = this.formBuilder.group({
-    birthday: ['2023-10-12', [
+    birthday: [null, [
       Validators.required, 
       this.birthdayValidator()
     ]],
-    email: ['ya@ya.ru', [
+    email: [null, [
       Validators.required,
       Validators.maxLength(1000),
       Validators.email
     ]],
-    userName: ['newUser', [
+    userName: [null, [
       Validators.required,
       Validators.minLength(1),
       Validators.maxLength(50),
       this.userNameValidator()
     ]],
-    role: ['User', [
+    role: [null, [
       Validators.required
     ]],
     passwords: this.formBuilder.group({
-      password: ['123123123', [
+      password: [null, [
         Validators.required,
         Validators.minLength(8),
         Validators.maxLength(500)
       ]],
-      confirmPassword: ['123123123', [
+      confirmPassword: [null, [
         Validators.required,
         Validators.minLength(8),
         Validators.maxLength(500),
@@ -48,12 +48,14 @@ export class RegisterComponent {
   constructor(
     private authService: AuthService,
     private formBuilder: FormBuilder,
-    private notificationService: NotificationService,
+    private notificationService: NotificationService
   ) { }
 
   ngOnInit(): void { }
 
   onSubmit() {
+    this.regForm.markAllAsTouched();
+    
     if (this.regForm.valid) {
       this.modelData = {
         birthday: this.regForm.value.birthday,
@@ -76,13 +78,14 @@ export class RegisterComponent {
   private birthdayValidator(): ValidatorFn {
     const currentDate = new Date();
     return (control: AbstractControl): { [key: string]: any } | null => {
-      if (!(control.dirty || control.touched)) {
+      if (!(control.dirty || control.touched) || !control.value) {
         return null;
       }
+
       var inputDate = control.value.split('-');
-      var birthday = new Date(inputDate[0], inputDate[1], inputDate[2]);
+      var birthday = new Date(inputDate[2], inputDate[1] - 1, inputDate[0]);
       
-      return inputDate[0] < 1900 || birthday > currentDate ? { custom: 'Значение даты не соответствует разрешённым' } : null;
+      return inputDate[2] < 1900 || birthday > currentDate ? { custom: 'Значение даты не соответствует разрешённым' } : null;
     };
   }
 
@@ -107,5 +110,39 @@ export class RegisterComponent {
       }
       return { custom: 'Пароли должны совпадать' };
     };
+  }
+
+  formatBirthday(event: any) {
+    var value = event.target.value.replace(/\D/g, '');
+    var cursorPosition = event.target.selectionStart;
+  
+    if (value !== '' && !/^-$/.test(value)) {
+      if (value.length >= 2) {
+        value = value.substring(0, 2) + '-' + value.substring(2);
+        if (cursorPosition === 2) {
+          cursorPosition += 1;
+        }
+      }
+      if (value.length >= 5) {
+        value = value.substring(0, 5) + '-' + value.substring(5, 9);
+        if (cursorPosition === 5) {
+          cursorPosition += 1;
+        }
+      }
+
+      if (event.inputType === 'deleteContentBackward') {
+        if (value.length === 6) {
+          value = value.substring(0, 5);
+        }
+        if (value.length === 3) {
+          value = value.substring(0, 2);
+        }
+      }
+    }
+
+    this.regForm.patchValue({
+      birthday: value,
+    });
+    event.target.setSelectionRange(cursorPosition, cursorPosition);
   }
 }

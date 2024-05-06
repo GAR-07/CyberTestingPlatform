@@ -8,7 +8,9 @@ namespace CyberTestingPlatform.Application.Services
         Task<Guid> CreateAccountAsync(Account account);
         Task<Guid> DeleteAccountAsync(Guid userId);
         string GenerateJwt(Account account);
+        Task<Account> GetAccountAsync(Guid userId);
         Task<Account> GetAccountByEmailAsync(string email);
+        Task<Account> GetAccountDataAsync(Guid userId);
         Task<List<Account>> GetAllAccountsAsync();
         string GetPasswordHash(string password);
         Task<List<Account>> GetSelectAccountsAsync(int sampleSize, int page);

@@ -14,7 +14,7 @@ namespace CyberTestingPlatform.DataAccess.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<List<Lecture>> GetSelectionAsync(int sampleSize, int page)
+        public async Task<List<Lecture>?> GetSelectionAsync(int sampleSize, int page)
         {
             var totalCount = await _dbContext.Lectures.AsNoTracking().CountAsync();
             var startIndex = Math.Max(0, totalCount - sampleSize * page);
@@ -24,8 +24,12 @@ namespace CyberTestingPlatform.DataAccess.Repositories
                 .Skip(startIndex)
                 .Take(countToTake)
                 .AsNoTracking()
-                .ToListAsync()
-                ?? throw new Exception($"Результатов не найдено");
+                .ToListAsync();
+
+            if (lectureEntities == null)
+            {
+                return null;
+            }
 
             var lectures = lectureEntities
                .Select(x => new Lecture(x.Id, x.Theme, x.Title, x.Content, x.Position, x.CreatorID, x.CreationDate, x.LastUpdationDate, x.CourseId))
@@ -34,13 +38,17 @@ namespace CyberTestingPlatform.DataAccess.Repositories
             return lectures;
         }
 
-        public async Task<List<Lecture>> GetByCourseIdAsync(Guid id)
+        public async Task<List<Lecture>?> GetByCourseIdAsync(Guid id)
         {
             var lectureEntities = await _dbContext.Lectures
                 .Where(lecture => lecture.CourseId == id)
                 .AsNoTracking()
-                .ToListAsync()
-                ?? throw new Exception($"Результатов не найдено");
+                .ToListAsync();
+
+            if (lectureEntities == null)
+            {
+                return null;
+            }
 
             var lectures = lectureEntities
                .Select(x => new Lecture(x.Id, x.Theme, x.Title, x.Content, x.Position, x.CreatorID, x.CreationDate, x.LastUpdationDate, x.CourseId))
@@ -49,10 +57,14 @@ namespace CyberTestingPlatform.DataAccess.Repositories
             return lectures;
         }
 
-        public async Task<Lecture> GetAsync(Guid id)
+        public async Task<Lecture?> GetAsync(Guid id)
         {
-            var lectureEntity = await _dbContext.Lectures.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id)
-                 ?? throw new Exception($"Лекция {id} не найдена");
+            var lectureEntity = await _dbContext.Lectures.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
+
+            if (lectureEntity == null)
+            {
+                return null;
+            }
 
             return new Lecture(
                 lectureEntity.Id,
@@ -66,7 +78,7 @@ namespace CyberTestingPlatform.DataAccess.Repositories
                 lectureEntity.CourseId);
         }
 
-        public async Task<Guid> CreateAsync(Lecture lecture)
+        public async Task<Guid?> CreateAsync(Lecture lecture)
         {
             var lectureEntity = new LectureEntity
             {
@@ -87,12 +99,16 @@ namespace CyberTestingPlatform.DataAccess.Repositories
             return lectureEntity.Id;
         }
 
-        public async Task<Guid> UpdateAsync(Lecture lecture)
+        public async Task<Guid?> UpdateAsync(Lecture lecture)
         {
             var lectureEntity = await _dbContext.Lectures
                 .Where(p => p.Id == lecture.Id)
-                .FirstOrDefaultAsync()
-                ?? throw new Exception($"Лекция {lecture.Id} не найдена");
+                .FirstOrDefaultAsync();
+
+            if (lectureEntity == null)
+            {
+                return null;
+            }
 
             lectureEntity.Theme = lecture.Theme;
             lectureEntity.Title = lecture.Title;
@@ -106,12 +122,16 @@ namespace CyberTestingPlatform.DataAccess.Repositories
             return lectureEntity.Id;
         }
 
-        public async Task<Guid> DeleteAsync(Guid id)
+        public async Task<Guid?> DeleteAsync(Guid id)
         {
             var lectureEntity = await _dbContext.Lectures
                 .Where(p => p.Id == id)
-                .FirstOrDefaultAsync()
-                ?? throw new Exception($"Лекция {id} не найдена");
+                .FirstOrDefaultAsync();
+
+            if (lectureEntity == null)
+            {
+                return null;
+            }
 
             _dbContext.Remove(lectureEntity);
             await _dbContext.SaveChangesAsync();

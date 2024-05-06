@@ -4,6 +4,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { CourseData } from '../interfaces/courseData.model';
 import { LectureData } from '../interfaces/lectureData.model';
 import { TestData } from '../interfaces/testData.model';
+import { TestResultData } from '../interfaces/testResultData.model';
 
 @Injectable({
   providedIn: 'root'
@@ -85,9 +86,12 @@ export class StorageService {
 
     // Далее идут методы для тестов
 
-    checkResultTest(id: string, answers: string) {
-      const requestBody = { answers: answers };
-      return this.http.post<any>(this.resourseApiUrl + '/Test/CheckResultTest/' + id, requestBody);
+    getTestResult(id: string) {
+      return this.http.get<any>(this.resourseApiUrl + '/Test/GetTestResult/' + id);
+    }
+
+    createTestResult(testResult: TestResultData) {
+      return this.http.post<any>(this.resourseApiUrl + '/Test/CreateTestResult/', testResult);
     }
 
     getTestsByCourseId(courseId: string) {

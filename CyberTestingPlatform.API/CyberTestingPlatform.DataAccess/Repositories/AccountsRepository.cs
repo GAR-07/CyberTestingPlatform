@@ -136,8 +136,12 @@ namespace CyberTestingPlatform.DataAccess.Repositories
         {
             var accountEntity = await _dbContext.Accounts
                 .Where(p => p.UserId == userId)
-            .FirstOrDefaultAsync()
-                ?? throw new Exception($"Пользователь {userId} не найден");
+                .FirstOrDefaultAsync();
+
+            if (accountEntity == null)
+            {
+                return null;
+            }
 
             _dbContext.Remove(accountEntity);
             await _dbContext.SaveChangesAsync();

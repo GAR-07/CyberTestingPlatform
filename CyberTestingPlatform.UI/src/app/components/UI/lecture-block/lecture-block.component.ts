@@ -64,30 +64,30 @@ export class LectureBlockComponent {
     private route: ActivatedRoute
   ) { }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     var accountData = this.authService.accountData();
     this.roles = accountData ? accountData.role : [];
     this.changeMode(this.mode);
-    this.getComponentData();
+    await this.getComponentData();
 
-    this.route.paramMap.subscribe(params => {
+    this.route.paramMap.subscribe(async params => {
       const newGuid = params.get('guid');
 
       if (newGuid !== this.currentGuid) {
         this.currentGuid = newGuid;
 
         if (newGuid !== null) {
-          this.updateComponentData();
-          console.log('update lecture!');
+          await this.updateComponentData();
         }
       }
     });
   }
 
-  changeMode(mode: string) {
+  async changeMode(mode: string) {
     this.mode = this.mods.includes(mode) ? mode : this.mods[0];
 
     if(this.mode === 'edit') {
+      await this.getAllCourses();
       if(this.course) {
         this.lectureForm.patchValue({
           courseId: this.course.id,
@@ -109,41 +109,35 @@ export class LectureBlockComponent {
         this.currentGuid = this.route.snapshot.paramMap.get('guid');
         await this.getLecture(this.currentGuid !== null ? this.currentGuid : this.guidEmpty);
       }
-  
-      if (!this.course && this.lecture.courseId !== this.guidEmpty) {
-        await this.getCourse(this.lecture.courseId);
-      }
-
-      if (this.mode === 'view') {
-        await this.getCourseLectures(this.lecture.courseId);
-        await this.getCourseTests(this.lecture.courseId);
-        
-        this.lecture.content = convertImgPathToTag(environment.resourseApiUrl, this.lecture.content);
-      } else {
-        this.lecture.content = convertTagToImgPath(environment.resourseApiUrl, this.lecture.content);
-      }
+      await this.getAdditionalComponentData();
     }
   }
 
   async updateComponentData() {
-    this.currentGuid = this.route.snapshot.paramMap.get('guid');
-    await this.getLecture(this.currentGuid !== null ? this.currentGuid : this.guidEmpty);
+    if (this.mode !== 'create') {
+      this.currentGuid = this.route.snapshot.paramMap.get('guid');
+      await this.getLecture(this.currentGuid !== null ? this.currentGuid : this.guidEmpty);
+      
+      await this.getAdditionalComponentData();
+    }
+  }
 
-    if (this.course.id !== this.lecture.courseId) {
+  async getAdditionalComponentData() {
+    if (!this.course && this.lecture.courseId !== this.guidEmpty) {
       await this.getCourse(this.lecture.courseId);
     }
 
-    if(this.mode !== 'create' && this.mode !== 'card') {
+    if (this.mode === 'edit') {
+      await this.getAllCourses();
+    }
+
+    if (this.mode === 'view') {
       await this.getCourseLectures(this.lecture.courseId);
       await this.getCourseTests(this.lecture.courseId);
-    }
-    
-    if (this.mode !== 'create') {
-      if (this.mode === 'view') {
-        this.lecture.content = convertImgPathToTag(environment.resourseApiUrl, this.lecture.content);
-      } else {
-        this.lecture.content = convertTagToImgPath(environment.resourseApiUrl, this.lecture.content);
-      }
+      
+      this.lecture.content = convertImgPathToTag(environment.resourseApiUrl, this.lecture.content);
+    } else {
+      this.lecture.content = convertTagToImgPath(environment.resourseApiUrl, this.lecture.content);
     }
   }
 

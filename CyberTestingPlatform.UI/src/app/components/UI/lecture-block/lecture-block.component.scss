@@ -1,81 +1,37 @@
-.content-wrapper {
+.theme {
+  padding: 5px;
+  text-align: left;
+
+  .link {
+    margin-top: 10px;
+  }
+}
+
+.title {
+  padding: 10px;
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--font-color-white);
+  background-color: var(--primary-color);
+}
+
+.content {
+  text-align: justify;
+  margin: 10px;
+  font-size: 1rem;
+  line-height: 1.25;
+}
+
+.actions {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 5px;
 
-  .content-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    max-width: 1920px;
-    margin: 20px 0;
-
-    .content-block {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      max-width: 1080px;
-      padding: 0 10px;
-
-      .theme {
-        padding: 5px;
-        text-align: left;
-
-        .link {
-          font-size: 1.5rem;
-          font-style: normal;
-          font-weight: 700;
-          line-height: normal;
-          margin-top: 10px;
-          text-decoration: none;
-          color: var(--primary-color);
-  
-          &:hover {
-            text-decoration: underline;
-            color: var(--additional-color);
-          }
-        }
-      }
-    
-      .title {
-        padding: 10px;
-        font-size: 2rem;
-        font-weight: bold;
-        color: var(--font-color-white);
-        background-color: var(--primary-color);
-      }
-    
-      .content {
-        text-align: justify;
-        margin: 10px;
-        font-size: 1rem;
-        line-height: 1.25;
-      }
-    }
-
-    .progress-bar {
-      padding: 0 10px;
-      display: flex;
-      flex-direction: row;
-      justify-items: start;
-      width: 100%;
-      max-width: 1080px;
-    }
-
-    .actions {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      padding: 5px;
-    
-      .btn {
-        margin: 5px;
-        font-size: 1rem;
-      }
-    }
+  .btn {
+    margin: 5px;
+    font-size: 1rem;
   }
 }
 
@@ -184,5 +140,8 @@
       }
     }
   }
-}
 
+  .actions {
+    flex-direction: column-reverse !important;
+  }
+}

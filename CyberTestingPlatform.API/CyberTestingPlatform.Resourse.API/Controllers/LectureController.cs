@@ -17,8 +17,8 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
             _lectureService = lectureService;
         }
 
-        [HttpGet("GetLecturesByCourseId/{id}")]
         [Authorize]
+        [HttpGet("GetLecturesByCourseId/{id}")]
         public async Task<IActionResult> GetLecturesByCourseId(Guid id)
         {
             if (ModelState.IsValid)
@@ -41,8 +41,8 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
             return BadRequest("Invalid model object");
         }
 
-        [HttpGet("GetLecture/{id}")]
         [Authorize]
+        [HttpGet("GetLecture/{id}")]
         public async Task<IActionResult> GetLecture(Guid id)
         {
             if (ModelState.IsValid)
@@ -65,9 +65,8 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
             return BadRequest("Invalid model object");
         }
 
-        [HttpGet]
         [Authorize]
-        [Route("GetLectures")]
+        [HttpGet("GetLectures")]
         public async Task<IActionResult> GetLectures([FromQuery] ItemsRequest request)
         {
             if (ModelState.IsValid)
@@ -90,9 +89,8 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
             return BadRequest("Invalid model object");
         }
 
-        [HttpPost]
         [Authorize(Roles = "Admin,Creator")]
-        [Route("CreateLecture")]
+        [HttpPost("CreateLecture")]
         public async Task<IActionResult> CreateLecture([FromBody] LecturesRequest request)
         {
             if (ModelState.IsValid)
@@ -115,8 +113,8 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
             return BadRequest("Invalid model object");
         }
 
-        [HttpPut("UpdateLecture/{id}")]
         [Authorize(Roles = "Admin,Creator")]
+        [HttpPut("UpdateLecture/{id}")]
         public async Task<IActionResult> UpdateLecture(Guid id, [FromBody] LecturesRequest request)
         {
             if (ModelState.IsValid)
@@ -139,8 +137,8 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
             return BadRequest("Invalid model object");
         }
 
-        [HttpDelete("DeleteLecture/{id}")]
         [Authorize(Roles = "Admin,Creator")]
+        [HttpDelete("DeleteLecture/{id}")]
         public async Task<IActionResult> DeleteLecture(Guid id)
         {
             if (ModelState.IsValid)

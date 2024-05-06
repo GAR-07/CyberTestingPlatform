@@ -16,7 +16,8 @@ export class HomeComponent {
   lectures!: LectureData[];
   tests!: TestData[];
   pageNum: number = 1;
-  pageSize: number = 20;
+  pageSize: number = 24;
+  windowWidth: number = 0;
   contentMods: string[] = ['list', 'view', 'edit']
 
   constructor(
@@ -26,8 +27,8 @@ export class HomeComponent {
 
   async ngOnInit(): Promise<void> {
     await this.getCourses(this.pageNum);
-    await this.getLectures(this.pageNum);
-    await this.getTests(this.pageNum);
+    // await this.getLectures(this.pageNum);
+    // await this.getTests(this.pageNum);
   }
 
   getCourses(pageNum: number): Promise<void> {

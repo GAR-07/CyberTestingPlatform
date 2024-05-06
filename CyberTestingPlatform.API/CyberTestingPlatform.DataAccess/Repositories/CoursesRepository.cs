@@ -14,12 +14,16 @@ namespace CyberTestingPlatform.DataAccess.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<List<Course>> GetAllAsync()
+        public async Task<List<Course>?> GetAllAsync()
         {
             var courseEntities = await _dbContext.Courses
                 .AsNoTracking()
-                .ToListAsync()
-                ?? throw new Exception($"Результатов не найдено");
+                .ToListAsync();
+
+            if (courseEntities == null)
+            {
+                return null;
+            }
 
             var courses = courseEntities
                 .Select(x => new Course(x.Id, x.Name, x.Description, x.Price, x.ImagePath, x.CreatorID, x.CreationDate, x.LastUpdationDate))
@@ -28,7 +32,7 @@ namespace CyberTestingPlatform.DataAccess.Repositories
             return courses;
         }
 
-        public async Task<List<Course>> GetSelectionAsync(int sampleSize, int page)
+        public async Task<List<Course>?> GetSelectionAsync(int sampleSize, int page)
         {
             var totalCount = await _dbContext.Courses.AsNoTracking().CountAsync();
             var startIndex = Math.Max(0, totalCount - sampleSize * page);
@@ -38,8 +42,12 @@ namespace CyberTestingPlatform.DataAccess.Repositories
                 .Skip(startIndex)
                 .Take(countToTake)
                 .AsNoTracking()
-                .ToListAsync()
-                ?? throw new Exception($"Результатов не найдено");
+                .ToListAsync();
+
+            if (courseEntities == null)
+            {
+                return null;
+            }
 
             var courses = courseEntities
                .Select(x => new Course(x.Id, x.Name, x.Description, x.Price, x.ImagePath, x.CreatorID, x.CreationDate, x.LastUpdationDate))
@@ -48,10 +56,14 @@ namespace CyberTestingPlatform.DataAccess.Repositories
             return courses;
         }
 
-        public async Task<Course> GetAsync(Guid id)
+        public async Task<Course?> GetAsync(Guid id)
         {
-            var courseEntity = await _dbContext.Courses.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id)
-                ?? throw new Exception($"Курс {id} не найден");
+            var courseEntity = await _dbContext.Courses.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
+
+            if (courseEntity == null)
+            {
+                return null;
+            }
 
             return new Course(
                 courseEntity.Id,
@@ -64,7 +76,7 @@ namespace CyberTestingPlatform.DataAccess.Repositories
                 courseEntity.LastUpdationDate);
         }
 
-        public async Task<Guid> CreateAsync(Course course)
+        public async Task<Guid?> CreateAsync(Course course)
         {
             var courseEntity = new CourseEntity
             {
@@ -84,12 +96,16 @@ namespace CyberTestingPlatform.DataAccess.Repositories
             return courseEntity.Id;
         }
 
-        public async Task<Guid> UpdateAsync(Course course)
+        public async Task<Guid?> UpdateAsync(Course course)
         {
             var courseEntity = await _dbContext.Courses
                 .Where(p => p.Id == course.Id)
-                .FirstOrDefaultAsync() 
-                ?? throw new Exception($"Курс {course.Id} не найден");
+                .FirstOrDefaultAsync();
+
+            if (courseEntity == null)
+            {
+                return null;
+            }
 
             courseEntity.Name = course.Name;
             courseEntity.Description = course.Description;
@@ -102,12 +118,16 @@ namespace CyberTestingPlatform.DataAccess.Repositories
             return courseEntity.Id;
         }
 
-        public async Task<Guid> DeleteAsync(Guid id)
+        public async Task<Guid?> DeleteAsync(Guid id)
         {
             var courseEntity = await _dbContext.Courses
                 .Where(p => p.Id == id)
-                .FirstOrDefaultAsync()
-                ?? throw new Exception($"Курс {id} не найден");
+                .FirstOrDefaultAsync();
+
+            if (courseEntity == null)
+            {
+                return null;
+            }
 
             _dbContext.Remove(courseEntity);
             await _dbContext.SaveChangesAsync();

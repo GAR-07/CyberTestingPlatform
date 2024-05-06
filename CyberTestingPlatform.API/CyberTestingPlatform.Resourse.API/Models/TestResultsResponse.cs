@@ -1,6 +1,6 @@
 ﻿namespace CyberTestingPlatform.Resourse.API.Models
 {
-    public record TestResultResponse (
+    public record TestResultsResponse (
         Guid Id,
         Guid TestId,
         Guid UserId,

@@ -10,7 +10,11 @@ export class NotificationComponent {
   @Input() notificationMessage!: NotificationMessage;
 	@Output() isConfirmed: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-	ngOnInit(): void { 
+	ngOnInit(): void {
+    if (this.notificationMessage.message === undefined) {
+      this.notificationMessage.message = 'Нарушение связи с сервером'
+    }
+    
     setTimeout(() => {
       this.close();
     }, 5000);

@@ -22,9 +22,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IStorageService, StorageService>();
 builder.Services.AddScoped<ICourseService, CourseService>();
 builder.Services.AddScoped<ILectureService, LectureService>();
+builder.Services.AddScoped<ITestResultService, TestResultService>();
 builder.Services.AddScoped<ITestService, TestService>();
 builder.Services.AddScoped<ICoursesRepository, CoursesRepository>();
 builder.Services.AddScoped<ILecturesRepository, LecturesRepository>();
+builder.Services.AddScoped<ITestResultsRepository, TestResultsRepository>();
 builder.Services.AddScoped<ITestsRepository, TestsRepository>();
 builder.Services.Configure<FormOptions>(options =>
 {

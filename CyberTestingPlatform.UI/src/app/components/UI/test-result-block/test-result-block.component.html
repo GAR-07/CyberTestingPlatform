@@ -1,0 +1,33 @@
+<ng-container [ngSwitch]="mode">
+
+  <ng-container *ngSwitchCase="'full view'">
+    <ng-container *ngIf="testResult">
+      <main class="content-wrapper">
+        <div class="content-container">
+          <div class="content-block">
+            <h2>Результаты прохождения теста {{ test ? '"' + test.title + '"' : ''}}</h2>
+            <div class="custom-table">
+              <div class="table-row header">
+                <div class="table-cell">Ответ</div>
+                <div class="table-cell">Результат</div> 
+              </div>
+              <ng-container *ngFor="let answer of answers; let i = index">
+                <div class="table-row">
+                  <div class="table-cell">{{ answers[i] }}</div>
+                  <div class="table-cell">{{ results[i] }}</div>
+                </div>
+              </ng-container>
+            </div>
+            <div class="actions">
+              <h2>Правильных ответов: {{ calculateAccuracyPercentage() }}%</h2>
+            </div>
+            <div class="actions">
+              <button *ngIf="test" class="btn primary" [routerLink]="['/test', test.id]">Пройти тест ещё раз?</button>
+              <button class="btn primary" (click)="goBack()">Вернуться назад</button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </ng-container>
+  </ng-container>
+</ng-container>

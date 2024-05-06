@@ -11,42 +11,58 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
     public class TestController : Controller
     {
         private readonly ITestService _testService;
+        private readonly ITestResultService _testResultService;
 
-        public TestController(ITestService testService)
+        public TestController(ITestService testService, ITestResultService testResultService)
         {
             _testService = testService;
+            _testResultService = testResultService;
         }
 
-        [HttpPost("CheckResultTest/{id}")]
         [Authorize]
-        public async Task<IActionResult> CheckResultTest(Guid id, [FromBody] TestsRequest request)
+        [HttpGet("GetTestResult/{id}")]
+        public async Task<IActionResult> GetTestResult(Guid id)
         {
             if (ModelState.IsValid)
             {
-                var test = await _testService.GetTestAsync(id);
-                var response = request.CorrectAnswers.Equals(test.CorrectAnswers, StringComparison.OrdinalIgnoreCase);
+                var testResult = await _testResultService.GetTestResult(id);
+
+                var response = new TestResultsResponse(
+                    testResult.Id,
+                    testResult.TestId,
+                    testResult.UserId,
+                    testResult.Answers,
+                    testResult.Results,
+                    testResult.CreationDate);
 
                 return Ok(response);
             }
             return BadRequest("Invalid model object");
         }
 
-        [HttpGet("GetCorrectAnswersTest/{id}")]
         [Authorize]
-        public async Task<IActionResult> GetCorrectAnswersTest(Guid id)
+        [HttpPost("CreateTestResult")]
+        public async Task<IActionResult> CreateTestResult([FromBody] TestResultsRequest request)
         {
             if (ModelState.IsValid)
             {
-                var test = await _testService.GetTestAsync(id);
-                var response = test.CorrectAnswers;
+                var testResult = new TestResult(
+                    Guid.NewGuid(),
+                    Guid.Parse(request.TestId),
+                    Guid.Parse(request.UserId),
+                    request.Answers,
+                    null,
+                    DateTime.Now);
 
-                return Ok(response);
+                var testResultId = await _testResultService.CreateTestResultAsync(testResult);
+
+                return Ok(testResultId);
             }
             return BadRequest("Invalid model object");
         }
 
+        [Authorize]
         [HttpGet("GetTestsByCourseId/{id}")]
-        [Authorize]
         public async Task<IActionResult> GetTestsByCourseId(Guid id)
         {
             if (ModelState.IsValid)
@@ -71,8 +87,8 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
             return BadRequest("Invalid model object");
         }
 
-        [HttpGet("GetTest/{id}")]
         [Authorize]
+        [HttpGet("GetTest/{id}")]
         public async Task<IActionResult> GetTest(Guid id)
         {
             if (ModelState.IsValid)
@@ -97,9 +113,8 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
             return BadRequest("Invalid model object");
         }
 
-        [HttpGet]
         [Authorize]
-        [Route("GetTests")]
+        [HttpGet("GetTests")]
         public async Task<IActionResult> GetTests([FromQuery] ItemsRequest request)
         {
             if (ModelState.IsValid)
@@ -124,9 +139,8 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
             return BadRequest("Invalid model object");
         }
 
-        [HttpPost]
         [Authorize(Roles = "Admin,Creator")]
-        [Route("CreateTest")]
+        [HttpPost("CreateTest")]
         public async Task<IActionResult> CreateTest([FromBody] TestsRequest request)
         {
             if (ModelState.IsValid)
@@ -151,8 +165,8 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
             return BadRequest("Invalid model object");
         }
 
-        [HttpPut("UpdateTest/{id}")]
         [Authorize(Roles = "Admin,Creator")]
+        [HttpPut("UpdateTest/{id}")]
         public async Task<IActionResult> UpdateTest(Guid id, [FromBody] TestsRequest request)
         {
             if (ModelState.IsValid)
@@ -177,8 +191,8 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
             return BadRequest("Invalid model object");
         }
 
-        [HttpDelete("DeleteTest/{id}")]
         [Authorize(Roles = "Admin,Creator")]
+        [HttpDelete("DeleteTest/{id}")]
         public async Task<IActionResult> DeleteTest(Guid id)
         {
             if (ModelState.IsValid)

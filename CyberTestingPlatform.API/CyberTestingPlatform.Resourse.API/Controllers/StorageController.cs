@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using CyberTestingPlatform.Resourse.API.Models;
 using CyberTestingPlatform.Application.Services;
-using CyberTestingPlatform.Core.Models;
 
 namespace CyberTestingPlatform.Resourse.API.Controllers
 {
@@ -17,9 +15,9 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
             _storageService = storageService;
         }
 
-        [HttpPost, DisableRequestSizeLimit]
+        [DisableRequestSizeLimit]
+        [HttpPost("UploadFiles")]
         [Authorize(Roles = "Admin,Creator")]
-        [Route("UploadFiles")]
         public async Task<IActionResult> UploadFiles()
         {
             var formCollection = await Request.ReadFormAsync();

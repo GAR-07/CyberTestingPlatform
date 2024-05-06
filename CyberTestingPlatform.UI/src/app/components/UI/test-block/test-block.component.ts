@@ -1,11 +1,12 @@
 import { HttpEventType } from '@angular/common/http';
 import { Component, HostListener, Input} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CourseData } from 'src/app/interfaces/courseData.model';
 import { LectureData } from 'src/app/interfaces/lectureData.model';
 import { NotificationMessage } from 'src/app/interfaces/notificationMessage.model';
 import { TestData } from 'src/app/interfaces/testData.model';
+import { TestResultData } from 'src/app/interfaces/testResultData.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { StorageService } from 'src/app/services/storage.service';
@@ -32,6 +33,7 @@ export class TestBlockComponent {
   answerOptions: string[] = [];
   correctAnswers: string[] = [];
   currentQuestion: number = 0;
+  testResultId: string | null = null;
   progress: number = 0;
   imagePath: string = '';
   currentGuid: string | null = null;
@@ -71,33 +73,35 @@ export class TestBlockComponent {
     private storageService: StorageService,
     private notificationService: NotificationService,
     private formBuilder: FormBuilder,
+    private router: Router,
     private route: ActivatedRoute
   ) { }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     var accountData = this.authService.accountData();
     this.roles = accountData ? accountData.role : [];
     this.changeMode(this.mode);
-    this.getComponentData();
+    
+    await this.getComponentData();
 
-    this.route.paramMap.subscribe(params => {
+    this.route.paramMap.subscribe(async params => {
       const newGuid = params.get('guid');
 
       if (newGuid !== this.currentGuid) {
         this.currentGuid = newGuid;
 
         if (newGuid !== null) {
-          this.getComponentData();
-          console.log('update test!');
+          await this.updateComponentData();
         }
       }
     });
   }
 
-  changeMode(mode: string) {
+  async changeMode(mode: string) {
     this.mode = this.mods.includes(mode) ? mode : this.mods[0];
 
     if(this.mode === 'edit') {
+      await this.getAllCourses();
       if(this.course) {
         this.testForm.patchValue({
           courseId: this.course.id,
@@ -121,22 +125,34 @@ export class TestBlockComponent {
         this.currentGuid = this.route.snapshot.paramMap.get('guid');
         await this.getTest(this.currentGuid !== null ? this.currentGuid : this.guidEmpty);
       }
-  
-      if (!this.course && this.test.courseId !== this.guidEmpty) {
-        await this.getCourse(this.test.courseId);
-      }
+      await this.getAdditionalComponentData();
+    }
+  }
 
-      if (this.mode === 'view') {
-        await this.getCourseLectures(this.test.courseId);
-        await this.getCourseTests(this.test.courseId);
-        
-        for (let i = 0; i < this.questions.length; i++) {
-          this.questions[i] = convertImgPathToTag(environment.resourseApiUrl, this.questions[i]);
-        }
-      } else {
-        for (let i = 0; i < this.questions.length; i++) {
-          this.questions[i] = convertTagToImgPath(environment.resourseApiUrl, this.questions[i]);
-        }
+  async updateComponentData() {
+    if (this.mode !== 'create') {
+      this.currentGuid = this.route.snapshot.paramMap.get('guid');
+      await this.getTest(this.currentGuid !== null ? this.currentGuid : this.guidEmpty);
+      
+      await this.getAdditionalComponentData();
+    }
+  }
+
+  async getAdditionalComponentData() {
+    if (!this.course && this.test.courseId !== this.guidEmpty) {
+      await this.getCourse(this.test.courseId);
+    }
+
+    if (this.mode === 'view') {
+      await this.getCourseLectures(this.test.courseId);
+      await this.getCourseTests(this.test.courseId);
+      
+      for (let i = 0; i < this.questions.length; i++) {
+        this.questions[i] = convertImgPathToTag(environment.resourseApiUrl, this.questions[i]);
+      }
+    } else {
+      for (let i = 0; i < this.questions.length; i++) {
+        this.questions[i] = convertTagToImgPath(environment.resourseApiUrl, this.questions[i]);
       }
     }
   }
@@ -221,9 +237,6 @@ export class TestBlockComponent {
   }
 
   createTest() {
-    const date = new Date();
-    const convertedDate = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
-
     var accountData = this.authService.accountData();
     this.test = {
       id: '',
@@ -234,7 +247,7 @@ export class TestBlockComponent {
       correctAnswers: this.testForm.value.correctAnswers,
       position: this.testForm.value.position,
       creatorId: accountData ? accountData.sub : '',
-      creationDate: convertedDate,
+      creationDate: '',
       lastUpdationDate: '',
       courseId: this.testForm.value.courseId,
     };
@@ -251,9 +264,6 @@ export class TestBlockComponent {
   }
 
   editTest() {
-    const date = new Date();
-    const convertedDate = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
-
     this.test = {
       id: this.test.id,
       theme: this.testForm.value.theme,
@@ -264,7 +274,7 @@ export class TestBlockComponent {
       position: this.testForm.value.position,
       creatorId: this.test.creatorId,
       creationDate: this.test.creationDate,
-      lastUpdationDate: convertedDate,
+      lastUpdationDate: '',
       courseId: this.testForm.value.courseId,
     };
     
@@ -328,16 +338,32 @@ export class TestBlockComponent {
     });
   }
 
-  testResults() {
+  saveTestResult() {
     var answers = this.correctAnswers.join('\n');
-    this.storageService.checkResultTest(this.test.id, answers).subscribe({
-      next: (response: any) => {
-        console.log(response);
+    var accountData = this.authService.accountData();
+
+    var testResult = new TestResultData(
+      null,
+      this.test.id,
+      accountData ? accountData.sub : '',
+      answers,
+      null,
+      null
+    )
+
+    this.storageService.createTestResult(testResult).subscribe({
+      next: (id: string) => {
+        this.notificationService.addMessage(new NotificationMessage('success', 'Результаты теста сохранены'));
+        this.testResultId = id;
       },
       error: (response) => {
         this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
       }
     });
+  }
+
+  getTestResults() {
+    this.router.navigate(['result/' + this.testResultId]);
   }
 
   nextQuestion() {

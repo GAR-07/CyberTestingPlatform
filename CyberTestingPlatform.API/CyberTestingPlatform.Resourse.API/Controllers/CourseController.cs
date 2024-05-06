@@ -18,7 +18,6 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
         }
 
         [HttpGet("GetCourse/{id}")]
-        [Authorize]
         public async Task<IActionResult> GetCourse(Guid id)
         {
             if (ModelState.IsValid)
@@ -40,9 +39,8 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
             return BadRequest("Invalid model object");
         }
 
-        [HttpGet]
         [Authorize]
-        [Route("GetCourses")]
+        [HttpGet("GetCourses")]
         public async Task<IActionResult> GetCourses([FromQuery] ItemsRequest request)
         {
             if (ModelState.IsValid)
@@ -64,9 +62,8 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
             return BadRequest("Invalid model object");
         }
 
-        [HttpGet]
         [Authorize]
-        [Route("GetAllCourses")]
+        [HttpGet("GetAllCourses")]
         public async Task<IActionResult> GetAllCourses()
         {
             if (ModelState.IsValid)
@@ -88,9 +85,8 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
             return BadRequest("Invalid model object");
         }
 
-        [Route("CreateCourse")]
         [Authorize(Roles = "Admin,Creator")]
-        [HttpPost]
+        [HttpPost("CreateCourse")]
         public async Task<IActionResult> CreateCourse([FromBody] CoursesRequest request)
         {
             if (ModelState.IsValid)
@@ -112,8 +108,8 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
             return BadRequest("Invalid model object");
         }
 
-        [HttpPut("UpdateCourse/{id}")]
         [Authorize(Roles = "Admin,Creator")]
+        [HttpPut("UpdateCourse/{id}")]
         public async Task<IActionResult> UpdateCourse(Guid id, [FromBody] CoursesRequest request)
         {
             if (ModelState.IsValid)
@@ -135,8 +131,8 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
             return BadRequest("Invalid model object");
         }
 
-        [HttpDelete("DeleteCourse/{id}")]
         [Authorize(Roles = "Admin,Creator")]
+        [HttpDelete("DeleteCourse/{id}")]
         public async Task<IActionResult> DeleteCourse(Guid id)
         {
             if (ModelState.IsValid)

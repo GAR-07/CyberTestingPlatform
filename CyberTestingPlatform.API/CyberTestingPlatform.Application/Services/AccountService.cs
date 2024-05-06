@@ -6,7 +6,6 @@ using BCrypt.Net;
 using CyberTestingPlatform.DataAccess.Repositories;
 using CyberTestingPlatform.Core.Models;
 using CyberTestingPlatform.Core.Shared;
-using System.Security.Principal;
 
 namespace CyberTestingPlatform.Application.Services
 {
@@ -51,7 +50,14 @@ namespace CyberTestingPlatform.Application.Services
 
         public async Task<List<Account>> GetAllAccountsAsync()
         {
-            return await _accountsRepository.GetAllAsync() ?? throw new CustomHttpException($"Результатов не найдено", 422);
+            return await _accountsRepository.GetAllAsync() ?? throw new CustomHttpException($"Ничего не найдено", 422);
+        }
+
+        public async Task<Account> GetAccountDataAsync(Guid userId)
+        {
+            var account = await _accountsRepository.GetAsync(userId) ?? throw new CustomHttpException($"Аккаунт {userId} не найден", 422);
+            account.PasswordHash = null;
+            return account;
         }
 
         public async Task<List<Account>> GetSelectAccountsAsync(int sampleSize, int page)
@@ -61,7 +67,7 @@ namespace CyberTestingPlatform.Application.Services
                 throw new CustomHttpException($"Заданы невозможные параметры для выборки", 422);
             }
 
-            return await _accountsRepository.GetSelectionAsync(sampleSize, page) ?? throw new CustomHttpException($"Результатов не найдено", 422);
+            return await _accountsRepository.GetSelectionAsync(sampleSize, page) ?? throw new CustomHttpException($"Ничего не найдено", 422);
         }
 
         public async Task<Account> GetAccountByEmailAsync(string email)
@@ -71,12 +77,12 @@ namespace CyberTestingPlatform.Application.Services
 
         public async Task<Account> GetAccountAsync(Guid userId)
         {
-            return await _accountsRepository.GetAsync(userId) ?? throw new CustomHttpException($"Аккаунт не найден", 422);
+            return await _accountsRepository.GetAsync(userId) ?? throw new CustomHttpException($"Аккаунт {userId} не найден", 422);
         }
 
         public async Task<Guid> CreateAccountAsync(Account account)
         {
-            return await _accountsRepository.CreateAsync(account) ?? throw new CustomHttpException($"Аккаунт {account.UserId} не найден", 422);
+            return await _accountsRepository.CreateAsync(account) ?? throw new CustomHttpException($"Ошибка создания аккаунта", 422);
         }
 
         public async Task<Guid> UpdateAccountAsync(Account account)

@@ -33,14 +33,19 @@ export class LoginComponent {
   ngOnInit(): void { }
 
   onSubmit() {
-    this.modelData = this.loginForm.value;
-    this.authService.login(this.modelData).subscribe({
-      next: () => {
-        this.notificationService.addMessage(new NotificationMessage('success', 'Вы вошли в аккаунт'));
-      },
-      error: (response) => {
-        this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
-      }
-    });
+    this.loginForm.markAllAsTouched();
+
+    if (this.loginForm.valid) {
+      this.modelData = this.loginForm.value;
+      
+      this.authService.login(this.modelData).subscribe({
+        next: () => {
+          this.notificationService.addMessage(new NotificationMessage('success', 'Вы вошли в аккаунт'));
+        },
+        error: (response) => {
+          this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
+        }
+      });
+    }
   }
 }

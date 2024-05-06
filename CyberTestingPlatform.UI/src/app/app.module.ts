@@ -23,6 +23,7 @@ import { CourseBlockComponent } from './components/UI/course-block/course-block.
 import { NotificationComponent } from './components/UI/notification/notification.component';
 import { ModalDialogComponent } from './components/UI/modal-dialog/modal-dialog.component';
 import { TestBlockComponent } from './components/UI/test-block/test-block.component';
+import { TestResultBlockComponent } from './components/UI/test-result-block/test-result-block.component';
 
 export function tokenGetter() {
   return localStorage.getItem(ACCESS_TOKEN_KEY);
@@ -44,7 +45,8 @@ export function tokenGetter() {
     CourseBlockComponent,
     NotificationComponent,
     ModalDialogComponent,
-    TestBlockComponent
+    TestBlockComponent,
+    TestResultBlockComponent
   ],
   imports: [
     BrowserModule,

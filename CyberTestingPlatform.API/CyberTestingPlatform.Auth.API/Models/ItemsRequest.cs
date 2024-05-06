@@ -1,4 +1,4 @@
-﻿namespace CyberTestingPlatform.Resourse.API.Models
+﻿namespace CyberTestingPlatform.Auth.API.Models
 {
     public record class ItemsRequest(
         int SampleSize,

@@ -11,6 +11,7 @@ import { StartPageComponent } from './components/pages/start-page/start-page.com
 import { CourseBlockComponent } from './components/UI/course-block/course-block.component';
 import { LectureBlockComponent } from './components/UI/lecture-block/lecture-block.component';
 import { TestBlockComponent } from './components/UI/test-block/test-block.component';
+import { TestResultBlockComponent } from './components/UI/test-result-block/test-result-block.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent, canActivate: [AuthGuard] },
@@ -22,6 +23,7 @@ const routes: Routes = [
   { path: 'course/:guid', component: CourseBlockComponent, canActivate: [AuthGuard] },
   { path: 'lecture/:guid', component: LectureBlockComponent, canActivate: [AuthGuard] },
   { path: 'test/:guid', component: TestBlockComponent, canActivate: [AuthGuard] },
+  { path: 'result/:guid', component: TestResultBlockComponent, canActivate: [AuthGuard] },
   { path: '**', component: HomeComponent, canActivate: [AuthGuard] }
 ];
 

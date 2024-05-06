@@ -14,7 +14,7 @@ namespace CyberTestingPlatform.DataAccess.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<List<Test>> GetSelectionAsync(int sampleSize, int page)
+        public async Task<List<Test>?> GetSelectionAsync(int sampleSize, int page)
         {
             var totalCount = await _dbContext.Tests.AsNoTracking().CountAsync();
             var startIndex = Math.Max(0, totalCount - sampleSize * page);
@@ -24,8 +24,12 @@ namespace CyberTestingPlatform.DataAccess.Repositories
                 .Skip(startIndex)
                 .Take(countToTake)
                 .AsNoTracking()
-                .ToListAsync()
-                ?? throw new Exception($"Результатов не найдено");
+                .ToListAsync();
+
+            if (testEntities == null)
+            {
+                return null;
+            }
 
             var tests = testEntities
                .Select(x => new Test(x.Id, x.Theme, x.Title, x.Questions, x.AnswerOptions, x.CorrectAnswers, x.Position, x.CreatorID, x.CreationDate, x.LastUpdationDate, x.CourseId))
@@ -34,13 +38,17 @@ namespace CyberTestingPlatform.DataAccess.Repositories
             return tests;
         }
 
-        public async Task<List<Test>> GetByCourseIdAsync(Guid id)
+        public async Task<List<Test>?> GetByCourseIdAsync(Guid id)
         {
             var testEntities = await _dbContext.Tests
                 .Where(test => test.CourseId == id)
                 .AsNoTracking()
-                .ToListAsync()
-                ?? throw new Exception($"Результатов не найдено");
+                .ToListAsync();
+
+            if (testEntities == null)
+            {
+                return null;
+            }
 
             var tests = testEntities
                .Select(x => new Test(x.Id, x.Theme, x.Title, x.Questions, x.AnswerOptions, x.CorrectAnswers, x.Position, x.CreatorID, x.CreationDate, x.LastUpdationDate, x.CourseId))
@@ -49,10 +57,14 @@ namespace CyberTestingPlatform.DataAccess.Repositories
             return tests;
         }
 
-        public async Task<Test> GetAsync(Guid id)
+        public async Task<Test?> GetAsync(Guid id)
         {
-            var testEntity = await _dbContext.Tests.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id)
-                ?? throw new Exception($"Тест {id} не найден");
+            var testEntity = await _dbContext.Tests.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
+
+            if (testEntity == null)
+            {
+                return null;
+            }
 
             return new Test(
                 testEntity.Id,
@@ -68,7 +80,7 @@ namespace CyberTestingPlatform.DataAccess.Repositories
                 testEntity.CourseId);
         }
 
-        public async Task<Guid> CreateAsync(Test test)
+        public async Task<Guid?> CreateAsync(Test test)
         {
             var testEntity = new TestEntity
             {
@@ -91,12 +103,16 @@ namespace CyberTestingPlatform.DataAccess.Repositories
             return testEntity.Id;
         }
 
-        public async Task<Guid> UpdateAsync(Test test)
+        public async Task<Guid?> UpdateAsync(Test test)
         {
             var testEntity = await _dbContext.Tests
                 .Where(p => p.Id == test.Id)
-                .FirstOrDefaultAsync()
-                ?? throw new Exception($"Тест {test.Id} не найден");
+                .FirstOrDefaultAsync();
+
+            if (testEntity == null)
+            {
+                return null;
+            }
 
             testEntity.Theme = test.Theme;
             testEntity.Title = test.Title;
@@ -112,12 +128,16 @@ namespace CyberTestingPlatform.DataAccess.Repositories
             return testEntity.Id;
         }
 
-        public async Task<Guid> DeleteAsync(Guid id)
+        public async Task<Guid?> DeleteAsync(Guid id)
         {
             var testEntity = await _dbContext.Tests
                 .Where(p => p.Id == id)
-                .FirstOrDefaultAsync()
-                ?? throw new Exception($"Тест {id} не найден");
+                .FirstOrDefaultAsync();
+
+            if (testEntity == null)
+            {
+                return null;
+            }
 
             _dbContext.Remove(testEntity);
             await _dbContext.SaveChangesAsync();

@@ -1,3 +1,19 @@
-<p>Текущий размер шрифта: {{currentFontSize}}px</p>
-<button (click)="increaseFontSize()">Размер шрифта +</button>
-<button (click)="decreaseFontSize()">Размер шрифта -</button>
+<main class="content-wrapper">
+  <div class="content-container">
+    <div class="content-block">
+      <div class="profile-section-wrapper">
+        <div class="profile-name">Добро пожаловать, user.userName</div>
+
+      </div>
+    </div>
+    <div class="content-block">
+      <div class="custom-section-wrapper">
+        <div class="custom-section-name">section-name</div>
+
+      </div>
+    </div>
+    <p>Текущий размер шрифта: {{currentFontSize}}px</p>
+    <button (click)="increaseFontSize()">Увеличить</button>
+    <button (click)="decreaseFontSize()">Уменьшить</button>
+  </div>
+</main>

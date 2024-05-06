@@ -62,29 +62,27 @@
 
           <div class="content-block">
             <div class="actions">
-              <button class="btn primary" (click)="previousQuestion()">К предыдущему вопросу</button>
-              <button *ngIf="currentQuestion !== questions.length - 1" class="btn primary" (click)="nextQuestion()">К следующему вопросу</button>
-              <button *ngIf="currentQuestion === questions.length - 1" class="btn primary" (click)="testResults()">Завершить тест</button>
+              <button class="btn primary" (click)="previousQuestion()">Предыдущий вопрос</button>
+              <button *ngIf="currentQuestion !== questions.length - 1" class="btn primary" (click)="nextQuestion()">Следующий вопрос</button>
+              <button *ngIf="currentQuestion === questions.length - 1 && !testResultId" class="btn primary" (click)="saveTestResult()">Завершить тест</button>
+              <button *ngIf="currentQuestion === questions.length - 1 && testResultId" class="btn primary" (click)="getTestResults()">Посмотреть результаты</button>
             </div>
           </div>
           
           <div class="content-block">
             <div class="actions">
               <button *ngIf="course && tests && getPreviousTestId(test.id) !== ''" 
-                class="btn primary" [routerLink]="['/test/', getPreviousTestId(test.id)]">К предыдущему тесту 
+                class="btn primary" [routerLink]="['/test/', getPreviousTestId(test.id)]">Предыдущий тест
               </button>
               <button *ngIf="course && lectures" 
-                class="btn primary" [routerLink]="['/lecture/', lectures[lectures.length - 1].id]">К предыдущей лекции
+                class="btn primary" [routerLink]="['/lecture/', lectures[lectures.length - 1].id]">Предыдущая теория
               </button>
 
               <button *ngIf="!course" class="btn primary" [routerLink]="['/']">На главную</button>
-              <button *ngIf="course" class="btn primary" [routerLink]="['/course/', course.id]">К списку</button>
+              <button *ngIf="course" class="btn primary" [routerLink]="['/course/', course.id]">Вернуться к курсу</button>
 
               <button *ngIf="tests && getNextTestId(test.id) !== ''" 
-                class="btn primary" [routerLink]="['/test/', getNextTestId(test.id)]">К следующему тесту
-              </button>
-              <button *ngIf="tests && getNextTestId(test.id) === ''" 
-                class="btn primary" (click)="getNextTestId(test.id)">Завершить тест
+                class="btn primary" [routerLink]="['/test/', getNextTestId(test.id)]">Следующий тест
               </button>
               <!-- (click)="checkAccessRoute('/test/', tests[0].id)" -->
             </div>
