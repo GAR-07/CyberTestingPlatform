@@ -5,6 +5,7 @@ import { NotificationMessage } from 'src/app/interfaces/notificationMessage.mode
 import { TestData } from 'src/app/interfaces/testData.model';
 import { NotificationService } from 'src/app/services/notification.service';
 import { StorageService } from 'src/app/services/storage.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-home',
@@ -92,5 +93,9 @@ export class HomeComponent {
         }
       });
     });
+  }
+
+  createFilePath(serverPath: string) {
+    return `${environment.resourseApiUrl}/${serverPath}`; 
   }
 }

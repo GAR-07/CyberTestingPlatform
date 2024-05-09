@@ -66,10 +66,10 @@ export class RegisterComponent {
       };
       this.authService.register(this.modelData).subscribe({
         next: () => {
-          this.notificationService.addMessage(new NotificationMessage('success', 'Вы успешно зарегистрировались'));
+          this.notificationService.addMessage(new NotificationMessage('Вы успешно зарегистрировались', 200));
         },
         error: (response) => {
-          this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
+          this.notificationService.addMessage(new NotificationMessage(response.error, response.status));
         }
       });
     }

@@ -11,19 +11,19 @@
     </div>
     <div class="content-block" #tabContents>
       <div id="course" class="tab-content" style="display: none;">
-        <app-course-block
-          [mods]="['create']">
-        </app-course-block>
+        <app-course-form
+          [mode]="'create'">
+        </app-course-form>
       </div>
       <div id="lecture" class="tab-content" style="display: none;">
-        <app-lecture-block
-          [mods]="['create']">
-        </app-lecture-block>
+        <app-lecture-form
+          [mode]="'create'">
+        </app-lecture-form>
       </div>
       <div id="test" class="tab-content" style="display: none;">
-        <app-test-block
-        [mods]="['create']">
-      </app-test-block>
+        <app-test-form
+          [mode]="'create'">
+        </app-test-form>
       </div>
     </div>
   
@@ -37,10 +37,9 @@
           <div class="table-cell">Действия</div>
         </div>
         <ng-container *ngFor="let course of courses" >
-          <app-course-block
-            [mods]="adminMods"
+          <app-course-form
             [course]="course">
-          </app-course-block>
+          </app-course-form>
         </ng-container>
       </div>
     </div>
@@ -56,10 +55,9 @@
         </div>
         <ng-container *ngIf="courses && lectures">
           <ng-container *ngFor="let lecture of lectures" >
-            <app-lecture-block
-              [mods]="adminMods"
+            <app-lecture-form
               [lecture]="lecture">
-            </app-lecture-block>
+            </app-lecture-form>
           </ng-container>
         </ng-container>
       </div>
@@ -76,10 +74,9 @@
         </div>
         <ng-container *ngIf="courses && tests">
           <ng-container *ngFor="let test of tests" >
-            <app-test-block
-              [mods]="adminMods"
+            <app-test-form
               [test]="test">
-            </app-test-block>
+            </app-test-form>
           </ng-container>
         </ng-container>
       </div>

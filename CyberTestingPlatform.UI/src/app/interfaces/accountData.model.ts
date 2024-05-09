@@ -1,9 +1,11 @@
 export class AccountData {
   constructor(
-      public id: string,
-      public userName: string,
+      public userId: string,
+      public birthday: string,
+      public registrationDate: string,
       public email: string,
-      public role: string,
-      public birthday: string
+      public userName: string,
+      public roles: string,
+      public imagePath: string,
   ) {  }
 }

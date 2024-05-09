@@ -1,0 +1,59 @@
+<ng-container *ngIf="course">
+  <main class="content-wrapper">
+    <div class="content-container">
+      <div class="progress-bar-wrapper"></div>
+      <div class="content-block">
+        <h1>{{ course.name }}</h1>
+        <ng-container *ngIf="course && lectures">
+          <div class="custom-section-wrapper">
+            <div class="custom-section-name">Теоретический материал</div>
+            <ul class="section-list">
+              <ng-container *ngFor="let group of groupedLecturesArray">
+                <li>
+                  <div class="theme-name">{{ group.theme }}</div>
+                  <ul class="theme-list">
+                    <ng-container *ngFor="let lecture of group.lectures">
+                      <li><a [routerLink]="['/lecture', lecture.id]">{{ lecture.title }}</a></li>
+                    </ng-container>
+                  </ul>
+                </li>
+              </ng-container>
+            </ul>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="course && tests">
+          <div class="custom-section-wrapper">
+            <div class="custom-section-name">Тесты для закрепления материала</div>
+            <ul class="section-list">
+              <ng-container *ngFor="let group of groupedTestsArray">
+                <li>
+                  <div class="theme-name">{{ group.theme }}</div>
+                  <ul class="theme-list">
+                    <ng-container *ngFor="let test of group.tests">
+                      <li><a [routerLink]="['/test', test.id]">{{ test.title }}</a></li>
+                    </ng-container>
+                  </ul>
+                </li>
+              </ng-container>
+            </ul>
+          </div>
+        </ng-container>
+      </div>
+
+      <div class="content-block">
+        <div class="actions">
+          <button class="btn primary" [routerLink]="['/']">Назад</button>
+          <button *ngIf="lectures && lectures.length > 0" class="btn primary" [routerLink]="['/lecture/', lectures[0].id]">Начать</button>
+          <!-- (click)="checkAccessRoute('/lecture/', lectures[0].id)" -->
+        </div>
+        <app-modal-dialog 
+          *ngIf="isModalDialogVisible" 
+          [header]="'Внимание!'"
+          [description]="'Уверены, что хотите удалить?'"
+          (isConfirmed)="closeModal($event)">
+        </app-modal-dialog>
+      </div>
+    </div>
+  </main>
+</ng-container>

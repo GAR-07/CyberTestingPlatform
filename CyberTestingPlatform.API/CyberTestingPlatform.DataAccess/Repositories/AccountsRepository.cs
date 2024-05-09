@@ -14,31 +14,20 @@ namespace CyberTestingPlatform.DataAccess.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<List<Account>?> GetAllAsync()
+        public async Task<List<Account>?> GetSelectionAsync(string? searchText, int page, int pageSize)
         {
-            var accountEntities = await _dbContext.Accounts
-                .AsNoTracking()
-                .ToListAsync();
+            var query = _dbContext.Accounts.AsQueryable();
 
-            if (accountEntities == null)
+            if (!string.IsNullOrEmpty(searchText))
             {
-                return null;
+                query = query.Where(x => x.UserName.Contains(searchText));
             }
 
-            var accounts = accountEntities
-                .Select(x => new Account(x.UserId, x.Birthday, x.Email, x.UserName, x.PasswordHash, x.Roles))
-                .ToList();
+            var totalCount = await query.CountAsync();
+            var startIndex = Math.Max(0, totalCount - pageSize * page);
+            var countToTake = Math.Min(pageSize, totalCount - startIndex);
 
-            return accounts;
-        }
-
-        public async Task<List<Account>?> GetSelectionAsync(int sampleSize, int page)
-        {
-            var totalCount = await _dbContext.Accounts.AsNoTracking().CountAsync();
-            var startIndex = Math.Max(0, totalCount - sampleSize * page);
-            var countToTake = Math.Min(sampleSize, totalCount - startIndex);
-
-            var accountEntities = await _dbContext.Accounts
+            var accountEntities = await query
                 .Skip(startIndex)
                 .Take(countToTake)
                 .AsNoTracking()
@@ -50,7 +39,7 @@ namespace CyberTestingPlatform.DataAccess.Repositories
             }
 
             var accounts = accountEntities
-               .Select(x => new Account(x.UserId, x.Birthday, x.Email, x.UserName, "", x.Roles))
+               .Select(x => new Account(x.UserId, x.Birthday, x.RegistrationDate, x.Email, x.UserName, "", x.Roles, x.ImagePath))
                .ToList();
 
             return accounts;
@@ -68,10 +57,12 @@ namespace CyberTestingPlatform.DataAccess.Repositories
             return new Account(
                 accountEntity.UserId,
                 accountEntity.Birthday,
+                accountEntity.RegistrationDate,
                 accountEntity.Email,
                 accountEntity.UserName,
                 accountEntity.PasswordHash,
-                accountEntity.Roles);
+                accountEntity.Roles,
+                accountEntity.ImagePath);
         }
 
         public async Task<Account?> GetAsync(Guid userId)
@@ -86,10 +77,12 @@ namespace CyberTestingPlatform.DataAccess.Repositories
             return new Account(
                 accountEntity.UserId,
                 accountEntity.Birthday,
+                accountEntity.RegistrationDate,
                 accountEntity.Email,
                 accountEntity.UserName,
                 accountEntity.PasswordHash,
-                accountEntity.Roles);
+                accountEntity.Roles,
+                accountEntity.ImagePath);
         }
 
         public async Task<Guid?> CreateAsync(Account account)
@@ -98,10 +91,12 @@ namespace CyberTestingPlatform.DataAccess.Repositories
             {
                 UserId = account.UserId,
                 Birthday = account.Birthday,
+                RegistrationDate = account.RegistrationDate,
                 Email = account.Email,
                 UserName = account.UserName,
                 PasswordHash = account.PasswordHash,
-                Roles = account.Roles
+                Roles = account.Roles,
+                ImagePath = account.ImagePath,
             };
 
             await _dbContext.Accounts.AddAsync(accountEntity);
@@ -126,6 +121,8 @@ namespace CyberTestingPlatform.DataAccess.Repositories
             accountEntity.UserName = account.UserName;
             accountEntity.PasswordHash = account.PasswordHash;
             accountEntity.Roles = account.Roles;
+            accountEntity.ImagePath = account.ImagePath;
+            accountEntity.RegistrationDate = account.RegistrationDate;
 
             await _dbContext.SaveChangesAsync();
 

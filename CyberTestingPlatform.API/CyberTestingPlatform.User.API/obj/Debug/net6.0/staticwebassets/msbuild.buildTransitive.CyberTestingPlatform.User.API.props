@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\CyberTestingPlatform.User.API.props" />
+</Project>

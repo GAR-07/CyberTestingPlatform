@@ -7,45 +7,40 @@ namespace CyberTestingPlatform.Application.Services
     {
         public StorageService() { }
 
-        public async Task<(string, string)> SaveFile(IFormFile file)
+        public async Task<string> SaveFile(IFormFile file)
         {
-            string filePath = string.Empty;
-            string error = ValidationFile(file);
-            if (error == string.Empty)
+            var folderName = Path.Combine("Resources", GetContentType(file.ContentType), SelectFolder());
+            var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+            if (!Directory.Exists(pathToSave))
             {
-                var folderName = Path.Combine("Resources", GetContentType(file.ContentType), SelectFolder());
-                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
-                if (!Directory.Exists(pathToSave))
-                {
-                    Directory.CreateDirectory(pathToSave);
-                }
-                string fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-                var fullPath = RemoveFileNameCollision(Path.Combine(pathToSave, fileName));
-                await using (FileStream fileStream = new(fullPath, FileMode.Create, FileAccess.Write))
-                {
-                    await file.CopyToAsync(fileStream);
-                }
-                filePath = Path.Combine(folderName, fullPath.Split(@"\").Last());
+                Directory.CreateDirectory(pathToSave);
             }
-            return (filePath, error);
+
+            var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+            var fullPath = RemoveFileNameCollision(Path.Combine(pathToSave, fileName));
+
+            await using (FileStream fileStream = new(fullPath, FileMode.Create, FileAccess.Write))
+            {
+                await file.CopyToAsync(fileStream);
+            }
+
+            var filePath = Path.Combine(folderName, fullPath.Split(@"\").Last());
+
+            return filePath;
         }
 
-        private static string ValidationFile(IFormFile file)
+        public void ValidationImageFile(IFormFile file)
         {
             var allowedContentTypes = new List<string> { "image/jpeg", "image/png", "image/bmp", "image/gif", "video/mp4" };
+
             if (!allowedContentTypes.Contains(file.ContentType))
-            {
-                return "Файл " + file.FileName + " имеет неверный формат!";
-            }
+                throw new Exception($"Файл " + file.FileName + " имеет неверный формат!");
+
             if (file.Length <= 0)
-            {
-                return "Файл " + file.FileName + " имеет нулевой размер!";
-            }
+                throw new Exception($"Файл " + file.FileName + " имеет нулевой размер!");
+
             if (file.Length > 104857600) // 100 MB
-            {
-                return "Файл " + file.FileName + " слишком большой!";
-            }
-            return string.Empty;
+                throw new Exception($"Файл " + file.FileName + " слишком большой!");
         }
 
         private static string RemoveFileNameCollision(string fullPath)

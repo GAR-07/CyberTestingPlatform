@@ -98,7 +98,7 @@ namespace CyberTestingPlatform.Tests.Resourse.API
             var service = new StorageService();
 
             // Act
-            List<(string?, string?)> results = new();
+            List<string?> results = new();
 
             foreach (var file in files)
             {
@@ -110,10 +110,9 @@ namespace CyberTestingPlatform.Tests.Resourse.API
 
             for (int i = 0; i < results.Count; i++)
             {
-                var (filePath, error) = results[i];
+                var filePath = results[i];
                 var data = fileData[i];
 
-                Assert.Empty(error);
                 Assert.NotNull(filePath);
 
                 Assert.Equal(data.FileName, Path.GetFileName(filePath));
@@ -162,7 +161,7 @@ namespace CyberTestingPlatform.Tests.Resourse.API
             var service = new StorageService();
 
             // Act
-            List<(string?, string?)> results = new();
+            List<string?> results = new();
 
             foreach (var file in files)
             {
@@ -174,10 +173,9 @@ namespace CyberTestingPlatform.Tests.Resourse.API
 
             for (int i = 0; i < results.Count; i++)
             {
-                var (filePath, error) = results[i];
+                var filePath = results[i];
 
                 Assert.Empty(filePath);
-                Assert.NotNull(error);
             }
         }
 

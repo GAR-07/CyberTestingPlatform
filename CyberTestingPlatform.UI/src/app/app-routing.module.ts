@@ -8,10 +8,10 @@ import { LoginComponent } from './components/pages/login/login.component';
 import { RegisterComponent } from './components/pages/register/register.component';
 import { AdminPanelComponent } from './components/pages/admin-panel/admin-panel.component';
 import { StartPageComponent } from './components/pages/start-page/start-page.component';
-import { CourseBlockComponent } from './components/UI/course-block/course-block.component';
-import { LectureBlockComponent } from './components/UI/lecture-block/lecture-block.component';
-import { TestBlockComponent } from './components/UI/test-block/test-block.component';
-import { TestResultBlockComponent } from './components/UI/test-result-block/test-result-block.component';
+import { CourseBlockComponent } from './components/course-block/course-block.component';
+import { LectureBlockComponent } from './components/lecture-block/lecture-block.component';
+import { TestBlockComponent } from './components/test-block/test-block.component';
+import { TestResultBlockComponent } from './components/test-result-block/test-result-block.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent, canActivate: [AuthGuard] },

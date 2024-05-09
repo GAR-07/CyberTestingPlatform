@@ -11,54 +11,10 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
     public class TestController : Controller
     {
         private readonly ITestService _testService;
-        private readonly ITestResultService _testResultService;
 
-        public TestController(ITestService testService, ITestResultService testResultService)
+        public TestController(ITestService testService)
         {
             _testService = testService;
-            _testResultService = testResultService;
-        }
-
-        [Authorize]
-        [HttpGet("GetTestResult/{id}")]
-        public async Task<IActionResult> GetTestResult(Guid id)
-        {
-            if (ModelState.IsValid)
-            {
-                var testResult = await _testResultService.GetTestResult(id);
-
-                var response = new TestResultsResponse(
-                    testResult.Id,
-                    testResult.TestId,
-                    testResult.UserId,
-                    testResult.Answers,
-                    testResult.Results,
-                    testResult.CreationDate);
-
-                return Ok(response);
-            }
-            return BadRequest("Invalid model object");
-        }
-
-        [Authorize]
-        [HttpPost("CreateTestResult")]
-        public async Task<IActionResult> CreateTestResult([FromBody] TestResultsRequest request)
-        {
-            if (ModelState.IsValid)
-            {
-                var testResult = new TestResult(
-                    Guid.NewGuid(),
-                    Guid.Parse(request.TestId),
-                    Guid.Parse(request.UserId),
-                    request.Answers,
-                    null,
-                    DateTime.Now);
-
-                var testResultId = await _testResultService.CreateTestResultAsync(testResult);
-
-                return Ok(testResultId);
-            }
-            return BadRequest("Invalid model object");
         }
 
         [Authorize]

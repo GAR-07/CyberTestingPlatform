@@ -1,0 +1,45 @@
+h1 {
+  padding: 10px;
+}
+
+.custom-section-wrapper {
+  .theme-name {
+    font-size: 1.5rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    margin: 10px;
+    color: var(--font-color);
+  }
+  
+  .theme-list {
+    li {
+      padding-bottom: 10px;
+  
+      a {
+        margin-left: 25px;
+        font-size: 1.25rem;
+        color: var(--primary-color);
+        text-decoration: none;
+        transition: color 0.3s ease;
+      
+        &:hover {
+          color: var(--additional-color);
+        }
+      }
+    }
+  }
+}
+
+.actions {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 5px;
+
+  .btn {
+    margin: 5px;
+    font-size: 1rem;
+  }
+}

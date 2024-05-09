@@ -1,9 +1,9 @@
 {
-  "/authApi": {
+  "/userApi": {
     "target": "https://localhost:7200",
     "secure": false,
     "pathRewrite": {
-      "^/authApi": ""
+      "^/userApi": ""
     }
   },
   "/resourseApi": {

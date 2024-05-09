@@ -1,0 +1,87 @@
+<ng-container *ngIf="test">
+  <main class="content-wrapper">
+    <div class="content-container">
+      <div class="progress-bar">
+        <ng-container *ngIf="lectures && lectures.length > 0">
+          <ng-container *ngFor="let _lecture of lectures; let i = index">
+            <a class="circle" [routerLink]="['/lecture', _lecture.id]">{{i+1}}</a>
+          </ng-container>
+        </ng-container>
+        <ng-container *ngIf="tests && tests.length > 0">
+          <ng-container *ngFor="let _test of tests; let i = index">
+            <a *ngIf="test.id === _test.id" class="circle primary" [routerLink]="['/test', _test.id]">{{lectures.length + i + 1}}</a>
+            <a *ngIf="test.id !== _test.id" class="circle" [routerLink]="['/test', _test.id]">{{lectures.length + i + 1}}</a>
+          </ng-container>
+        </ng-container>
+      </div>
+      <div class="content-block">
+        <div class="theme" *ngIf="course">
+          <a class="link" [routerLink]="['/course', course.id]">{{course ? course.name + ' / ' : ''}}</a>
+          <a class="link" [routerLink]="['/course', course.id]">{{test.theme}}</a>
+        </div>
+        <div class="theme" *ngIf="!course">
+          <a class="link">{{test.theme}}</a>
+        </div>
+        <h1 class="title">{{test.title}}</h1>
+
+        <h2>Вопрос №{{currentQuestion + 1}}</h2>
+        <div class="content">
+          <h2 [innerHTML]="questions[currentQuestion]"></h2>
+        </div>
+        <div class="content">
+          <ng-container *ngIf="answerOptions[currentQuestion] !== '.'">
+            <div class="custom-radio-group">
+              <ng-container *ngFor="let answer of answerOptions[currentQuestion].split('; '); let i = index">
+                <label>
+                  <input class="radio-btn" type="radio" [value]="answer"
+                  name="answer" [(ngModel)]="correctAnswers[currentQuestion]">
+                  <span [innerHTML]="answer"></span>
+                </label>
+              </ng-container>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="answerOptions[currentQuestion] === '.'">
+            <div class="custom-input">
+              <input type="text" placeholder="Ответ" [(ngModel)]="correctAnswers[currentQuestion]">
+            </div>
+          </ng-container>
+        </div>
+      </div>
+
+      <div class="content-block">
+        <div class="actions">
+          <button class="btn primary" (click)="previousQuestion()">Предыдущий вопрос</button>
+          <button *ngIf="currentQuestion !== questions.length - 1" class="btn primary" (click)="nextQuestion()">Следующий вопрос</button>
+          <button *ngIf="currentQuestion === questions.length - 1 && !testResultId" class="btn primary" (click)="saveTestResult()">Завершить тест</button>
+          <button *ngIf="currentQuestion === questions.length - 1 && testResultId" class="btn primary" (click)="getTestResults()">Посмотреть результаты</button>
+        </div>
+      </div>
+      
+      <div class="content-block">
+        <div class="actions">
+          <button *ngIf="course && tests && getPreviousTestId(test.id) !== ''" 
+            class="btn primary" [routerLink]="['/test/', getPreviousTestId(test.id)]">Предыдущий тест
+          </button>
+          <button *ngIf="course && lectures" 
+            class="btn primary" [routerLink]="['/lecture/', lectures[lectures.length - 1].id]">Предыдущая теория
+          </button>
+
+          <button *ngIf="!course" class="btn primary" [routerLink]="['/']">На главную</button>
+          <button *ngIf="course" class="btn primary" [routerLink]="['/course/', course.id]">Вернуться к курсу</button>
+
+          <button *ngIf="tests && getNextTestId(test.id) !== ''" 
+            class="btn primary" [routerLink]="['/test/', getNextTestId(test.id)]">Следующий тест
+          </button>
+          <!-- (click)="checkAccessRoute('/test/', tests[0].id)" -->
+        </div>
+        <app-modal-dialog 
+          *ngIf="isModalDialogVisible" 
+          [header]="'Внимание!'" 
+          [description]="'Уверены, что хотите удалить?'"
+          (isConfirmed)="closeModal($event)">
+        </app-modal-dialog>
+      </div>
+    </div>
+  </main>
+</ng-container>

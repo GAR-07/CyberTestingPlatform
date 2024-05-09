@@ -1,7 +1,5 @@
 ﻿using CyberTestingPlatform.DataAccess.Repositories;
 using CyberTestingPlatform.Core.Models;
-using CyberTestingPlatform.Core.Shared;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace CyberTestingPlatform.Application.Services
 {
@@ -15,18 +13,25 @@ namespace CyberTestingPlatform.Application.Services
             _testResultsRepository = testResultsRepository;
             _testService = testService;
         }
-
-        public async Task<List<TestResult>> GetSelectionTestResultsId(int sampleSize, int page, Guid id)
+        public async Task<List<TestResult>> GetSelectionTestResultsByUser(int sampleSize, int page, Guid userId)
         {
             if (sampleSize <= 0 || page < 0)
             {
-                throw new CustomHttpException($"Заданы невозможные параметры для выборки", 422);
+                throw new Exception($"Заданы невозможные параметры для выборки");
             }
-            return await _testResultsRepository.GetSelectionAsync(sampleSize, page, id) ?? throw new CustomHttpException($"Ничего не найдено", 422);
+            return await _testResultsRepository.GetSelectionByUserAsync(sampleSize, page, userId) ?? throw new Exception($"Ничего не найдено");
+        }
+        public async Task<List<TestResult>> GetSelectionTestResultsByTest(int sampleSize, int page, Guid testId)
+        {
+            if (sampleSize <= 0 || page < 0)
+            {
+                throw new Exception($"Заданы невозможные параметры для выборки");
+            }
+            return await _testResultsRepository.GetSelectionByTestAsync(sampleSize, page, testId) ?? throw new Exception($"Ничего не найдено");
         }
         public async Task<TestResult> GetTestResult(Guid id)
         {
-            return await _testResultsRepository.GetAsync(id) ?? throw new CustomHttpException($"Результат не найден", 422);
+            return await _testResultsRepository.GetAsync(id) ?? throw new Exception($"Результат не найден");
         }
         public async Task<Guid> CreateTestResultAsync(TestResult testResult)
         {
@@ -38,7 +43,7 @@ namespace CyberTestingPlatform.Application.Services
 
             if (userAnswers.Length != correctAnswers.Length)
             {
-                throw new CustomHttpException($"Количество ответов не совпадает с вопросами", 422);
+                throw new Exception($"Количество ответов не совпадает с вопросами");
             }
 
             for (int i = 0; i < correctAnswers.Length; i++)
@@ -46,17 +51,17 @@ namespace CyberTestingPlatform.Application.Services
                 results.Add(userAnswers[i].Equals(correctAnswers[i], StringComparison.OrdinalIgnoreCase));
             }
 
-            testResult.Results =  string.Join("\n", results.Select(x => x ? "Верно" : "Неверно"));
+            testResult.Results = string.Join("\n", results.Select(x => x ? "Верно" : "Неверно"));
 
-            return await _testResultsRepository.CreateAsync(testResult) ?? throw new CustomHttpException($"Ошибка сохранения результатов", 422);
+            return await _testResultsRepository.CreateAsync(testResult) ?? throw new Exception($"Ошибка сохранения результатов");
         }
         public async Task<Guid> UpdateTestResultAsync(TestResult testResult)
         {
-            return await _testResultsRepository.UpdateAsync(testResult) ?? throw new CustomHttpException($"Результат {testResult.Id} не найден", 422);
+            return await _testResultsRepository.UpdateAsync(testResult) ?? throw new Exception($"Результат {testResult.Id} не найден");
         }
         public async Task<Guid> DeleteTestResultAsync(Guid id)
         {
-            return await _testResultsRepository.DeleteAsync(id) ?? throw new CustomHttpException($"Результат {id} не найден", 422);
+            return await _testResultsRepository.DeleteAsync(id) ?? throw new Exception($"Результат {id} не найден");
         }
     }
 }

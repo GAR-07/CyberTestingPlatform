@@ -10,13 +10,13 @@ namespace CyberTestingPlatform.DataAccess.Entites
         
         [Required]
         [MaxLength(Lecture.MAX_THEME_LENGTH)]
-        public string Theme { get; set; }
+        public string Theme { get; set; } = "";
 
         [Required]
         [MaxLength(Lecture.MAX_TITLE_LENGTH)]
-        public string Title { get; set; }
+        public string Title { get; set; } = "";
 
-        public string Content { get; set; }
+        public string Content { get; set; } = "";
 
         public Guid CourseId { get; set; }
 

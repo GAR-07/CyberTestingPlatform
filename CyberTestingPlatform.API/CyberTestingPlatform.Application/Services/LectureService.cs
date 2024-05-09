@@ -1,6 +1,5 @@
 ﻿using CyberTestingPlatform.DataAccess.Repositories;
 using CyberTestingPlatform.Core.Models;
-using CyberTestingPlatform.Core.Shared;
 
 namespace CyberTestingPlatform.Application.Services
 {
@@ -17,29 +16,29 @@ namespace CyberTestingPlatform.Application.Services
         {
             if (sampleSize <= 0 || page < 0)
             {
-                throw new CustomHttpException($"Заданы невозможные параметры для выборки", 422);
+                throw new Exception($"Заданы невозможные параметры для выборки");
             }
-            return await _lecturesRepository.GetSelectionAsync(sampleSize, page) ?? throw new CustomHttpException($"Ничего не найдено", 422);
+            return await _lecturesRepository.GetSelectionAsync(sampleSize, page) ?? throw new Exception($"Ничего не найдено");
         }
         public async Task<List<Lecture>> GetLecturesByCourseIdAsync(Guid id)
         {
-            return await _lecturesRepository.GetByCourseIdAsync(id) ?? throw new CustomHttpException($"Ничего не найдено", 422);
+            return await _lecturesRepository.GetByCourseIdAsync(id) ?? throw new Exception($"Ничего не найдено");
         }
         public async Task<Lecture> GetLectureAsync(Guid id)
         {
-            return await _lecturesRepository.GetAsync(id) ?? throw new CustomHttpException($"Лекцкия {id} не найдена", 422);
+            return await _lecturesRepository.GetAsync(id) ?? throw new Exception($"Лекцкия {id} не найдена");
         }
         public async Task<Guid> CreateLectureAsync(Lecture lecture)
         {
-            return await _lecturesRepository.CreateAsync(lecture) ?? throw new CustomHttpException($"Ошибка создания лекции", 422);
+            return await _lecturesRepository.CreateAsync(lecture) ?? throw new Exception($"Ошибка создания лекции");
         }
         public async Task<Guid> UpdateLectureAsync(Lecture lecture)
         {
-            return await _lecturesRepository.UpdateAsync(lecture) ?? throw new CustomHttpException($"Лекция {lecture.Id} не найдена", 422);
+            return await _lecturesRepository.UpdateAsync(lecture) ?? throw new Exception($"Лекция {lecture.Id} не найдена");
         }
         public async Task<Guid> DeleteLectureAsync(Guid id)
         {
-            return await _lecturesRepository.DeleteAsync(id) ?? throw new CustomHttpException($"Лекция {id} не найдена", 422);
+            return await _lecturesRepository.DeleteAsync(id) ?? throw new Exception($"Лекция {id} не найдена");
         }
     }
 }

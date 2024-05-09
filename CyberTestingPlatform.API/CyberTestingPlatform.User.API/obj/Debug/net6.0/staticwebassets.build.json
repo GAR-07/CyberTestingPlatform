@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "hWvUEXDhBmIyM4EP0bjkcjLVJ9zCJKLy6I5TFj+LDdI=",
+  "Source": "CyberTestingPlatform.User.API",
+  "BasePath": "_content/CyberTestingPlatform.User.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

@@ -1,19 +1,112 @@
-<main class="content-wrapper">
+<main *ngIf="account" class="content-wrapper">
   <div class="content-container">
     <div class="content-block">
       <div class="profile-section-wrapper">
-        <div class="profile-name">Добро пожаловать, user.userName</div>
-
+        <div class="profile-name">Добро пожаловать<span *ngIf="account">, {{account.userName}}</span>!</div>
+        <div class="custom-section-wrapper">
+          <div class="profile-info-wrapper">
+            <div class="profile-image">
+              <img *ngIf="!account" [src]="createFilePath('account.imagePath')" alt="Profile image">
+              <div *ngIf="account">
+                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="128" height="128" x="0" y="0" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512" xml:space="preserve"><g><path d="M256 0c-74.439 0-135 60.561-135 135s60.561 135 135 135 135-60.561 135-135S330.439 0 256 0zm0 240c-57.897 0-105-47.103-105-105S198.103 30 256 30s105 47.103 105 105-47.103 105-105 105zM423.966 358.195C387.006 320.667 338.009 300 286 300h-60c-52.008 0-101.006 20.667-137.966 58.195C51.255 395.539 31 444.833 31 497c0 8.284 6.716 15 15 15h420c8.284 0 15-6.716 15-15 0-52.167-20.255-101.461-57.034-138.805zM61.66 482c7.515-85.086 78.351-152 164.34-152h60c85.989 0 156.825 66.914 164.34 152H61.66z" fill="#000000" opacity="1" data-original="#000000"></path></g></svg>
+              </div>
+            </div>
+            <ul class="profile-info">
+              <li>
+                <span>Действующая группа</span>
+                <span>{{account.roles.split(',')[account.roles.split(',').length - 1]}}</span>
+              </li>
+              <li>
+                <span>Регистрация аккаунта</span>
+                <span>{{account.registrationDate.substring(0, 10)}}</span>
+              </li>
+              <li>
+                <span>Почта аккаунта</span>
+                <span>{{account.email}}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
+
     <div class="content-block">
-      <div class="custom-section-wrapper">
-        <div class="custom-section-name">section-name</div>
-
-      </div>
+        <div class="tab actions" #tabLinks>
+          <button class="btn tab-link primary" data-tab="courses" (click)="openTab('courses')">Мои курсы</button>
+          <button class="btn tab-link" data-tab="statistics" (click)="openTab('statistics')">Статистика</button>
+          <button class="btn tab-link" data-tab="security" (click)="openTab('security')">Безопасность</button>
+          <button class="btn tab-link" data-tab="settings" (click)="openTab('settings')">Настройки</button>
+        </div>
     </div>
-    <p>Текущий размер шрифта: {{currentFontSize}}px</p>
-    <button (click)="increaseFontSize()">Увеличить</button>
-    <button (click)="decreaseFontSize()">Уменьшить</button>
+
+    <div class="content-block" #tabContents>
+
+      <div id="courses" class="tab-content" style="display: block;">
+          <ng-container *ngIf="courses; else noCourses">
+              <div class="custom-section-wrapper">
+                <div class="custom-section-name">Начатые курсы</div>
+                <ul class="section-list">
+                  <ng-container *ngFor="let course of courses">
+                    <li>
+                      <div class="theme-name"><a [routerLink]="['/course', course.id]">{{ course.name }}</a></div>
+                      <div class="actions">
+                        <button class="btn" [routerLink]="['/course', course.id]">Перейти</button>
+                        <button class="btn" (click)="removeUserCourse(course.id)">Удалить</button>
+                      </div>
+                    </li>
+                  </ng-container>
+                </ul>
+              </div>
+          </ng-container>
+          <ng-template #noCourses>
+            <div class="custom-section-wrapper">
+              <div class="custom-section-name">Нет начатых курсов</div>
+            </div>
+          </ng-template>
+      </div>
+
+      <div id="statistics" class="tab-content" style="display: none;">
+        <ng-container *ngIf="courses; else noCourses">
+          <div class="custom-section-wrapper">
+            <div class="custom-section-name">Начатые курсы</div>
+            <ul class="section-list">
+              <ng-container *ngFor="let course of courses">
+                <li>
+                  <div class="theme-name"><a [routerLink]="['/course', course.id]">{{ course.name }}</a></div>
+                  <button class="btn" [routerLink]="['/course', course.id]">Перейти</button>
+                  <button class="btn" (click)="removeUserCourse(course.id)">Удалить</button>
+                </li>
+              </ng-container>
+            </ul>
+          </div>
+        </ng-container>
+        <ng-template #noCourses>
+          <div class="custom-section-wrapper">
+            <div class="custom-section-name">Нет начатых курсов</div>
+          </div>
+        </ng-template>
+      </div>
+
+      <div id="security" class="tab-content" style="display: none;">
+        <div class="custom-section-wrapper">
+          <div class="custom-section-name">Настройки сайта и аккаунта</div>
+          <div class="actions">
+            <button class="btn primary">Изменить фото профиля</button>
+            <button class="btn primary">Изменить имя</button>
+            <button class="btn primary">Изменить пароль</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="settings" class="tab-content" style="display: none;">
+        <div class="custom-section-wrapper">
+          <div class="custom-section-name">Настройки сайта и аккаунта</div>
+          <p>Текущий размер шрифта: {{currentFontSize}}px</p>
+          <button class="btn" (click)="increaseFontSize()">Увеличить</button>
+          <button class="btn" (click)="decreaseFontSize()">Уменьшить</button>
+        </div>
+      </div>
+
+    </div>
   </div>
 </main>

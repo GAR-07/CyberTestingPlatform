@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.Diagnostics;
-using Newtonsoft.Json;
 using CyberTestingPlatform.Application.Services;
 using CyberTestingPlatform.DataAccess.Repositories;
 using CyberTestingPlatform.DataAccess;
@@ -22,12 +21,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IStorageService, StorageService>();
 builder.Services.AddScoped<ICourseService, CourseService>();
 builder.Services.AddScoped<ILectureService, LectureService>();
-builder.Services.AddScoped<ITestResultService, TestResultService>();
 builder.Services.AddScoped<ITestService, TestService>();
+builder.Services.AddScoped<ITestResultService, TestResultService>();
 builder.Services.AddScoped<ICoursesRepository, CoursesRepository>();
 builder.Services.AddScoped<ILecturesRepository, LecturesRepository>();
-builder.Services.AddScoped<ITestResultsRepository, TestResultsRepository>();
 builder.Services.AddScoped<ITestsRepository, TestsRepository>();
+builder.Services.AddScoped<ITestResultsRepository, TestResultsRepository>();
 builder.Services.Configure<FormOptions>(options =>
 {
     options.ValueLengthLimit = 262144000;
@@ -89,21 +88,8 @@ app.UseExceptionHandler(errorApp =>
         var exceptionHandlerPathFeature =
             context.Features.Get<IExceptionHandlerPathFeature>();
 
-        if (exceptionHandlerPathFeature.Error is CustomHttpException customHttpException)
-        {
-            context.Response.StatusCode = customHttpException.StatusCode;
-            var errorMessage = exceptionHandlerPathFeature.Error.Message;
-
-            var result = JsonConvert.SerializeObject(new CustomErrorResponse(errorMessage, 422));
-            await context.Response.WriteAsync(result);
-        }
-        else
-        {
-            // Обработка других типов исключений
-            var errorMessage = exceptionHandlerPathFeature.Error.Message;
-            var result = JsonConvert.SerializeObject(new CustomErrorResponse(errorMessage, 500));
-            await context.Response.WriteAsync(result);
-        }
+        var errorMessage = exceptionHandlerPathFeature.Error.Message;
+        await context.Response.WriteAsync(errorMessage);
     });
 });
 

@@ -14,7 +14,7 @@
         </ul>
         <ul class="navbar-nav" *ngIf="roles.length != 0">
           <li class="nav-item" *ngIf="roles.includes('Admin') || roles.includes('Editor') || roles.includes('Moder')">
-            <a class="nav-link" routerLink="/adminPanel">AdminPanel</a>
+            <a class="nav-link" routerLink="/adminPanel">Панель управления</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" routerLink="/cabinet">Кабинет</a>
@@ -53,7 +53,7 @@
             </ul>
             <ul class="navbar-nav" *ngIf="roles.length != 0">
               <li class="nav-item" *ngIf="roles.includes('Admin')">
-                <a class="nav-link" routerLink="/adminPanel">AdminPanel</a>
+                <a class="nav-link" routerLink="/adminPanel">Панель управления</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" routerLink="/cabinet" >Кабинет</a>

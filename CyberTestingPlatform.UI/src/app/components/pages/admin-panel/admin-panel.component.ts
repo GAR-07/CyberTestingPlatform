@@ -21,9 +21,8 @@ export class AdminPanelComponent {
   lectures!: LectureData[];
   tests!: TestData[];
   pageNum: number = 1;
-  pageSize: number = 20;
+  pageSize: number = 24;
   roles : string[] = []
-  adminMods: string[] = ['list', 'view', 'edit']
 
   constructor(
     private authService: AuthService,
@@ -34,14 +33,25 @@ export class AdminPanelComponent {
 
   async ngOnInit(): Promise<void> {
     this.checkAccountData();
-    try {
-      await this.getCourses(this.pageNum);
-      await this.getLectures(this.pageNum);
-      await this.getTests(this.pageNum);
-    } catch (response: any) {
-      this.notificationService.addMessage(new NotificationMessage('error', response.toString()));
-    }
+    await this.getCourses(this.pageNum);
+    await this.getLectures(this.pageNum);
+    await this.getTests(this.pageNum);
   }
+
+  // getAccountsData() {
+  //   return new Promise<void>((resolve, reject) => {
+  //     this.accountService.getAccounts('m', 1, 10).subscribe({
+  //       next: (response: AccountData[]) => {
+  //         console.log(response);
+  //         resolve();
+  //       },
+  //       error: (response) => {
+  //         this.notificationService.addMessage(new NotificationMessage(response.error, response.status));
+  //         reject();
+  //       }
+  //     });
+  //   });
+  // }
 
   getCourses(pageNum: number): Promise<void> {
     return new Promise<void>((resolve, reject) => {
@@ -57,7 +67,7 @@ export class AdminPanelComponent {
           resolve();
         },
         error: (response) => {
-          this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
+          this.notificationService.addMessage(new NotificationMessage(response.error, response.status));
           reject();
         }
       });
@@ -78,7 +88,7 @@ export class AdminPanelComponent {
           resolve();
         },
         error: (response) => {
-          this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
+          this.notificationService.addMessage(new NotificationMessage(response.error, response.status));
           reject();
         }
       });
@@ -99,7 +109,7 @@ export class AdminPanelComponent {
           resolve();
         },
         error: (response) => {
-          this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
+          this.notificationService.addMessage(new NotificationMessage(response.error, response.status));
           reject();
         }
       });

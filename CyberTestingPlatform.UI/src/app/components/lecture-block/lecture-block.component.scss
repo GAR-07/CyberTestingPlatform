@@ -1,0 +1,42 @@
+.theme {
+  padding: 5px;
+  text-align: left;
+
+  .link {
+    margin-top: 10px;
+  }
+}
+
+.title {
+  padding: 10px;
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--font-color-white);
+  background-color: var(--primary-color);
+}
+
+.content {
+  text-align: justify;
+  margin: 10px;
+  font-size: 1rem;
+  line-height: 1.25;
+}
+
+.actions {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 5px;
+
+  .btn {
+    margin: 5px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 699.98px) {
+  .actions {
+    flex-direction: column-reverse !important;
+  }
+}

@@ -1,11 +1,19 @@
 <div class="content-wrapper">
   <div class="content-container">
     <div class="card-container">
-      <div *ngFor="let course of courses">
-        <app-course-block
-          [mods]="['card']"
-          [course]="course">
-        </app-course-block>
-      </div>
+      <ng-container *ngFor="let course of courses">
+          <a class="card" [routerLink]="['/course', course.id]">
+            <div class="card__top-wrap">
+              <div class="image">
+                <img [src]="createFilePath(course.imagePath)" alt="Course image">
+              </div>
+            </div>
+            <div class="card__bottom-wrap">
+              <div class="title">{{course.name}}</div>
+              <div class="description">{{course.description}}</div>
+              <!-- <div *ngIf="course.price !== 0" class="price">{{course.price}} рублей</div> -->
+          </div>
+          </a>
+      </ng-container>
     </div>
 </div>

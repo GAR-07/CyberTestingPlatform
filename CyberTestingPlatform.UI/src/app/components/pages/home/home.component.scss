@@ -38,3 +38,9 @@
     row-gap: 40px;
   }
 }
+
+@media (min-width: 1366px){
+  .card {
+    height: 480px !important;
+  }
+}

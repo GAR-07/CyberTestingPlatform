@@ -14,7 +14,7 @@ namespace CyberTestingPlatform.DataAccess.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<List<TestResult>?> GetSelectionAsync(int sampleSize, int page, Guid userId)
+        public async Task<List<TestResult>?> GetSelectionByUserAsync(int sampleSize, int page, Guid userId)
         {
             var totalCount = await _dbContext.TestResults.AsNoTracking().Where(x => x.UserId == userId).CountAsync();
             var startIndex = Math.Max(0, totalCount - sampleSize * page);
@@ -22,6 +22,31 @@ namespace CyberTestingPlatform.DataAccess.Repositories
 
             var testResultEntities = await _dbContext.TestResults
                 .Where(x => x.UserId == userId)
+                .Skip(startIndex)
+                .Take(countToTake)
+                .AsNoTracking()
+                .ToListAsync();
+
+            if (testResultEntities == null)
+            {
+                return null;
+            }
+
+            var results = testResultEntities
+               .Select(x => new TestResult(x.Id, x.TestId, x.UserId, x.Answers, x.Results, x.CreationDate))
+               .ToList();
+
+            return results;
+        }
+
+        public async Task<List<TestResult>?> GetSelectionByTestAsync(int sampleSize, int page, Guid testId)
+        {
+            var totalCount = await _dbContext.TestResults.AsNoTracking().Where(x => x.TestId == testId).CountAsync();
+            var startIndex = Math.Max(0, totalCount - sampleSize * page);
+            var countToTake = Math.Min(sampleSize, totalCount - startIndex);
+
+            var testResultEntities = await _dbContext.TestResults
+                .Where(x => x.TestId == testId)
                 .Skip(startIndex)
                 .Take(countToTake)
                 .AsNoTracking()

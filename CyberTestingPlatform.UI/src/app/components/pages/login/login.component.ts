@@ -40,10 +40,10 @@ export class LoginComponent {
       
       this.authService.login(this.modelData).subscribe({
         next: () => {
-          this.notificationService.addMessage(new NotificationMessage('success', 'Вы вошли в аккаунт'));
+          this.notificationService.addMessage(new NotificationMessage('Вы вошли в аккаунт', 200));
         },
         error: (response) => {
-          this.notificationService.addMessage(new NotificationMessage('error', response.error.Message));
+          this.notificationService.addMessage(new NotificationMessage(response.error, response.status));
         }
       });
     }

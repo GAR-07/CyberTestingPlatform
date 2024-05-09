@@ -4,7 +4,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
 import { LoginData } from '../interfaces/loginData.model';
 import { RegisterData } from '../interfaces/registerData.model';
-import { AUTH_API_URL} from '../app-injection-tokens';
+import { USER_API_URL} from '../app-injection-tokens';
 import { tap } from 'rxjs';
 
 export const ACCESS_TOKEN_KEY = 'accessToken'
@@ -16,14 +16,14 @@ export const ACCESS_TOKEN_KEY = 'accessToken'
 export class AuthService {
 
   constructor(
-    @Inject(AUTH_API_URL) private authApiUrl: string,
+    @Inject(USER_API_URL) private userApiUrl: string,
     private jwtHelper: JwtHelperService,
     private http: HttpClient,
     private router: Router
     ) { }
 
   login(account : LoginData) {
-    return this.http.post<any>(this.authApiUrl + '/Account/Login', account).pipe(
+    return this.http.post<any>(this.userApiUrl + '/Auth/Login', account).pipe(
       tap(response => {
         localStorage.setItem(ACCESS_TOKEN_KEY, response.accessToken);
         this.router.navigate(['']);
@@ -32,7 +32,7 @@ export class AuthService {
   }
 
   register(account : RegisterData) {
-    return this.http.post<any>(this.authApiUrl + '/Account/Register', account).pipe(
+    return this.http.post<any>(this.userApiUrl + '/Auth/Register', account).pipe(
       tap(response => {
         localStorage.setItem(ACCESS_TOKEN_KEY, response.accessToken);
         this.router.navigate(['']);

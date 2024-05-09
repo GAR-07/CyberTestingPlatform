@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
-import { AUTH_API_URL } from '../app-injection-tokens';
+import { USER_API_URL } from '../app-injection-tokens';
 
 @Injectable({
   providedIn: 'root'
@@ -8,16 +8,20 @@ import { AUTH_API_URL } from '../app-injection-tokens';
 export class AccountService {
 
   constructor(
-    @Inject(AUTH_API_URL) private authApiUrl: string,
+    @Inject(USER_API_URL) private userApiUrl: string,
     private http: HttpClient
   ) { }
 
+  getAccount(id: string) {
+    return this.http.get<any>(this.userApiUrl + '/Account/GetAccount/' + id);
+  }
   
-  getAccounts(sampleSize: number, page: number) {
+  getAccounts(searchText: string, page: number, pageSize: number) {
     const params = new HttpParams()
       .set('Content-Type', 'application/json')
-      .set('sampleSize', sampleSize.toString())
-      .set('page', page.toString());
-    return this.http.get<any>(this.authApiUrl + '/Account/GetAccounts', { params });
+      .set('searchText', searchText)
+      .set('page', page.toString())
+      .set('pageSize', pageSize.toString());
+    return this.http.get<any>(this.userApiUrl + '/Account/GetAccounts', { params });
   }
 }

@@ -2,20 +2,6 @@ a {
   cursor: pointer;
 }
 
-.notification {
-  align-items: center;
-  width: auto;
-  max-width: 400px;
-  height: auto;
-  margin: 5px 5px 0 5px;
-  padding: 10px;
-  border-width: 2px;
-  border-style: solid;
-  border-radius: 15px;
-  border-color: var(--font-color-grey);
-  z-index: 9999;
-}
-
 .notification.success {
     background-color: #dff0d8;
     border-color: #d6e9c6;

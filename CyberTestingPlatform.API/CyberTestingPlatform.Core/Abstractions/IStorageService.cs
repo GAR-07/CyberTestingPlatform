@@ -4,6 +4,7 @@ namespace CyberTestingPlatform.Application.Services
 {
     public interface IStorageService
     {
-        Task<(string, string)> SaveFile(IFormFile file);
+        Task<string> SaveFile(IFormFile file);
+        void ValidationImageFile(IFormFile file);
     }
 }

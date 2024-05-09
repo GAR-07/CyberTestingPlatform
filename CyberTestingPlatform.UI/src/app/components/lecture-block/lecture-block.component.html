@@ -1,0 +1,54 @@
+<ng-container *ngIf="lecture">
+  <main class="content-wrapper">
+    <div class="content-container">
+      <div class="progress-bar">
+        <ng-container *ngIf="lectures && lectures.length > 0">
+          <ng-container *ngFor="let _lecture of lectures; let i = index">
+            <a *ngIf="lecture.id === _lecture.id" class="circle primary" [routerLink]="['/lecture', _lecture.id]">{{i+1}}</a>
+            <a *ngIf="lecture.id !== _lecture.id" class="circle" [routerLink]="['/lecture', _lecture.id]">{{i+1}}</a>
+          </ng-container>
+        </ng-container>
+        <ng-container *ngIf="tests && tests.length > 0">
+          <ng-container *ngFor="let _test of tests; let i = index">
+            <a class="circle" [routerLink]="['/test', _test.id]">{{lectures.length + i + 1}}</a>
+          </ng-container>
+        </ng-container>
+      </div>
+
+      <div class="content-block">
+        <div class="theme" *ngIf="course">
+          <a class="link" [routerLink]="['/course', course.id]">{{course ? course.name + ' / ' : ''}}</a>
+          <a class="link" [routerLink]="['/course', course.id]">{{lecture.theme}}</a>
+        </div>
+        <h1 class="title">{{lecture.title}}</h1>
+        
+        <div class="content" [innerHTML]="lecture.content"></div>
+        
+        <div class="content-block">
+          <div class="actions">
+            <button *ngIf="course && lectures && getPreviousLectureId(lecture.id) !== ''" 
+              class="btn primary" [routerLink]="['/lecture/', getPreviousLectureId(lecture.id)]">Предыдущая теория
+            </button>
+
+            <button *ngIf="!course" class="btn primary" [routerLink]="['/']">На главную</button>
+            <button *ngIf="course" class="btn primary" [routerLink]="['/course/', course.id]">Вернуться к курсу</button>
+
+            <button *ngIf="course && lectures && getNextLectureId(lecture.id) !== ''" 
+              class="btn primary" [routerLink]="['/lecture/', getNextLectureId(lecture.id)]">Следующая теория
+            </button>
+            <button *ngIf="course && tests && getNextLectureId(lecture.id) === ''" 
+            class="btn primary" [routerLink]="['/test/', tests[0].id]">Начать тест
+          </button>
+            <!-- (click)="checkAccessRoute('/lecture/', lectures[0].id)" -->
+          </div>
+          <app-modal-dialog 
+            *ngIf="isModalDialogVisible" 
+            [header]="'Внимание!'" 
+            [description]="'Уверены, что хотите удалить?'"
+            (isConfirmed)="closeModal($event)">
+          </app-modal-dialog>
+        </div>
+      </div>
+    </div>
+  </main>
+</ng-container>

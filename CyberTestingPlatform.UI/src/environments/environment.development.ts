@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  authApiUrl: '/authApi',
+  userApiUrl: '/userApi',
   resourseApiUrl: '/resourseApi',
   tokenWhiteListedDomains: ['/resourseApi']
 };

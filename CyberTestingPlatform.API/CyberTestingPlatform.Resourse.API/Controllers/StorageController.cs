@@ -21,13 +21,11 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
         public async Task<IActionResult> UploadFiles()
         {
             var formCollection = await Request.ReadFormAsync();
-            var (filePath, error) = await _storageService.SaveFile(formCollection.Files[0]);
+            _storageService.ValidationImageFile(formCollection.Files[0]);
+
+            var filePath = await _storageService.SaveFile(formCollection.Files[0]);
             
-            return Ok(new
-            {
-                filePath,
-                error
-            });
+            return Ok(new { filePath });
         }
     }
 }

@@ -1,0 +1,154 @@
+<ng-container [ngSwitch]="mode">
+
+  <div *ngSwitchCase="'list'" class="list-wrapper">
+    <div *ngIf="course" class="table-row">
+      <div class="table-cell">{{course.name}}</div>
+      <div class="table-cell">{{course.description}}</div>
+      <div class="table-cell">{{course.price}}</div>
+      <div *ngIf="roles.includes('Admin') || roles.includes('Editor')" class="actions-cell">
+        <button class="btn" (click)="changeMode('view')">Развернуть</button>
+        <button class="btn" (click)="changeMode('edit')">Редактировать</button>
+        <button class="btn" (click)="showModal()">Удалить</button>
+      </div>
+    </div>
+    <app-modal-dialog 
+      *ngIf="isModalDialogVisible" 
+      [header]="'Внимание!'" 
+      [description]="'Уверены, что хотите удалить?'"
+      (isConfirmed)="closeModal($event)">
+    </app-modal-dialog>
+  </div>
+
+  <div *ngSwitchCase="'edit'" class="edit-create-wrapper">
+    <h1>Изменение курса</h1>
+    <form [formGroup]="courseForm" (ngSubmit)="editCourse()" class="custom-form">
+
+      <div class="form-group">
+        <div class="custom-input">
+          <input type="text" formControlName="name" placeholder="Название">
+        </div>
+        <app-validator-message [field]="courseForm.get('name')"></app-validator-message>
+      </div>
+    
+      <div class="form-group">
+        <div class="custom-input">
+          <textarea type="text" formControlName="description" placeholder="Описание"></textarea>
+        </div>
+        <app-validator-message [field]="courseForm.get('description')"></app-validator-message>
+      </div>
+    
+      <div class="form-group">
+        <div class="custom-input">
+          <input type="text" formControlName="price" placeholder="Цена">
+        </div>
+        <app-validator-message [field]="courseForm.get('price')"></app-validator-message>
+      </div>
+
+      <div class="form-group">
+        <div class="upload-container">
+          <div class="upload-input" draggable="true" ngClass="{{ dragAreaClass }}">
+            <input type="file" accept=".png, .jpg, .bmp" placeholder="Загрузить обложку" 
+              #dragAreaInput multiple="false" (change)="uploadFile(dragAreaInput.files)">
+            <label (click)="dragAreaInput.click()">Загрузить обложку</label>
+          </div>
+          <div *ngIf="courseForm.value.imagePath" class="demo-card-wrapper">
+            <div class="card" style="width: 100%; max-width: 300px; height: 320px;" >
+              <div class="card__top-wrap">
+                <div class="image">
+                  <img [src]="createFilePath(courseForm.value.imagePath)" alt="Course image">
+                </div>
+              </div>
+              <div class="card__bottom-wrap">
+                <div class="title">Заголовок</div>
+                <div class="description">Довольно длинное описание будет отображаться на этом самом месте</div>
+                <div class="price">Цена</div>
+              </div>
+            </div>
+            <div class="card" style="width: 100%; max-width: 200px; height: 320px;" >
+              <div class="card__top-wrap">
+                <div class="image">
+                  <img [src]="createFilePath(courseForm.value.imagePath)" alt="Course image">
+                </div>
+              </div>
+              <div class="card__bottom-wrap">
+                <div class="title">Заголовок</div>
+                <div class="description">Довольно длинное описание будет отображаться на этом самом месте</div>
+                <div class="price">Цена</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <app-validator-message [field]="courseForm.get('imagePath')"></app-validator-message>
+      </div>
+    
+      <button type="submit" class="btn primary" [disabled]="!courseForm.valid">Сохранить</button>
+      <button class="btn primary" (click)="changeMode('list')">Отменить</button>
+    </form>
+  </div>
+
+  <div *ngSwitchCase="'create'" class="edit-create-wrapper">
+    <h1>Добавление курса</h1>
+    <form [formGroup]="courseForm" (ngSubmit)="createCourse()" class="custom-form">
+    
+      <div class="form-group">
+        <div class="custom-input">
+          <input type="text" formControlName="name" placeholder="Название">
+        </div>
+        <app-validator-message [field]="courseForm.get('name')"></app-validator-message>
+      </div>
+    
+      <div class="form-group">
+        <div class="custom-input">
+          <textarea type="text" formControlName="description" placeholder="Описание"></textarea>
+        </div>
+        <app-validator-message [field]="courseForm.get('description')"></app-validator-message>
+      </div>
+
+      <div class="form-group">
+        <div class="custom-input">
+          <input type="text" formControlName="price" placeholder="Цена">
+        </div>
+        <app-validator-message [field]="courseForm.get('price')"></app-validator-message>
+      </div>
+
+      <div class="form-group">
+        <div class="upload-container">
+          <div class="upload-input" draggable="true" ngClass="{{ dragAreaClass }}">
+            <input type="file" accept=".png, .jpg, .bmp" placeholder="Загрузить обложку" 
+              #dragAreaInput multiple="false" (change)="uploadFile(dragAreaInput.files)">
+            <label (click)="dragAreaInput.click()">Загрузить обложку</label>
+          </div>
+          <div *ngIf="courseForm.value.imagePath" class="demo-card-wrapper">
+            <div class="card" style="width: 100%; max-width: 300px; height: 320px;" >
+              <div class="card__top-wrap">
+                <div class="image">
+                  <img [src]="createFilePath(courseForm.value.imagePath)" alt="Course image">
+                </div>
+              </div>
+              <div class="card__bottom-wrap">
+                <div class="title">Заголовок</div>
+                <div class="description">Довольно длинное описание будет отображаться на этом самом месте</div>
+                <div class="price">Цена</div>
+              </div>
+            </div>
+            <div class="card" style="width: 100%; max-width: 200px; height: 320px;" >
+              <div class="card__top-wrap">
+                <div class="image">
+                  <img [src]="createFilePath(courseForm.value.imagePath)" alt="Course image">
+                </div>
+              </div>
+              <div class="card__bottom-wrap">
+                <div class="title">Заголовок</div>
+                <div class="description">Довольно длинное описание будет отображаться на этом самом месте</div>
+                <div class="price">Цена</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <app-validator-message [field]="courseForm.get('imagePath')"></app-validator-message>
+      </div>
+    
+      <button type="submit" class="btn primary" [disabled]="!courseForm.valid">Создать</button>
+    </form>
+  </div>
+</ng-container>
