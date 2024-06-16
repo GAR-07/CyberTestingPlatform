@@ -32,13 +32,20 @@ namespace CyberTestingPlatform.DataAccess.Repositories
             return courses;
         }
 
-        public async Task<List<Course>?> GetSelectionAsync(int sampleSize, int page)
+        public async Task<List<Course>?> GetSelectionAsync(string? searchText, int page, int pageSize)
         {
-            var totalCount = await _dbContext.Courses.AsNoTracking().CountAsync();
-            var startIndex = Math.Max(0, totalCount - sampleSize * page);
-            var countToTake = Math.Min(sampleSize, totalCount - startIndex);
+            var query = _dbContext.Courses.AsQueryable();
 
-            var courseEntities = await _dbContext.Courses
+            if (!string.IsNullOrEmpty(searchText))
+            {
+                query = query.Where(x => x.Name.Contains(searchText));
+            }
+
+            var totalCount = await query.CountAsync();
+            var startIndex = Math.Max(0, totalCount - pageSize * page);
+            var countToTake = Math.Min(pageSize, totalCount - startIndex);
+
+            var courseEntities = await query
                 .Skip(startIndex)
                 .Take(countToTake)
                 .AsNoTracking()

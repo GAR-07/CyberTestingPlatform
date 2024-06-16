@@ -11,11 +11,30 @@ h1 {
   .custom-input {
     margin: 20px 0 0 0;
     border-radius: 15px;
+    position: relative;
   
     input {
       height: 40px;
       font-size: 1.5rem;
       border-radius: 15px;
+    }
+
+    .placeholder {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      pointer-events: none;
+      padding: 4px 11px;
+      font-size: 1.5rem;
+      font-style: normal;
+      font-weight: 700;
+      line-height: normal;
+      border: none;
+      border-radius: 15px;
+      color: var(--font-color-grey);
+      background-color: var(--font-color-white);
+      transition: 0.2s;
     }
   }
 

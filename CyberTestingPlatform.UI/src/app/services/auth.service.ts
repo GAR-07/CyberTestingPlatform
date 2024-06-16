@@ -45,7 +45,7 @@ export class AuthService {
     this.router.navigate(['/start']);
   }
 
-  accountData() {
+  getAccountData() {
     var token = localStorage.getItem(ACCESS_TOKEN_KEY);
     if (token && !this.jwtHelper.isTokenExpired(token)) {
       return this.jwtHelper.decodeToken(token);

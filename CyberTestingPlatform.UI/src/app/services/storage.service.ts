@@ -30,11 +30,12 @@ export class StorageService {
       return this.http.get<any>(this.resourseApiUrl + '/Course/GetAllCourses');
     }
 
-    getCourses(sampleSize: number, page: number) {
+    getCourses(searchText: string | null, sampleSize: number, page: number) {
       const params = new HttpParams()
         .set('Content-Type', 'application/json')
-        .set('sampleSize', sampleSize.toString())
-        .set('page', page.toString());
+        .set('searchText', searchText ? searchText : '')
+        .set('page', page.toString())
+        .set('pageSize', sampleSize.toString());
       return this.http.get<any>(this.resourseApiUrl + '/Course/GetCourses', { params });
     }
 
@@ -84,15 +85,25 @@ export class StorageService {
       return this.http.delete<any>(this.resourseApiUrl + '/Lecture/DeleteLecture/' + id);
     }
 
-    // Далее идут методы для тестов
+    // Далее идут методы для результатов тестов
 
     getTestResult(id: string) {
-      return this.http.get<any>(this.resourseApiUrl + '/Test/GetTestResult/' + id);
+      return this.http.get<any>(this.resourseApiUrl + '/Result/GetTestResult/' + id);
+    }
+
+    getTestResultsByUser(sampleSize: number, page: number, id: string) {
+      const params = new HttpParams()
+        .set('Content-Type', 'application/json')
+        .set('sampleSize', sampleSize.toString())
+        .set('page', page.toString());
+      return this.http.get<any>(this.resourseApiUrl + '/Result/GetTestResultsByUser/' + id, { params });
     }
 
     createTestResult(testResult: TestResultData) {
-      return this.http.post<any>(this.resourseApiUrl + '/Test/CreateTestResult/', testResult);
+      return this.http.post<any>(this.resourseApiUrl + '/Result/CreateTestResult/', testResult);
     }
+
+    // Методы для тестов
 
     getTestsByCourseId(courseId: string) {
       return this.http.get<any>(this.resourseApiUrl + '/Test/GetTestsByCourseId/' + courseId);

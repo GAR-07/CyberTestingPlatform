@@ -5,6 +5,52 @@
   .card-container {
     display: grid;
     grid-auto-flow: row dense;
+    justify-items: center;
+    align-items: center; 
+  }
+}
+
+@media (max-width: 899.98px) {
+  .search-container {
+    position: absolute;
+    margin: 10px 0;
+    padding: 0;
+    top: 40px;
+    left: 50%;
+    width: 100%;
+    transform: translateX(-50%);
+    z-index: 0;
+
+    ::ng-deep app-search {
+      width: 95%; 
+
+      .custom-input {
+        &:not(:disabled):hover {
+          transform: translateY(0) !important;
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 900px) {
+  .search-container {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    top: 5px;
+    left: 50%;
+    width: auto;
+    transform: translateX(-50%);
+    z-index: 999;
+
+    ::ng-deep app-search {
+      .custom-input {
+        &:not(:disabled):hover {
+          transform: translateY(0) !important;
+        }
+      }
+    }
   }
 }
 

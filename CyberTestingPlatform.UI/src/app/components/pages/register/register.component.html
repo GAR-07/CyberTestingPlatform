@@ -5,7 +5,9 @@
   
       <div class="form-group">
         <div class="custom-input">
-          <input type="text" class="form-control" formControlName="birthday" (input)="formatBirthday($event)" placeholder="Дата рождения">
+          <label #placeholder for="birthday" class="placeholder" (mouseover)="hidePlaceholder()" (mouseout)="showPlaceholder()">Дата рождения</label>
+          <input type="date" class="form-control" formControlName="birthday" placeholder="Дата рождения"
+            (focus)="hidePlaceholder()" (blur)="togglePlaceholder()">
         </div>
         <app-validator-message [field]="regForm.get('birthday')"></app-validator-message>
       </div>
@@ -24,7 +26,7 @@
         <app-validator-message [field]="regForm.get('email')"></app-validator-message>
       </div>
   
-      <div class="form-group">
+      <!-- <div class="form-group">
         <div class="custom-radio-group">
           <div class="title">Выберите роль:</div>
           <label>
@@ -39,7 +41,7 @@
           </label>
         </div>
         <app-validator-message [field]="regForm.get('role')"></app-validator-message>
-      </div>
+      </div> -->
   
       <div formGroupName="passwords">
   

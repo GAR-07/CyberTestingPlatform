@@ -1,7 +1,10 @@
+import { XhrFactory } from '@angular/common';
 import { Component, ElementRef, QueryList, Renderer2, ViewChildren } from '@angular/core';
 import { AccountData } from 'src/app/interfaces/accountData.model';
 import { CourseData } from 'src/app/interfaces/courseData.model';
 import { NotificationMessage } from 'src/app/interfaces/notificationMessage.model';
+import { TestData } from 'src/app/interfaces/testData.model';
+import { TestResultData } from 'src/app/interfaces/testResultData.model';
 import { AccountService } from 'src/app/services/account.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { NotificationService } from 'src/app/services/notification.service';
@@ -20,6 +23,8 @@ export class CabinetComponent {
   currentFontSize: number = 0;
   account!: AccountData;
   courses!: CourseData[];
+  results!: TestResultData[];
+  testNameOfResults!: string[];
   pageNum: number = 1;
   pageSize: number = 24;
 
@@ -45,9 +50,9 @@ export class CabinetComponent {
     await this.getCourses(this.pageNum);
   }
 
-  getAccountData() {
+  getAccountData(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      this.accountService.getAccount(this.authService.accountData().sub).subscribe({
+      this.accountService.getAccount(this.authService.getAccountData().sub).subscribe({
         next: (response: AccountData) => {
           this.account = response;    
           resolve();
@@ -63,7 +68,7 @@ export class CabinetComponent {
   getCourses(pageNum: number): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       this.courses = [];
-      this.storageService.getCourses(this.pageSize, pageNum)
+      this.storageService.getCourses(null, this.pageSize, pageNum)
       .subscribe({
         next: (response: CourseData[]) => {
           if (response) {
@@ -80,9 +85,45 @@ export class CabinetComponent {
       });
     });
   }
+
+  getTestResultsByUser(pageNum: number): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this.results = [];
+      this.testNameOfResults = [];
+      this.storageService.getTestResultsByUser(this.pageSize, pageNum, this.account.userId)
+      .subscribe({
+        next: (response: TestResultData[]) => {
+          if (response) {
+            for (var i = 0; i < response.length; i++) {
+              this.results.push(response[i]);
+              this.getTestName(response[i].testId);
+            }
+          }
+          resolve();
+        },
+        error: (response) => {
+          this.notificationService.addMessage(new NotificationMessage(response.error, response.status));
+          reject();
+        }
+      });
+    });
+  }
   
   removeUserCourse(id: string) {
     
+  }
+
+  getTestName(id: string) {
+    this.storageService.getTest(id).subscribe({
+      next: (response: TestData) => {
+        if (response) {
+          this.testNameOfResults.push(response.title);
+        }
+      },
+      error: (response) => {
+        this.notificationService.addMessage(new NotificationMessage(response.error, response.status));
+      }
+    });
   }
 
   createFilePath(serverPath: string) {
@@ -131,5 +172,17 @@ export class CabinetComponent {
     if (this.currentFontSize > 8) {
       this.changeFontSize(-2);
     }
+  }
+
+  calculateAccuracyPercentage(result: TestResultData): number {
+    var answers = result.answers.split('\n');
+    var results = result.results ? result.results.split('\n') : [];
+
+    const correctAnswersCount = results.filter(res => res === 'Верно').length;
+  
+    const totalAnswersCount = answers.length;
+    const accuracyPercentage = (correctAnswersCount / totalAnswersCount) * 100;
+  
+    return accuracyPercentage;
   }
 }

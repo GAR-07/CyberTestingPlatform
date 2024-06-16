@@ -18,8 +18,7 @@ export class HomeComponent {
   tests!: TestData[];
   pageNum: number = 1;
   pageSize: number = 24;
-  windowWidth: number = 0;
-  contentMods: string[] = ['list', 'view', 'edit']
+  searchValue: string | null = null;
 
   constructor(
     private storageService: StorageService,
@@ -35,7 +34,7 @@ export class HomeComponent {
   getCourses(pageNum: number): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       this.courses = [];
-      this.storageService.getCourses(this.pageSize, pageNum)
+      this.storageService.getCourses(this.searchValue, this.pageSize, pageNum)
       .subscribe({
         next: (response: CourseData[]) => {
           if (response) {
@@ -93,6 +92,12 @@ export class HomeComponent {
         }
       });
     });
+  }
+
+  onSearchChanged(searchValue: string) {
+    this.searchValue = searchValue;
+    this.getCourses(this.pageNum);
+    console.log(this.courses);
   }
 
   createFilePath(serverPath: string) {

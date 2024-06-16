@@ -1,0 +1,94 @@
+<ng-container [ngSwitch]="mode">
+  <div *ngSwitchCase="'list'"  class="list-wrapper">
+    <div *ngIf="account" class="table-row">
+      <div class="table-cell">{{account.userName}}</div>
+      <div class="table-cell">{{account.email}}</div>
+      <div class="table-cell">{{account.roles}}</div>
+      <div class="table-cell">
+        {{ account.birthday | slice:0:10 }}<br>
+        {{ account.registrationDate | slice:0:10 }}
+      </div>
+      <div *ngIf="roles.includes('Admin') || roles.includes('Editor')" class="actions-cell">
+        <button class="btn" (click)="changeMode('edit')">Редактировать</button>
+        <button class="btn" (click)="changeMode('')">Заблокировать</button>
+      </div>
+    </div>
+    <app-modal-dialog 
+      *ngIf="isModalDialogVisible" 
+      [header]="'Внимание!'" 
+      [description]="'Уверены, что хотите удалить?'"
+      (isConfirmed)="closeModal($event)">
+    </app-modal-dialog>
+  </div>
+
+  <!-- <div *ngSwitchCase="'edit'" class="edit-create-wrapper">
+    <h1>Изменение лекции</h1>
+    <form [formGroup]="lectureForm" (ngSubmit)="editLecture()" class="custom-form">
+
+      <div class="form-group">
+        <div class="custom-input">
+          <select formControlName="courseId" (click)="getAllCourses()" placeholder="Курс">
+            <option value="{{guidEmpty}}"></option>
+            <ng-container *ngIf="!courses; else noCourses">
+              <option value="{{course.id}}">{{course.name}}</option>
+            </ng-container>
+            <ng-template #noCourses>
+              <ng-container *ngFor="let course of courses">
+                <option value="{{course.id}}">{{course.name}}</option>
+              </ng-container>
+            </ng-template>
+          </select>
+        </div>
+        <app-validator-message [field]="lectureForm.get('courseId')"></app-validator-message>
+      </div>
+    
+      <div class="form-group">
+        <div class="custom-input">
+          <input type="text" formControlName="theme" placeholder="Тема">
+        </div>
+        <app-validator-message [field]="lectureForm.get('theme')"></app-validator-message>
+      </div>
+    
+      <div class="form-group">
+        <div class="custom-input">
+          <input type="text" formControlName="title" placeholder="Заголовок">
+        </div>
+        <app-validator-message [field]="lectureForm.get('title')"></app-validator-message>
+      </div>
+    
+      <div class="form-group">
+        <div class="custom-input">
+          <textarea type="text" formControlName="content" placeholder="Содержание"></textarea>
+        </div>
+        <app-validator-message [field]="lectureForm.get('content')"></app-validator-message>
+      </div>
+
+      <div class="upload-container">
+        <div class="upload-input" draggable="true" ngClass="{{ dragAreaClass }}">
+          <input type="file" accept=".png, .jpg, .bmp" placeholder="Загрузить изображение" 
+            #dragAreaInput multiple="false" (change)="uploadFile(dragAreaInput.files)">
+          <label (click)="dragAreaInput.click()">Загрузить изображение</label>
+        </div>
+        <div class="form-group" *ngIf="imagePath !== ''">
+          <div class="custom-input">
+            <input value="{{imagePath}}" type="text" placeholder="Ссылка для вставки" readonly>
+          </div>
+        </div>
+        <div *ngIf="imagePath !== ''">
+          <img [src]="createFilePath(imagePath)">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="custom-input">
+          <input type="number" formControlName="position" placeholder="Позиция в списке">
+        </div>
+        <app-validator-message [field]="lectureForm.get('position')"></app-validator-message>
+      </div>
+    
+      <button type="submit" class="btn primary" [disabled]="!lectureForm.valid">Сохранить</button>
+      <button class="btn primary" (click)="changeMode('')">Отменить</button>
+    </form>
+
+  </div> -->
+</ng-container>

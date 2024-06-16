@@ -38,12 +38,13 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
             return BadRequest("Invalid model object");
         }
 
+        [Authorize]
         [HttpGet("GetTestResultsByUser/{id}")]
-        public async Task<IActionResult> GetTestResultsByUser([FromQuery] ItemsRequest request, Guid userId)
+        public async Task<IActionResult> GetTestResultsByUser([FromQuery] ItemsRequest request, Guid id)
         {
             if (ModelState.IsValid)
             {
-                var testResult = await _testResultService.GetSelectionTestResultsByUser(request.SampleSize, request.Page, userId);
+                var testResult = await _testResultService.GetSelectionTestResultsByUser(request.SampleSize, request.Page, id);
 
                 var response = testResult.Select(x => new TestResultsResponse(
                     x.Id,
@@ -60,13 +61,13 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
 
         [Authorize]
         [HttpGet("GetTestResultsByTest/{id}")]
-        public async Task<IActionResult> GetTestResultsByTest([FromQuery] ItemsRequest request, Guid testId)
+        public async Task<IActionResult> GetTestResultsByTest([FromQuery] ItemsRequest request, Guid id)
         {
             if (ModelState.IsValid)
             {
-                var testResult = await _testResultService.GetSelectionTestResultsByTest(request.SampleSize, request.Page, testId);
+                var testResults = await _testResultService.GetSelectionTestResultsByTest(request.SampleSize, request.Page, id);
 
-                var response = testResult.Select(x => new TestResultsResponse(
+                var response = testResults.Select(x => new TestResultsResponse(
                     x.Id,
                     x.TestId,
                     x.UserId,

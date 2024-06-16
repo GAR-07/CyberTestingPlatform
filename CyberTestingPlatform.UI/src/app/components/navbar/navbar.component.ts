@@ -29,7 +29,7 @@ export class NavbarComponent {
   }
 
   checkAccountData() {
-    var accountData = this.authService.accountData();
+    var accountData = this.authService.getAccountData();
     if (accountData) {
       this.roles = accountData.role;
     } else {

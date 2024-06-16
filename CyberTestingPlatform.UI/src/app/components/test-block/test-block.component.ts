@@ -151,7 +151,7 @@ export class TestBlockComponent {
 
   saveTestResult() {
     var answers = this.correctAnswers.join('\n');
-    var accountData = this.authService.accountData();
+    var accountData = this.authService.getAccountData();
 
     var testResult = new TestResultData(
       null,

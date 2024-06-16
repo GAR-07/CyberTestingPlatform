@@ -1,7 +1,6 @@
 import { HttpEventType } from '@angular/common/http';
 import { Component, HostListener, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import { CourseData } from 'src/app/interfaces/courseData.model';
 import { NotificationMessage } from 'src/app/interfaces/notificationMessage.model';
 import { AuthService } from 'src/app/services/auth.service';
@@ -46,7 +45,7 @@ export class CourseFormComponent {
   ) {}
 
   ngOnInit(): void {
-    var accountData = this.authService.accountData();
+    var accountData = this.authService.getAccountData();
     this.roles = accountData ? accountData.role : [];
     this.changeMode(this.mode);
   }
@@ -74,7 +73,7 @@ export class CourseFormComponent {
       description: this.courseForm.value.description,
       price: this.courseForm.value.price,
       imagePath: this.courseForm.value.imagePath,
-      creatorId: this.authService.accountData().sub,
+      creatorId: this.authService.getAccountData().sub,
       creationDate: '',
       lastUpdationDate: '',
     };
@@ -82,7 +81,6 @@ export class CourseFormComponent {
     this.storageService.createCourse(this.course).subscribe({
       next: (response: any) => {
         window.location.reload();
-        console.log(response);
       },
       error: (response) => {
         this.notificationService.addMessage(new NotificationMessage(response.error, response.status));
@@ -105,7 +103,7 @@ export class CourseFormComponent {
     this.storageService.updateCourse(this.course.id, this.course).subscribe({
       next: (response: any) => {
         this.mode = "";
-        console.log(response);
+        window.location.reload();
       },
       error: (response) => {
         this.notificationService.addMessage(new NotificationMessage(response.error, response.status));
@@ -117,7 +115,6 @@ export class CourseFormComponent {
     this.storageService.deleteCourse(id).subscribe({
       next: (response: any) => {
         window.location.reload();
-        console.log(response);
       },
       error: (response) => {
         this.notificationService.addMessage(new NotificationMessage(response.error, response.status));

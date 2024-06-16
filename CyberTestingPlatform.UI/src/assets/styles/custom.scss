@@ -12,6 +12,17 @@
   width: 100%;
   max-width: 1920px;
   margin: 20px 0;
+  padding: 0 5px;
+}
+
+.search-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 10px 0;
+  padding: 0 5px;
 }
 
 .content-block {

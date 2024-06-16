@@ -59,7 +59,7 @@ export class LectureFormComponent {
   ) { }
 
   ngOnInit() {
-    var accountData = this.authService.accountData();
+    var accountData = this.authService.getAccountData();
     this.roles = accountData ? accountData.role : [];
     this.changeMode(this.mode);
   }
@@ -130,7 +130,7 @@ export class LectureFormComponent {
       title: this.lectureForm.value.title,
       content: this.lectureForm.value.content,
       position: this.lectureForm.value.position,
-      creatorId: this.authService.accountData().sub,
+      creatorId: this.authService.getAccountData().sub,
       creationDate: convertedDate,
       lastUpdationDate: '',
       courseId: this.lectureForm.value.courseId,
@@ -139,7 +139,6 @@ export class LectureFormComponent {
     this.storageService.createLecture(this.lecture).subscribe({
       next: (response: any) => {
         window.location.reload();
-        console.log(response);
       },
       error: (response) => {
         this.notificationService.addMessage(new NotificationMessage(response.error, response.status));
@@ -166,7 +165,7 @@ export class LectureFormComponent {
     this.storageService.updateLecture(this.lecture.id, this.lecture).subscribe({
       next: (response: any) => {
         this.mode = "";
-        console.log(response);
+        window.location.reload();
       },
       error: (response) => {
         this.notificationService.addMessage(new NotificationMessage(response.error, response.status));
@@ -178,7 +177,6 @@ export class LectureFormComponent {
     this.storageService.deleteLecture(id).subscribe({
       next: (response: any) => {
         window.location.reload();
-        console.log(response);
       },
       error: (response: any) => {
         console.log(response.error.Message);

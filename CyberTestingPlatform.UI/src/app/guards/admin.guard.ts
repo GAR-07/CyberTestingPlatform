@@ -17,7 +17,7 @@ export class AdminGuard {
       this.router.navigate(['/start']); 
       return false
     }
-    if (!this.authService.accountData().role.includes('Admin')) {
+    if (!this.authService.getAccountData().role.includes('Admin')) {
       alert('Недостаточный уровень доступа аккаунта');
       this.router.navigate(['']);
       return false

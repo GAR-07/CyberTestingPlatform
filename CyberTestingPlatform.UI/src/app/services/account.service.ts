@@ -16,10 +16,10 @@ export class AccountService {
     return this.http.get<any>(this.userApiUrl + '/Account/GetAccount/' + id);
   }
   
-  getAccounts(searchText: string, page: number, pageSize: number) {
+  getAccounts(searchText: string | null, page: number, pageSize: number) {
     const params = new HttpParams()
       .set('Content-Type', 'application/json')
-      .set('searchText', searchText)
+      .set('searchText', searchText ? searchText : '')
       .set('page', page.toString())
       .set('pageSize', pageSize.toString());
     return this.http.get<any>(this.userApiUrl + '/Account/GetAccounts', { params });

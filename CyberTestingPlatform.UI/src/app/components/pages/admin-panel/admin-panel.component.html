@@ -26,9 +26,29 @@
         </app-test-form>
       </div>
     </div>
+
+    <div class="content-block">
+      <h2>Аккаунты</h2>
+      <app-search (searchChanged)="onSearchChangedAccounts($event)"></app-search>
+      <div class="custom-table">
+        <div class="table-row header">
+          <div class="table-cell">Логин</div> 
+          <div class="table-cell">Почта</div>
+          <div class="table-cell">Роли</div>
+          <div class="table-cell">Дата рождения<br>Дата регистрации</div>
+          <div class="table-cell">Действия</div>
+        </div>
+        <ng-container *ngFor="let account of accounts">
+          <app-account-form
+            [account]="account">
+          </app-account-form>
+        </ng-container>
+      </div>
+    </div>
   
     <div class="content-block">
       <h2>Курсы</h2>
+      <app-search (searchChanged)="onSearchChangedCourses($event)"></app-search>
       <div class="custom-table">
         <div class="table-row header">
           <div class="table-cell">Название</div>
@@ -46,6 +66,7 @@
 
     <div class="content-block">
       <h2>Лекции</h2>
+      <app-search (searchChanged)="onSearchChangedLectures($event)"></app-search>
       <div class="custom-table">
         <div class="table-row header">
           <div class="table-cell">Курс</div>
@@ -65,6 +86,7 @@
 
     <div class="content-block">
       <h2>Тесты</h2>
+      <app-search (searchChanged)="onSearchChangedTests($event)"></app-search>
       <div class="custom-table">
         <div class="table-row header">
           <div class="table-cell">Курс</div>

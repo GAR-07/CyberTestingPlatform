@@ -33,7 +33,7 @@
     <div class="content-block">
         <div class="tab actions" #tabLinks>
           <button class="btn tab-link primary" data-tab="courses" (click)="openTab('courses')">Мои курсы</button>
-          <button class="btn tab-link" data-tab="statistics" (click)="openTab('statistics')">Статистика</button>
+          <button class="btn tab-link" data-tab="statistics" (click)="openTab('statistics')" (click)="getTestResultsByUser(pageNum)">Статистика</button>
           <button class="btn tab-link" data-tab="security" (click)="openTab('security')">Безопасность</button>
           <button class="btn tab-link" data-tab="settings" (click)="openTab('settings')">Настройки</button>
         </div>
@@ -44,7 +44,7 @@
       <div id="courses" class="tab-content" style="display: block;">
           <ng-container *ngIf="courses; else noCourses">
               <div class="custom-section-wrapper">
-                <div class="custom-section-name">Начатые курсы</div>
+                <div class="custom-section-name">Курсы</div>
                 <ul class="section-list">
                   <ng-container *ngFor="let course of courses">
                     <li>
@@ -66,30 +66,31 @@
       </div>
 
       <div id="statistics" class="tab-content" style="display: none;">
-        <ng-container *ngIf="courses; else noCourses">
+        <ng-container *ngIf="results; else noResults">
           <div class="custom-section-wrapper">
-            <div class="custom-section-name">Начатые курсы</div>
+            <div class="custom-section-name">Результаты тестов</div>
             <ul class="section-list">
-              <ng-container *ngFor="let course of courses">
+              <ng-container *ngFor="let result of results; let i = index">
                 <li>
-                  <div class="theme-name"><a [routerLink]="['/course', course.id]">{{ course.name }}</a></div>
-                  <button class="btn" [routerLink]="['/course', course.id]">Перейти</button>
-                  <button class="btn" (click)="removeUserCourse(course.id)">Удалить</button>
+                  <div class="theme-name"><a [routerLink]="['/result', result.id]">{{ testNameOfResults[i]}}</a></div>
+                  <div class="theme-name">{{ calculateAccuracyPercentage(result)}}%</div>
+                  <div class="theme-name">{{ result.creationDate | slice:0:10 }}</div>
+                  <button class="btn" [routerLink]="['/result', result.id]">Перейти</button>
                 </li>
               </ng-container>
             </ul>
           </div>
         </ng-container>
-        <ng-template #noCourses>
+        <ng-template #noResults>
           <div class="custom-section-wrapper">
-            <div class="custom-section-name">Нет начатых курсов</div>
+            <div class="custom-section-name">Нет пройденных тестов</div>
           </div>
         </ng-template>
       </div>
 
       <div id="security" class="tab-content" style="display: none;">
         <div class="custom-section-wrapper">
-          <div class="custom-section-name">Настройки сайта и аккаунта</div>
+          <div class="custom-section-name">Настройки аккаунта</div>
           <div class="actions">
             <button class="btn primary">Изменить фото профиля</button>
             <button class="btn primary">Изменить имя</button>
@@ -100,7 +101,7 @@
 
       <div id="settings" class="tab-content" style="display: none;">
         <div class="custom-section-wrapper">
-          <div class="custom-section-name">Настройки сайта и аккаунта</div>
+          <div class="custom-section-name">Настройки сайта</div>
           <p>Текущий размер шрифта: {{currentFontSize}}px</p>
           <button class="btn" (click)="increaseFontSize()">Увеличить</button>
           <button class="btn" (click)="decreaseFontSize()">Уменьшить</button>

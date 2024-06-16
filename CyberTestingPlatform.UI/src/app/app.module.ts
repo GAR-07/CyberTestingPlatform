@@ -27,6 +27,8 @@ import { TestResultBlockComponent } from './components/test-result-block/test-re
 import { CourseFormComponent } from './components/course-form/course-form.component';
 import { LectureFormComponent } from './components/lecture-form/lecture-form.component';
 import { TestFormComponent } from './components/test-form/test-form.component';
+import { SearchComponent } from './components/UI/search/search.component';
+import { AccountFormComponent } from './components/account-form/account-form.component';
 
 export function tokenGetter() {
   return localStorage.getItem(ACCESS_TOKEN_KEY);
@@ -53,6 +55,8 @@ export function tokenGetter() {
     ModalDialogComponent,
     LectureFormComponent,
     TestFormComponent,
+    SearchComponent,
+    AccountFormComponent,
 
   ],
   imports: [

@@ -33,7 +33,7 @@ export class TestResultBlockComponent {
   ) { }
 
   ngOnInit(): void {
-    var accountData = this.authService.accountData();
+    var accountData = this.authService.getAccountData();
     this.roles = accountData ? accountData.role : [];
     this.changeMode(this.mode);
     this.getComponentData();

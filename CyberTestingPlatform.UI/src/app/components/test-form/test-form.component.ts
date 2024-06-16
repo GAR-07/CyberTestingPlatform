@@ -1,12 +1,9 @@
 import { HttpEventType } from '@angular/common/http';
 import { Component, HostListener, Input} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
 import { CourseData } from 'src/app/interfaces/courseData.model';
-import { LectureData } from 'src/app/interfaces/lectureData.model';
 import { NotificationMessage } from 'src/app/interfaces/notificationMessage.model';
 import { TestData } from 'src/app/interfaces/testData.model';
-import { TestResultData } from 'src/app/interfaces/testResultData.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { StorageService } from 'src/app/services/storage.service';
@@ -69,7 +66,7 @@ export class TestFormComponent {
   ) { }
 
   ngOnInit() {
-    var accountData = this.authService.accountData();
+    var accountData = this.authService.getAccountData();
     this.roles = accountData ? accountData.role : [];
     this.changeMode(this.mode);
   }
@@ -135,7 +132,7 @@ export class TestFormComponent {
   }
 
   createTest() {
-    var accountData = this.authService.accountData();
+    var accountData = this.authService.getAccountData();
     this.test = {
       id: '',
       theme: this.testForm.value.theme,
@@ -153,7 +150,6 @@ export class TestFormComponent {
     this.storageService.createTest(this.test).subscribe({
       next: (response: any) => {
         window.location.reload();
-        console.log(response);
       },
       error: (response) => {
         this.notificationService.addMessage(new NotificationMessage(response.error, response.status));
@@ -179,7 +175,7 @@ export class TestFormComponent {
     this.storageService.updateTest(this.test.id, this.test).subscribe({
       next: (response: any) => {
         this.mode = "";
-        console.log(response);
+        window.location.reload();
       },
       error: (response) => {
         this.notificationService.addMessage(new NotificationMessage(response.error, response.status));
@@ -191,7 +187,6 @@ export class TestFormComponent {
     this.storageService.deleteTest(id).subscribe({
       next: (response: any) => {
         window.location.reload();
-        console.log(response);
       },
       error: (response: any) => {
         console.log(response.error.Message);

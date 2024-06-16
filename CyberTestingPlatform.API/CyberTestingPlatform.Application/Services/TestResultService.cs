@@ -35,6 +35,21 @@ namespace CyberTestingPlatform.Application.Services
         }
         public async Task<Guid> CreateTestResultAsync(TestResult testResult)
         {
+            testResult.Results = await GetTestResults(testResult);
+
+            return await _testResultsRepository.CreateAsync(testResult) ?? throw new Exception($"Ошибка сохранения результатов");
+        }
+        public async Task<Guid> UpdateTestResultAsync(TestResult testResult)
+        {
+            return await _testResultsRepository.UpdateAsync(testResult) ?? throw new Exception($"Результат {testResult.Id} не найден");
+        }
+        public async Task<Guid> DeleteTestResultAsync(Guid id)
+        {
+            return await _testResultsRepository.DeleteAsync(id) ?? throw new Exception($"Результат {id} не найден");
+        }
+
+        private async Task<string> GetTestResults(TestResult testResult)
+        {
             var test = await _testService.GetTestAsync(testResult.TestId);
 
             string[] userAnswers = testResult.Answers.Split('\n');
@@ -51,17 +66,7 @@ namespace CyberTestingPlatform.Application.Services
                 results.Add(userAnswers[i].Equals(correctAnswers[i], StringComparison.OrdinalIgnoreCase));
             }
 
-            testResult.Results = string.Join("\n", results.Select(x => x ? "Верно" : "Неверно"));
-
-            return await _testResultsRepository.CreateAsync(testResult) ?? throw new Exception($"Ошибка сохранения результатов");
-        }
-        public async Task<Guid> UpdateTestResultAsync(TestResult testResult)
-        {
-            return await _testResultsRepository.UpdateAsync(testResult) ?? throw new Exception($"Результат {testResult.Id} не найден");
-        }
-        public async Task<Guid> DeleteTestResultAsync(Guid id)
-        {
-            return await _testResultsRepository.DeleteAsync(id) ?? throw new Exception($"Результат {id} не найден");
+            return string.Join("\n", results.Select(x => x ? "Верно" : "Неверно"));
         }
     }
 }

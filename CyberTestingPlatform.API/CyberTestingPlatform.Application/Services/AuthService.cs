@@ -69,7 +69,7 @@ namespace CyberTestingPlatform.Application.Services
 
         public async Task<bool> ValidateRegistration(string email, string role)
         {
-            if (role != "User" && role != "Teacher")
+            if (role != "User")
                 throw new Exception($"Задана неверная роль пользователя");
 
             if (await IsEmailAlreadyExists(email))
@@ -86,7 +86,7 @@ namespace CyberTestingPlatform.Application.Services
         public DateTime ConvertBirtdayDate(string birthday)
         {
             var date = birthday.Split('-').Select(Int32.Parse).ToArray();
-            return new DateTime(date[2], date[1], date[0]);
+            return new DateTime(date[0], date[1], date[2]);
         }
 
         private static bool IsPasswordValid(string password, string passwordHash)

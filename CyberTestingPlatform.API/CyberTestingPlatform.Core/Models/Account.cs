@@ -4,7 +4,6 @@
     {
         public static readonly DateTime MIN_REGISTER_DATE = new DateTime(2024, 1, 1);
         public static readonly DateTime MIN_BIRTHDAY_DATE = new DateTime(1900, 1, 1);
-        public static readonly DateTime MAX_DATE = DateTime.Now;
 
         public Guid UserId { get; set; }
         public DateTime Birthday { get; set; }
@@ -26,14 +25,14 @@
             Roles = roles;
             ImagePath = imagePath;
 
-            if (birthday < MIN_BIRTHDAY_DATE || birthday > MAX_DATE)
+            if (birthday < MIN_BIRTHDAY_DATE || birthday > DateTime.Now)
             {
-                throw new Exception($"День рождения не вписывается в допустимые временные рамки: ({MIN_BIRTHDAY_DATE} - {MAX_DATE}");
+                throw new Exception($"День рождения не вписывается в допустимые временные рамки: ({MIN_BIRTHDAY_DATE} - {DateTime.Now}");
             }
 
-            if (registrationDate < MIN_REGISTER_DATE || registrationDate > MAX_DATE)
+            if (registrationDate < MIN_REGISTER_DATE || registrationDate > DateTime.Now)
             {
-                throw new Exception($"Дата регистрации не вписывается в допустимые временные рамки: ({MIN_REGISTER_DATE} - {MAX_DATE}");
+                throw new Exception($"Дата регистрации не вписывается в допустимые временные рамки: ({MIN_REGISTER_DATE} - {DateTime.Now}");
             }
         }
     }

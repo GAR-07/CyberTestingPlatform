@@ -1,8 +1,10 @@
 import { Component, ElementRef, QueryList, Renderer2, ViewChildren} from '@angular/core';
+import { AccountData } from 'src/app/interfaces/accountData.model';
 import { CourseData } from 'src/app/interfaces/courseData.model';
 import { LectureData } from 'src/app/interfaces/lectureData.model';
 import { NotificationMessage } from 'src/app/interfaces/notificationMessage.model';
 import { TestData } from 'src/app/interfaces/testData.model';
+import { AccountService } from 'src/app/services/account.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { StorageService } from 'src/app/services/storage.service';
@@ -16,47 +18,60 @@ export class AdminPanelComponent {
   @ViewChildren('tabLinks') tabLinks!: QueryList<ElementRef>;
   @ViewChildren('tabContents') tabContents!: QueryList<ElementRef>;
 
+  accounts!: AccountData[];
   allCourses!: CourseData[];
   courses!: CourseData[];
   lectures!: LectureData[];
   tests!: TestData[];
+  roles: string[] = [];
   pageNum: number = 1;
   pageSize: number = 24;
-  roles : string[] = []
+  searchValueAccounts: string | null = null;
+  searchValueCourses: string | null = null;
+  searchValueLectures: string | null = null;
+  searchValueTests: string | null = null;
+  searchValueResults: string | null = null;
 
   constructor(
     private authService: AuthService,
     private storageService: StorageService,
+    private accountService: AccountService,
     private renderer: Renderer2,
     private notificationService: NotificationService,
   ) {}
 
   async ngOnInit(): Promise<void> {
     this.checkAccountData();
+    await this.getAccountsData();
     await this.getCourses(this.pageNum);
     await this.getLectures(this.pageNum);
     await this.getTests(this.pageNum);
   }
 
-  // getAccountsData() {
-  //   return new Promise<void>((resolve, reject) => {
-  //     this.accountService.getAccounts('m', 1, 10).subscribe({
-  //       next: (response: AccountData[]) => {
-  //         console.log(response);
-  //         resolve();
-  //       },
-  //       error: (response) => {
-  //         this.notificationService.addMessage(new NotificationMessage(response.error, response.status));
-  //         reject();
-  //       }
-  //     });
-  //   });
-  // }
+  getAccountsData() {
+    return new Promise<void>((resolve, reject) => {
+      this.accounts = [];
+      this.accountService.getAccounts(this.searchValueAccounts, 1, 10).subscribe({
+        next: (response: AccountData[]) => {
+          if (response) {
+            for (var i = 0; i < response.length; i++) {
+              this.accounts.push(response[i]);
+            }
+          }
+          resolve();
+        },
+        error: (response) => {
+          this.notificationService.addMessage(new NotificationMessage(response.error, response.status));
+          reject();
+        }
+      });
+    });
+  }
 
   getCourses(pageNum: number): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       this.courses = [];
-      this.storageService.getCourses(this.pageSize, pageNum)
+      this.storageService.getCourses(this.searchValueCourses, this.pageSize, pageNum)
       .subscribe({
         next: (response: CourseData[]) => {
           if (response) {
@@ -142,8 +157,32 @@ export class AdminPanelComponent {
     });
   }
 
+  onSearchChangedAccounts(searchValue: string) {
+    this.searchValueAccounts = searchValue;
+    this.getAccountsData();
+  }
+
+  onSearchChangedCourses(searchValue: string) {
+    this.searchValueCourses = searchValue;
+    this.getCourses(this.pageNum);
+  }
+
+  onSearchChangedLectures(searchValue: string) {
+    this.searchValueLectures = searchValue;
+    this.getLectures(this.pageNum);
+  }
+
+  onSearchChangedTests(searchValue: string) {
+    this.searchValueTests = searchValue;
+    this.getTests(this.pageNum);
+  }
+
+  onSearchChangedResults(searchValue: string) {
+    this.searchValueResults = searchValue;
+  }
+
   checkAccountData() {
-    var accountData = this.authService.accountData();
+    var accountData = this.authService.getAccountData();
     if (accountData) {
       this.roles = accountData.role;
     } else {
