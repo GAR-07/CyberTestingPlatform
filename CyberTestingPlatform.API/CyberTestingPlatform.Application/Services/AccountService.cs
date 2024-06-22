@@ -60,5 +60,17 @@ namespace CyberTestingPlatform.Application.Services
             return await _accountsRepository.DeleteAsync(userId)
                 ?? throw new Exception($"Аккаунт {userId} не найден");
         }
+
+        public async Task<Account> UpdateRolesAsync(Guid userId, string roles)
+        {
+            return await _accountsRepository.UpdateRolesAsync(userId, roles)
+                ?? throw new Exception($"Ошибка изменения ролей аккаунта {userId}");
+        }
+
+        public async Task<Guid> BlockAccountAsync(Guid userId)
+        {
+            return await _accountsRepository.BlockAccountAsync(userId)
+                ?? throw new Exception($"Ошибка блокировки аккаунта {userId}");
+        }
     }
 }

@@ -1,4 +1,4 @@
-import { HttpClient} from '@angular/common/http';
+import { HttpClient, HttpParams} from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
@@ -38,6 +38,14 @@ export class AuthService {
         this.router.navigate(['']);
       })
     );
+  }
+
+  changePassword(oldPassword: string, newPassword: string) {
+    const params = new HttpParams()
+      .set('Content-Type', 'application/json')
+      .set('oldPassword', oldPassword.toString())
+      .set('newPassword', newPassword.toString());
+    return this.http.post<any>(this.userApiUrl + '/Auth/ChangePassword', null, { params });
   }
 
   logout() {

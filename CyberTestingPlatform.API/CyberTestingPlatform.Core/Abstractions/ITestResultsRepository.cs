@@ -7,8 +7,8 @@ namespace CyberTestingPlatform.DataAccess.Repositories
         Task<Guid?> CreateAsync(TestResult testResult);
         Task<Guid?> DeleteAsync(Guid id);
         Task<TestResult?> GetAsync(Guid id);
-        Task<List<TestResult>?> GetSelectionByTestAsync(int sampleSize, int page, Guid testId);
-        Task<List<TestResult>?> GetSelectionByUserAsync(int sampleSize, int page, Guid userId);
+        Task<List<TestResult>?> GetSelectionByTestAsync(string? searchText, int page, int pageSize, Guid testId);
+        Task<List<TestResult>?> GetSelectionByUserAsync(string? searchText, int page, int pageSize, Guid userId);
         Task<Guid?> UpdateAsync(TestResult testResult);
     }
 }

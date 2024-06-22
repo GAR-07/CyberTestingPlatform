@@ -10,5 +10,7 @@ namespace CyberTestingPlatform.DataAccess.Repositories
         Task<Account?> GetByEmailAsync(string email);
         Task<List<Account>?> GetSelectionAsync(string? searchText, int page, int pageSize);
         Task<Guid?> UpdateAsync(Account account);
+        Task<Account?> UpdateRolesAsync(Guid userId, string roles);
+        Task<Guid?> BlockAccountAsync(Guid userId);
     }
 }

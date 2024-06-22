@@ -6,9 +6,9 @@ namespace CyberTestingPlatform.Application.Services
     {
         Task<Guid> CreateTestAsync(Test test);
         Task<Guid> DeleteTestAsync(Guid id);
-        Task<List<Test>> GetSelectTestsAsync(int sampleSize, int page);
         Task<Test> GetTestAsync(Guid id);
         Task<List<Test>> GetTestsByCourseIdAsync(Guid id);
+        Task<List<Test>> GetSelectTestsAsync(string? searchText, int page, int pageSize);
         Task<Guid> UpdateTestAsync(Test test);
     }
 }

@@ -40,11 +40,11 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
 
         [Authorize]
         [HttpGet("GetTestResultsByUser/{id}")]
-        public async Task<IActionResult> GetTestResultsByUser([FromQuery] ItemsRequest request, Guid id)
+        public async Task<IActionResult> GetTestResultsByUser([FromQuery] SearchRequest request, Guid id)
         {
             if (ModelState.IsValid)
             {
-                var testResult = await _testResultService.GetSelectionTestResultsByUser(request.SampleSize, request.Page, id);
+                var testResult = await _testResultService.GetSelectionTestResultsByUser(request.SearchText, request.Page, request.PageSize, id);
 
                 var response = testResult.Select(x => new TestResultsResponse(
                     x.Id,
@@ -61,11 +61,11 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
 
         [Authorize]
         [HttpGet("GetTestResultsByTest/{id}")]
-        public async Task<IActionResult> GetTestResultsByTest([FromQuery] ItemsRequest request, Guid id)
+        public async Task<IActionResult> GetTestResultsByTest([FromQuery] SearchRequest request, Guid id)
         {
             if (ModelState.IsValid)
             {
-                var testResults = await _testResultService.GetSelectionTestResultsByTest(request.SampleSize, request.Page, id);
+                var testResults = await _testResultService.GetSelectionTestResultsByTest(request.SearchText, request.Page, request.PageSize, id);
 
                 var response = testResults.Select(x => new TestResultsResponse(
                     x.Id,

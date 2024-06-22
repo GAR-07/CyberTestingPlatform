@@ -34,7 +34,7 @@ export class HomeComponent {
   getCourses(pageNum: number): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       this.courses = [];
-      this.storageService.getCourses(this.searchValue, this.pageSize, pageNum)
+      this.storageService.getCourses(this.searchValue, pageNum, this.pageSize)
       .subscribe({
         next: (response: CourseData[]) => {
           if (response) {
@@ -55,7 +55,7 @@ export class HomeComponent {
   getLectures(pageNum: number) {
     return new Promise<void>((resolve, reject) => {
       this.lectures = [];
-      this.storageService.getLectures(this.pageSize, pageNum)
+      this.storageService.getLectures(null, pageNum, this.pageSize)
       .subscribe({
         next: (response: LectureData[]) => {
           if (response) {
@@ -76,7 +76,7 @@ export class HomeComponent {
   getTests(pageNum: number) {
     return new Promise<void>((resolve, reject) => {
       this.tests = [];
-      this.storageService.getTests(this.pageSize, pageNum)
+      this.storageService.getTests(null, pageNum, this.pageSize)
       .subscribe({
         next: (response: TestData[]) => {
           if (response) {

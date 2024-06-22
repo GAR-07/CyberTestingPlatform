@@ -145,5 +145,54 @@ namespace CyberTestingPlatform.DataAccess.Repositories
 
             return accountEntity.UserId;
         }
+
+        public async Task<Account?> UpdateRolesAsync(Guid userId, string roles)
+        {
+            var accountEntity = await _dbContext.Accounts
+                .Where(p => p.UserId == userId)
+                .FirstOrDefaultAsync();
+
+            if (accountEntity == null)
+            {
+                return null;
+            }
+
+            accountEntity.Roles = roles;
+
+            await _dbContext.SaveChangesAsync();
+
+            return new Account(
+                accountEntity.UserId,
+                accountEntity.Birthday,
+                accountEntity.RegistrationDate,
+                accountEntity.Email,
+                accountEntity.UserName,
+                accountEntity.PasswordHash,
+                accountEntity.Roles,
+                accountEntity.ImagePath);
+        }
+
+        public async Task<Guid?> BlockAccountAsync(Guid userId)
+        {
+            var accountEntity = await _dbContext.Accounts
+                .Where(p => p.UserId == userId)
+                .FirstOrDefaultAsync();
+
+            if (accountEntity == null)
+            {
+                return null;
+            }
+
+            var roles = accountEntity.Roles.Split(',');
+            if (!roles.Contains("Banned"))
+            {
+                accountEntity.Roles += ",Banned";
+                await _dbContext.SaveChangesAsync();
+            }
+
+            await _dbContext.SaveChangesAsync();
+
+            return accountEntity.UserId;
+        }
     }
 }

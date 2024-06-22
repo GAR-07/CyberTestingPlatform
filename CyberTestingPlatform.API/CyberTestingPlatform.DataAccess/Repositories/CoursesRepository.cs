@@ -41,7 +41,7 @@ namespace CyberTestingPlatform.DataAccess.Repositories
                 query = query.Where(x => x.Name.Contains(searchText));
             }
 
-            var totalCount = await query.CountAsync();
+            var totalCount = await query.AsNoTracking().CountAsync();
             var startIndex = Math.Max(0, totalCount - pageSize * page);
             var countToTake = Math.Min(pageSize, totalCount - startIndex);
 

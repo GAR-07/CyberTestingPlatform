@@ -70,10 +70,13 @@
           <div class="custom-section-wrapper">
             <div class="custom-section-name">Результаты тестов</div>
             <ul class="section-list">
+              <li>
+                <div class="theme-name">Средний процент правильных решений: {{ averageAccuracy | number: '1.0-2' }}%</div>
+              </li>
               <ng-container *ngFor="let result of results; let i = index">
                 <li>
                   <div class="theme-name"><a [routerLink]="['/result', result.id]">{{ testNameOfResults[i]}}</a></div>
-                  <div class="theme-name">{{ calculateAccuracyPercentage(result)}}%</div>
+                  <div class="theme-name">{{ calculateAccuracyPercentage(result) | number: '1.0-2' }}%</div>
                   <div class="theme-name">{{ result.creationDate | slice:0:10 }}</div>
                   <button class="btn" [routerLink]="['/result', result.id]">Перейти</button>
                 </li>
@@ -91,10 +94,53 @@
       <div id="security" class="tab-content" style="display: none;">
         <div class="custom-section-wrapper">
           <div class="custom-section-name">Настройки аккаунта</div>
-          <div class="actions">
-            <button class="btn primary">Изменить фото профиля</button>
-            <button class="btn primary">Изменить имя</button>
-            <button class="btn primary">Изменить пароль</button>
+          <div class="row">
+            <div class="col">
+              <form [formGroup]="changeProfileImgForm" (ngSubmit)="onChangeProfileImgForm()" class="custom-form">
+                <div class="form-group">
+                  <div class="custom-input">
+                    <input type="text" class="form-control" formControlName="imgPath" placeholder="Ссылка">
+                  </div>
+                  <app-validator-message [field]="changeProfileImgForm.get('imgPath')"></app-validator-message>
+                </div>
+                <button type="submit" class="btn primary">Изменить фото</button>
+              </form>
+            </div>
+            <div class="col">
+              <form [formGroup]="changeLoginForm" (ngSubmit)="onChangeLogin()" class="custom-form">
+                <div class="form-group">
+                  <div class="custom-input">
+                    <input type="text" class="form-control" formControlName="userName" placeholder="Имя пользователя">
+                  </div>
+                  <app-validator-message [field]="changeLoginForm.get('userName')"></app-validator-message>
+                </div>
+                <button type="submit" class="btn primary">Изменить имя</button>
+              </form>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <form [formGroup]="changePasswordForm" (ngSubmit)="onChangePasswordForm()" class="custom-form">
+                <div class="form-group">
+                  <div class="custom-input">
+                    <input type="text" class="form-control" formControlName="oldPassword" placeholder="Старый пароль">
+                    <app-validator-message [field]="changePasswordForm.get('oldPassword')"></app-validator-message>
+                  </div>
+                  <div formGroupName="passwords">
+                    <div class="custom-input">
+                      <input type="text" class="form-control" formControlName="password" placeholder="Новый пароль">
+                    </div>
+                    <app-validator-message [field]="changePasswordForm.get('passwords.password')"></app-validator-message>
+                    <div class="custom-input">
+                    <input type="password" class="form-control" formControlName="confirmPassword" placeholder="Повторите новый пароль">
+                    </div>
+                    <app-validator-message [field]="changePasswordForm.get('passwords')"></app-validator-message>
+                  </div>
+                </div>
+                <button type="submit" class="btn primary">Изменить пароль</button>
+              </form>
+            </div>
           </div>
         </div>
       </div>
@@ -102,9 +148,11 @@
       <div id="settings" class="tab-content" style="display: none;">
         <div class="custom-section-wrapper">
           <div class="custom-section-name">Настройки сайта</div>
-          <p>Текущий размер шрифта: {{currentFontSize}}px</p>
-          <button class="btn" (click)="increaseFontSize()">Увеличить</button>
-          <button class="btn" (click)="decreaseFontSize()">Уменьшить</button>
+          <div class="actions">
+            <p>Текущий размер шрифта: {{currentFontSize}}px</p>
+            <button class="btn" (click)="increaseFontSize()">Увеличить</button>
+            <button class="btn" (click)="decreaseFontSize()">Уменьшить</button>
+          </div>
         </div>
       </div>
 

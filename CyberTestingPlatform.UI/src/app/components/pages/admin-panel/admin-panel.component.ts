@@ -42,16 +42,17 @@ export class AdminPanelComponent {
 
   async ngOnInit(): Promise<void> {
     this.checkAccountData();
-    await this.getAccountsData();
+    await this.getAccountsData(this.pageNum);
     await this.getCourses(this.pageNum);
     await this.getLectures(this.pageNum);
     await this.getTests(this.pageNum);
   }
 
-  getAccountsData() {
+  getAccountsData(pageNum: number): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       this.accounts = [];
-      this.accountService.getAccounts(this.searchValueAccounts, 1, 10).subscribe({
+      this.accountService.getAccounts(this.searchValueAccounts, pageNum, this.pageSize)
+      .subscribe({
         next: (response: AccountData[]) => {
           if (response) {
             for (var i = 0; i < response.length; i++) {
@@ -71,7 +72,7 @@ export class AdminPanelComponent {
   getCourses(pageNum: number): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       this.courses = [];
-      this.storageService.getCourses(this.searchValueCourses, this.pageSize, pageNum)
+      this.storageService.getCourses(this.searchValueCourses, pageNum, this.pageSize)
       .subscribe({
         next: (response: CourseData[]) => {
           if (response) {
@@ -92,7 +93,7 @@ export class AdminPanelComponent {
   getLectures(pageNum: number) {
     return new Promise<void>((resolve, reject) => {
       this.lectures = [];
-      this.storageService.getLectures(this.pageSize, pageNum)
+      this.storageService.getLectures(this.searchValueLectures, pageNum, this.pageSize)
       .subscribe({
         next: (response: LectureData[]) => {
           if (response) {
@@ -113,7 +114,7 @@ export class AdminPanelComponent {
   getTests(pageNum: number) {
     return new Promise<void>((resolve, reject) => {
       this.tests = [];
-      this.storageService.getTests(this.pageSize, pageNum)
+      this.storageService.getTests(this.searchValueTests, pageNum, this.pageSize)
       .subscribe({
         next: (response: TestData[]) => {
           if (response) {
@@ -159,7 +160,7 @@ export class AdminPanelComponent {
 
   onSearchChangedAccounts(searchValue: string) {
     this.searchValueAccounts = searchValue;
-    this.getAccountsData();
+    this.getAccountsData(this.pageNum);
   }
 
   onSearchChangedCourses(searchValue: string) {

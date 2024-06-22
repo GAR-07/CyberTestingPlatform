@@ -2,6 +2,7 @@
 using CyberTestingPlatform.DataAccess.Entites;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace CyberTestingPlatform.DataAccess.Repositories
 {
@@ -14,13 +15,20 @@ namespace CyberTestingPlatform.DataAccess.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<List<TestResult>?> GetSelectionByUserAsync(int sampleSize, int page, Guid userId)
+        public async Task<List<TestResult>?> GetSelectionByUserAsync(string? searchText, int page, int pageSize, Guid userId)
         {
-            var totalCount = await _dbContext.TestResults.AsNoTracking().Where(x => x.UserId == userId).CountAsync();
-            var startIndex = Math.Max(0, totalCount - sampleSize * page);
-            var countToTake = Math.Min(sampleSize, totalCount - startIndex);
+            var query = _dbContext.TestResults.AsQueryable();
 
-            var testResultEntities = await _dbContext.TestResults
+            if (!string.IsNullOrEmpty(searchText))
+            {
+                query = query.Where(x => x.TestId.ToString().Contains(searchText));
+            }
+
+            var totalCount = await query.AsNoTracking().Where(x => x.UserId == userId).CountAsync();
+            var startIndex = Math.Max(0, totalCount - pageSize * page);
+            var countToTake = Math.Min(pageSize, totalCount - startIndex);
+
+            var testResultEntities = await query
                 .Where(x => x.UserId == userId)
                 .Skip(startIndex)
                 .Take(countToTake)
@@ -39,13 +47,20 @@ namespace CyberTestingPlatform.DataAccess.Repositories
             return results;
         }
 
-        public async Task<List<TestResult>?> GetSelectionByTestAsync(int sampleSize, int page, Guid testId)
+        public async Task<List<TestResult>?> GetSelectionByTestAsync(string? searchText, int page, int pageSize, Guid testId)
         {
-            var totalCount = await _dbContext.TestResults.AsNoTracking().Where(x => x.TestId == testId).CountAsync();
-            var startIndex = Math.Max(0, totalCount - sampleSize * page);
-            var countToTake = Math.Min(sampleSize, totalCount - startIndex);
+            var query = _dbContext.TestResults.AsQueryable();
 
-            var testResultEntities = await _dbContext.TestResults
+            if (!string.IsNullOrEmpty(searchText))
+            {
+                query = query.Where(x => x.CreationDate.ToString() == searchText);
+            }
+
+            var totalCount = await query.AsNoTracking().Where(x => x.TestId == testId).CountAsync();
+            var startIndex = Math.Max(0, totalCount - pageSize * page);
+            var countToTake = Math.Min(pageSize, totalCount - startIndex);
+
+            var testResultEntities = await query
                 .Where(x => x.TestId == testId)
                 .Skip(startIndex)
                 .Take(countToTake)

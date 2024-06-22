@@ -71,11 +71,11 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
 
         [Authorize]
         [HttpGet("GetTests")]
-        public async Task<IActionResult> GetTests([FromQuery] ItemsRequest request)
+        public async Task<IActionResult> GetTests([FromQuery] SearchRequest request)
         {
             if (ModelState.IsValid)
             {
-                var tests = await _testService.GetSelectTestsAsync(request.SampleSize, request.Page);
+                var tests = await _testService.GetSelectTestsAsync(request.SearchText, request.Page, request.PageSize);
 
                 var response = tests.Select(x => new TestsResponse(
                     x.Id,

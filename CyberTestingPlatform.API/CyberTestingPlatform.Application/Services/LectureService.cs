@@ -12,13 +12,13 @@ namespace CyberTestingPlatform.Application.Services
             _lecturesRepository = lecturesRepository;
         }
 
-        public async Task<List<Lecture>> GetSelectLecturesAsync(int sampleSize, int page)
+        public async Task<List<Lecture>> GetSelectLecturesAsync(string? searchText, int page, int pageSize)
         {
-            if (sampleSize <= 0 || page < 0)
+            if (pageSize <= 0 || page < 0)
             {
                 throw new Exception($"Заданы невозможные параметры для выборки");
             }
-            return await _lecturesRepository.GetSelectionAsync(sampleSize, page) ?? throw new Exception($"Ничего не найдено");
+            return await _lecturesRepository.GetSelectionAsync(searchText, page, pageSize) ?? throw new Exception($"Ничего не найдено");
         }
         public async Task<List<Lecture>> GetLecturesByCourseIdAsync(Guid id)
         {

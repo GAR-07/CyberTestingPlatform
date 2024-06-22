@@ -2,6 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 using CyberTestingPlatform.Application.Services;
 using CyberTestingPlatform.User.API.Models;
 using CyberTestingPlatform.Core.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Principal;
+using System.Security.Claims;
 
 namespace CyberTestingPlatform.User.API.Controllers
 {
@@ -52,6 +55,32 @@ namespace CyberTestingPlatform.User.API.Controllers
                 await _accountService.CreateAccountAsync(account);
 
                 return Ok(new { accessToken = _authService.GenerateJwt(account) });
+            }
+            return BadRequest("Invalid model object");
+        }
+
+        [Authorize]
+        [HttpPost("ChangePassword")]
+        public async Task<IActionResult> ChangePassword([FromQuery] ChangePasswordRequest model)
+        {
+            if (ModelState.IsValid)
+            {
+                var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+
+                if (userEmail == null)
+                {
+                    return Unauthorized();
+                }
+
+                var account = await _authService.GetAccountByEmailAsync(userEmail);
+
+                _authService.ValidateAccount(account, model.OldPassword);
+
+                account.PasswordHash = _authService.GetPasswordHash(model.NewPassword);
+
+                await _accountService.UpdateAccountAsync(account);
+
+                return Ok();
             }
             return BadRequest("Invalid model object");
         }

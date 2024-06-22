@@ -15,121 +15,133 @@ export class StorageService {
   constructor(
     @Inject(RESOURSE_API_URL) private resourseApiUrl: string,
     private http: HttpClient
-    ) { }
+  ) { }
 
-    uploadFiles(formData : FormData) {
-      return this.http.post<any>(this.resourseApiUrl + '/Storage/UploadFiles', formData, { 
-        reportProgress: true, 
-        observe: 'events' 
-      });
-    }
+  uploadFiles(formData : FormData) {
+    return this.http.post<any>(this.resourseApiUrl + '/Storage/UploadFiles', formData, { 
+      reportProgress: true, 
+      observe: 'events' 
+    });
+  }
 
-    // Далее идут методы для курсов
+  // Далее идут методы для курсов
 
-    getAllCourses() {
-      return this.http.get<any>(this.resourseApiUrl + '/Course/GetAllCourses');
-    }
+  getAllCourses() {
+    return this.http.get<any>(this.resourseApiUrl + '/Course/GetAllCourses');
+  }
 
-    getCourses(searchText: string | null, sampleSize: number, page: number) {
-      const params = new HttpParams()
-        .set('Content-Type', 'application/json')
-        .set('searchText', searchText ? searchText : '')
-        .set('page', page.toString())
-        .set('pageSize', sampleSize.toString());
-      return this.http.get<any>(this.resourseApiUrl + '/Course/GetCourses', { params });
-    }
+  getCourses(searchText: string | null, page: number, pageSize: number) {
+    const params = new HttpParams()
+      .set('Content-Type', 'application/json')
+      .set('searchText', searchText ? searchText : '')
+      .set('page', page.toString())
+      .set('pageSize', pageSize.toString());
+    return this.http.get<any>(this.resourseApiUrl + '/Course/GetCourses', { params });
+  }
 
-    getCourse(id: string) {
-      return this.http.get<any>(this.resourseApiUrl + '/Course/GetCourse/' + id);
-    }
+  getCourse(id: string) {
+    return this.http.get<any>(this.resourseApiUrl + '/Course/GetCourse/' + id);
+  }
 
-    createCourse(course: CourseData) {
-      return this.http.post<any>(this.resourseApiUrl + '/Course/CreateCourse', course);
-    }
+  createCourse(course: CourseData) {
+    return this.http.post<any>(this.resourseApiUrl + '/Course/CreateCourse', course);
+  }
 
-    updateCourse(id: string, course: CourseData) {
-      return this.http.put<any>(this.resourseApiUrl + '/Course/UpdateCourse/' + id, course);
-    }
+  updateCourse(id: string, course: CourseData) {
+    return this.http.put<any>(this.resourseApiUrl + '/Course/UpdateCourse/' + id, course);
+  }
 
-    deleteCourse(id: string) {
-      return this.http.delete<any>(this.resourseApiUrl + '/Course/DeleteCourse/' + id);
-    }
+  deleteCourse(id: string) {
+    return this.http.delete<any>(this.resourseApiUrl + '/Course/DeleteCourse/' + id);
+  }
 
-    // Далее идут методы для лекций
+  // Далее идут методы для лекций
 
-    getLecturesByCourseId(courseId: string) {
-      return this.http.get<any>(this.resourseApiUrl + '/Lecture/GetLecturesByCourseId/' + courseId);
-    }
+  getLecturesByCourseId(courseId: string) {
+    return this.http.get<any>(this.resourseApiUrl + '/Lecture/GetLecturesByCourseId/' + courseId);
+  }
 
-    getLectures(sampleSize: number, page: number) {
-      const params = new HttpParams()
-        .set('Content-Type', 'application/json')
-        .set('sampleSize', sampleSize.toString())
-        .set('page', page.toString());
-      return this.http.get<any>(this.resourseApiUrl + '/Lecture/GetLectures', { params });
-    }
+  getLectures(searchText: string | null, page: number, pageSize: number) {
+    const params = new HttpParams()
+      .set('Content-Type', 'application/json')
+      .set('searchText', searchText ? searchText : '')
+      .set('page', page.toString())
+      .set('pageSize', pageSize.toString());
+    return this.http.get<any>(this.resourseApiUrl + '/Lecture/GetLectures', { params });
+  }
 
-    getLecture(id: string) {
-      return this.http.get<any>(this.resourseApiUrl + '/Lecture/GetLecture/' + id);
-    }
+  getLecture(id: string) {
+    return this.http.get<any>(this.resourseApiUrl + '/Lecture/GetLecture/' + id);
+  }
 
-    createLecture(lecture: LectureData) {
-      return this.http.post<any>(this.resourseApiUrl + '/Lecture/CreateLecture', lecture);
-    }
+  createLecture(lecture: LectureData) {
+    return this.http.post<any>(this.resourseApiUrl + '/Lecture/CreateLecture', lecture);
+  }
 
-    updateLecture(id: string, lecture: LectureData) {
-      return this.http.put<any>(this.resourseApiUrl + '/Lecture/UpdateLecture/' + id, lecture);
-    }
+  updateLecture(id: string, lecture: LectureData) {
+    return this.http.put<any>(this.resourseApiUrl + '/Lecture/UpdateLecture/' + id, lecture);
+  }
 
-    deleteLecture(id: string) {
-      return this.http.delete<any>(this.resourseApiUrl + '/Lecture/DeleteLecture/' + id);
-    }
+  deleteLecture(id: string) {
+    return this.http.delete<any>(this.resourseApiUrl + '/Lecture/DeleteLecture/' + id);
+  }
 
-    // Далее идут методы для результатов тестов
+  // Методы для тестов
 
-    getTestResult(id: string) {
-      return this.http.get<any>(this.resourseApiUrl + '/Result/GetTestResult/' + id);
-    }
+  getTestsByCourseId(courseId: string) {
+    return this.http.get<any>(this.resourseApiUrl + '/Test/GetTestsByCourseId/' + courseId);
+  }
 
-    getTestResultsByUser(sampleSize: number, page: number, id: string) {
-      const params = new HttpParams()
-        .set('Content-Type', 'application/json')
-        .set('sampleSize', sampleSize.toString())
-        .set('page', page.toString());
-      return this.http.get<any>(this.resourseApiUrl + '/Result/GetTestResultsByUser/' + id, { params });
-    }
+  getTests(searchText: string | null, page: number, pageSize: number) {
+    const params = new HttpParams()
+      .set('Content-Type', 'application/json')
+      .set('searchText', searchText ? searchText : '')
+      .set('page', page.toString())
+      .set('pageSize', pageSize.toString());
+    return this.http.get<any>(this.resourseApiUrl + '/Test/GetTests', { params });
+  }
 
-    createTestResult(testResult: TestResultData) {
-      return this.http.post<any>(this.resourseApiUrl + '/Result/CreateTestResult/', testResult);
-    }
+  getTest(id: string) {
+    return this.http.get<any>(this.resourseApiUrl + '/Test/GetTest/' + id);
+  }
 
-    // Методы для тестов
+  createTest(test: TestData) {
+    return this.http.post<any>(this.resourseApiUrl + '/Test/CreateTest', test);
+  }
 
-    getTestsByCourseId(courseId: string) {
-      return this.http.get<any>(this.resourseApiUrl + '/Test/GetTestsByCourseId/' + courseId);
-    }
+  updateTest(id: string, test: TestData) {
+    return this.http.put<any>(this.resourseApiUrl + '/Test/UpdateTest/' + id, test);
+  }
 
-    getTests(sampleSize: number, page: number) {
-      const params = new HttpParams()
-        .set('Content-Type', 'application/json')
-        .set('sampleSize', sampleSize.toString())
-        .set('page', page.toString());
-      return this.http.get<any>(this.resourseApiUrl + '/Test/GetTests', { params });
-    }
+  deleteTest(id: string) {
+    return this.http.delete<any>(this.resourseApiUrl + '/Test/DeleteTest/' + id);
+  }
 
-    getTest(id: string) {
-      return this.http.get<any>(this.resourseApiUrl + '/Test/GetTest/' + id);
-    }
+  // Далее идут методы для результатов тестов
 
-    createTest(test: TestData) {
-      return this.http.post<any>(this.resourseApiUrl + '/Test/CreateTest', test);
-    }
+  getTestResult(id: string) {
+    return this.http.get<any>(this.resourseApiUrl + '/Result/GetTestResult/' + id);
+  }
 
-    updateTest(id: string, test: TestData) {
-      return this.http.put<any>(this.resourseApiUrl + '/Test/UpdateTest/' + id, test);
-    }
+  getTestResultsByUser(searchText: string | null, page: number, pageSize: number, id: string) {
+    const params = new HttpParams()
+      .set('Content-Type', 'application/json')
+      .set('searchText', searchText ? searchText : '')
+      .set('page', page.toString())
+      .set('pageSize', pageSize.toString());
+    return this.http.get<any>(this.resourseApiUrl + '/Result/GetTestResultsByUser/' + id, { params });
+  }
 
-    deleteTest(id: string) {
-      return this.http.delete<any>(this.resourseApiUrl + '/Test/DeleteTest/' + id);
-    }
+  getTestResultsByTest(searchText: string | null, page: number, pageSize: number, id: string) {
+    const params = new HttpParams()
+      .set('Content-Type', 'application/json')
+      .set('searchText', searchText ? searchText : '')
+      .set('page', page.toString())
+      .set('pageSize', pageSize.toString());
+    return this.http.get<any>(this.resourseApiUrl + '/Result/GetTestResultsByTest/' + id, { params });
+  }
+
+  createTestResult(testResult: TestResultData) {
+    return this.http.post<any>(this.resourseApiUrl + '/Result/CreateTestResult/', testResult);
+  }
 }

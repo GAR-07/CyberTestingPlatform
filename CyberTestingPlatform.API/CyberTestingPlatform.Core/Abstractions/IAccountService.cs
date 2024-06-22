@@ -1,5 +1,4 @@
 ﻿using CyberTestingPlatform.Core.Models;
-using System.Security.Claims;
 
 namespace CyberTestingPlatform.Application.Services
 {
@@ -11,5 +10,7 @@ namespace CyberTestingPlatform.Application.Services
         Task<Account> GetAccountByEmailAsync(string email);
         Task<List<Account>> GetAccountsAsync(string? searchText, int page, int pageSize);
         Task<Guid> UpdateAccountAsync(Account account);
+        Task<Account> UpdateRolesAsync(Guid userId, string roles);
+        Task<Guid> BlockAccountAsync(Guid userId);
     }
 }

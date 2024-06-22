@@ -13,21 +13,21 @@ namespace CyberTestingPlatform.Application.Services
             _testResultsRepository = testResultsRepository;
             _testService = testService;
         }
-        public async Task<List<TestResult>> GetSelectionTestResultsByUser(int sampleSize, int page, Guid userId)
+        public async Task<List<TestResult>> GetSelectionTestResultsByUser(string? searchText, int page, int pageSize, Guid userId)
         {
-            if (sampleSize <= 0 || page < 0)
+            if (pageSize <= 0 || page < 0)
             {
                 throw new Exception($"Заданы невозможные параметры для выборки");
             }
-            return await _testResultsRepository.GetSelectionByUserAsync(sampleSize, page, userId) ?? throw new Exception($"Ничего не найдено");
+            return await _testResultsRepository.GetSelectionByUserAsync(searchText, page, pageSize, userId) ?? throw new Exception($"Ничего не найдено");
         }
-        public async Task<List<TestResult>> GetSelectionTestResultsByTest(int sampleSize, int page, Guid testId)
+        public async Task<List<TestResult>> GetSelectionTestResultsByTest(string? searchText, int page, int pageSize, Guid testId)
         {
-            if (sampleSize <= 0 || page < 0)
+            if (pageSize <= 0 || page < 0)
             {
                 throw new Exception($"Заданы невозможные параметры для выборки");
             }
-            return await _testResultsRepository.GetSelectionByTestAsync(sampleSize, page, testId) ?? throw new Exception($"Ничего не найдено");
+            return await _testResultsRepository.GetSelectionByTestAsync(searchText, page, pageSize, testId) ?? throw new Exception($"Ничего не найдено");
         }
         public async Task<TestResult> GetTestResult(Guid id)
         {

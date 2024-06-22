@@ -67,11 +67,11 @@ namespace CyberTestingPlatform.Resourse.API.Controllers
 
         [Authorize]
         [HttpGet("GetLectures")]
-        public async Task<IActionResult> GetLectures([FromQuery] ItemsRequest request)
+        public async Task<IActionResult> GetLectures([FromQuery] SearchRequest request)
         {
             if (ModelState.IsValid)
             {
-                var lectures = await _lectureService.GetSelectLecturesAsync(request.SampleSize, request.Page);
+                var lectures = await _lectureService.GetSelectLecturesAsync(request.SearchText, request.Page, request.PageSize);
 
                 var response = lectures.Select(x => new LecturesResponse(
                     x.Id,

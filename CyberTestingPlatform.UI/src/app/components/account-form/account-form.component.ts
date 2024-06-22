@@ -7,6 +7,7 @@ import { StorageService } from 'src/app/services/storage.service';
 import { environment } from 'src/environments/environment';
 import { NotificationService } from 'src/app/services/notification.service';
 import { NotificationMessage } from 'src/app/interfaces/notificationMessage.model';
+import { AccountService } from 'src/app/services/account.service';
 
 @Component({
   selector: 'app-account-form',
@@ -45,6 +46,7 @@ export class AccountFormComponent {
 
   constructor(
     private authService: AuthService,
+    private accountService: AccountService,
     private storageService: StorageService,
     private notificationService: NotificationService,
     private formBuilder: FormBuilder,
@@ -71,6 +73,29 @@ export class AccountFormComponent {
         registrationDate: this.account.registrationDate
       });
     }
+  }
+
+  editAccount() {
+    this.notificationService.addMessage(new NotificationMessage('Функция временно недоступна', 400));
+  }
+
+  blockAccount(id: string) {
+    return new Promise<void>((resolve, reject) => {
+      this.accountService.BlockAccount(id)
+      .subscribe({
+        next: (response) => {
+          this.notificationService.addMessage(new NotificationMessage('Аккаунт ' + response + ' заблокирован', 200));
+        },
+        error: (response) => {
+          this.notificationService.addMessage(new NotificationMessage(response.error, response.status));
+          reject();
+        }
+      });
+    });
+  }
+
+  isAccountBanned(account: { roles: string }): boolean {
+    return account.roles.split(',').includes('Banned');
   }
 
   showModal() {

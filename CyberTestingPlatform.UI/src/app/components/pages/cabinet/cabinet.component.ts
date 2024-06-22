@@ -1,5 +1,5 @@
-import { XhrFactory } from '@angular/common';
 import { Component, ElementRef, QueryList, Renderer2, ViewChildren } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { AccountData } from 'src/app/interfaces/accountData.model';
 import { CourseData } from 'src/app/interfaces/courseData.model';
 import { NotificationMessage } from 'src/app/interfaces/notificationMessage.model';
@@ -25,12 +25,48 @@ export class CabinetComponent {
   courses!: CourseData[];
   results!: TestResultData[];
   testNameOfResults!: string[];
+  searchValueResults: string | null = null;
   pageNum: number = 1;
   pageSize: number = 24;
+
+  changeProfileImgForm: FormGroup = this.formBuilder.group({
+    imgPath: [null, [
+      Validators.required,
+      Validators.maxLength(500)
+    ]],
+  });
+  changeLoginForm: FormGroup = this.formBuilder.group({
+    userName: [null, [
+      Validators.required,
+      Validators.minLength(1),
+      Validators.maxLength(50),
+      this.userNameValidator()
+    ]],
+  });
+  changePasswordForm: FormGroup = this.formBuilder.group({
+    oldPassword: [null, [
+      Validators.required,
+      Validators.minLength(8),
+      Validators.maxLength(500)
+    ]],
+    passwords: this.formBuilder.group({
+      password: [null, [
+        Validators.required,
+        Validators.minLength(8),
+        Validators.maxLength(500)
+      ]],
+      confirmPassword: [null, [
+        Validators.required,
+        Validators.minLength(8),
+        Validators.maxLength(500),
+      ]],
+    }, { validator: this.passwordsAreEqual() })
+  });
 
   constructor(
     private elem: ElementRef,
     private renderer: Renderer2,
+    private formBuilder: FormBuilder,
     private authService: AuthService,
     private accountService: AccountService,
     private storageService: StorageService,
@@ -90,7 +126,7 @@ export class CabinetComponent {
     return new Promise<void>((resolve, reject) => {
       this.results = [];
       this.testNameOfResults = [];
-      this.storageService.getTestResultsByUser(this.pageSize, pageNum, this.account.userId)
+      this.storageService.getTestResultsByUser(this.searchValueResults, pageNum, this.pageSize, this.account.userId)
       .subscribe({
         next: (response: TestResultData[]) => {
           if (response) {
@@ -108,9 +144,36 @@ export class CabinetComponent {
       });
     });
   }
+
+  onChangeProfileImgForm() {
+    this.notificationService.addMessage(new NotificationMessage('Функция временно недоступна', 400));
+  }
+
+  onChangeLogin() {
+    this.notificationService.addMessage(new NotificationMessage('Функция временно недоступна', 400));
+  }
+
+  onChangePasswordForm() {
+    this.changePasswordForm.markAllAsTouched();
+    console.log(this.changePasswordForm.valid);
+    
+    if (this.changePasswordForm.valid) {
+      var oldPassword = this.changePasswordForm.value.oldPassword;
+      var newPassword = this.changePasswordForm.value.passwords.password;
+      this.authService.changePassword(oldPassword, newPassword).subscribe({
+        next: () => {
+          this.notificationService.addMessage(new NotificationMessage('Вы успешно сменили пароль', 200));
+        },
+        error: (response) => {
+          console.log(response);
+          this.notificationService.addMessage(new NotificationMessage(response.error, response.status));
+        }
+      });
+    }
+  }
   
   removeUserCourse(id: string) {
-    
+
   }
 
   getTestName(id: string) {
@@ -160,6 +223,7 @@ export class CabinetComponent {
     const htmlElement = this.elem.nativeElement.ownerDocument.documentElement;
     htmlElement.style.fontSize = (this.currentFontSize + delta) + 'px';
     this.currentFontSize = parseInt(window.getComputedStyle(htmlElement).fontSize, 10);
+    localStorage.setItem('fontSize', this.currentFontSize.toString());
   }
 
   increaseFontSize(): void {
@@ -174,6 +238,14 @@ export class CabinetComponent {
     }
   }
 
+  get averageAccuracy(): number {
+    if (!this.results || this.results.length === 0) {
+      return 0;
+    }
+    const totalAccuracy = this.results.reduce((sum, result) => sum + this.calculateAccuracyPercentage(result), 0);
+    return totalAccuracy / this.results.length;
+  }
+
   calculateAccuracyPercentage(result: TestResultData): number {
     var answers = result.answers.split('\n');
     var results = result.results ? result.results.split('\n') : [];
@@ -184,5 +256,28 @@ export class CabinetComponent {
     const accuracyPercentage = (correctAnswersCount / totalAnswersCount) * 100;
   
     return accuracyPercentage;
+  }
+
+  private userNameValidator(): ValidatorFn {
+    const pattern = /[^a-zA-ZА-Яа-яЁё_]/;
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      if (!(control.dirty || control.touched)) {
+        return null;
+      }
+      return pattern.test(control.value) ? { custom: 'Поле может содержать только буквы и нижнее подчёркивание' } : null;
+    };
+  }
+
+  private passwordsAreEqual(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const group = control as FormGroup;
+      const password = group.get('password')?.value;
+      const confirmPassword = group.get('confirmPassword')?.value;
+
+      if (!(group.dirty || group.touched) || password === confirmPassword) {
+        return null;
+      }
+      return { custom: 'Пароли должны совпадать' };
+    };
   }
 }
